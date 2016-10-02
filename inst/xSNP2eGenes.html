@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to define eQTL genes given a list of SNPs or a...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xSNP2eGenes"><tr><td>xSNP2eGenes</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to define eQTL genes given a list of SNPs or a customised eQTL mapping data</h2>
+
+<h3>Description</h3>
+
+<p><code>xSNP2eGenes</code> is supposed to define eQTL genes given a list of
+SNPs or a customised eQTL mapping data. The eQTL weight is calcualted
+as Cumulative Distribution Function of negative log-transformed
+eQTL-reported signficance level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
+"JKscience_TS2B",
+"JKscience_TS3A", "JKng_bcell", "JKng_mono", "JKnc_neutro", "JK_nk",
+"GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
+"GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
+"GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
+"GTEx_V4_Lung", "GTEx_V4_Muscle_Skeletal", "GTEx_V4_Nerve_Tibial",
+"GTEx_V4_Skin_Sun_Exposed_Lower_leg", "GTEx_V4_Stomach",
+"GTEx_V4_Thyroid",
+"GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14", "eQTLdb_LPS2",
+"eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL,
+cdf.function = c("empirical", "exponential"), plot = FALSE,
+verbose = TRUE,
+RData.location =
+"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>a input vector containing SNPs. SNPs should be provided as
+dbSNP ID (ie starting with rs). Alternatively, they can be in the
+format of 'chrN:xxx', where N is either 1-22 or X, xxx is number; for
+example, 'chr16:28525386'</p>
+</td></tr>
+<tr valign="top"><td><code>include.eQTL</code></td>
+<td>
+<p>genes modulated by eQTL (also Lead SNPs or in LD
+with Lead SNPs) are also included. By default, it is 'NA' to disable
+this option. Otherwise, those genes modulated by eQTL will be included:
+immune stimulation in monocytes ('JKscience_TS1A' and 'JKscience_TS2B'
+for cis-eQTLs or 'JKscience_TS3A' for trans-eQTLs) from Science 2014,
+343(6175):1246949; cis- and trans-eQTLs in B cells ('JKng_bcell') and
+in monocytes ('JKng_mono') from Nature Genetics 2012, 44(5):502-510;
+cis- and trans-eQTLs in neutrophils ('JKnc_neutro') from Nature
+Communications 2015, 7(6):7545; cis-eQTLs in NK cells ('JK_nk') which
+is unpublished. Also supported are GTEx cis-eQTLs from Science 2015,
+348(6235):648-60, including 13 tissues:
+'GTEx_Adipose_Subcutaneous','GTEx_Artery_Aorta','GTEx_Artery_Tibial','GTEx_Esophagus_Mucosa','GTEx_Esophagus_Muscularis','GTEx_Heart_Left_Ventricle','GTEx_Lung','GTEx_Muscle_Skeletal','GTEx_Nerve_Tibial','GTEx_Skin_Sun_Exposed_Lower_leg','GTEx_Stomach','GTEx_Thyroid','GTEx_Whole_Blood'.</p>
+</td></tr>
+<tr valign="top"><td><code>eQTL.customised</code></td>
+<td>
+<p>a user-input matrix or data frame with 3
+columns: 1st column for SNPs/eQTLs, 2nd column for Genes, and 3rd for
+eQTL mapping significance level (p-values or FDR). It is designed to
+allow the user analysing their eQTL data. This customisation (if
+provided) has the high priority over built-in eQTL data.</p>
+</td></tr>
+<tr valign="top"><td><code>cdf.function</code></td>
+<td>
+<p>a character specifying a Cumulative Distribution
+Function (cdf). It can be one of 'exponential' based on exponential
+cdf, 'empirical' for empirical cdf</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p>logical to indicate whether the histogram plot (plus
+density or CDF plot) should be drawn. By default, it sets to false for
+no plotting</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+<tr valign="top"><td><code>RData.location</code></td>
+<td>
+<p>the characters to tell the location of built-in
+RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a data frame with following columns:
+</p>
+
+<ul>
+<li><p><code>Gene</code>: eQTL genes
+</p>
+</li>
+<li><p><code>SNP</code>: eQTLs
+</p>
+</li>
+<li><p><code>Pval</code>: the eQTL mapping significant level
+</p>
+</li>
+<li><p><code>Weight</code>: the eQTL weight
+</p>
+</li></ul>
+
+
+
+<h3>Note</h3>
+
+<p>None
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xRDataLoader</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+
+# a) provide the SNPs with the significance info
+## get lead SNPs reported in AS GWAS and their significance info (p-values)
+#data.file &lt;- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
+#AS &lt;- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
+ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase')
+gr &lt;- ImmunoBase$AS$variants
+AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
+
+# b) define eQTL genes
+df_eGenes &lt;- xSNP2eGenes(data=AS[,1], include.eQTL="JKscience_TS2A")
+</pre>
+
+
+</body></html>

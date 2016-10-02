@@ -1,0 +1,357 @@
+---
+title: "Pi User Manual (R/Bioconductor package)"
+author: "Hai Fang, the ULTRA-DD Consortium, Julian C Knight"
+date: "`r Sys.Date()`"
+abstract: >
+  This document provides instructions on how to use an R/Bioconductor package called Priority index (or Pi). Pi is developed as a genomic-led target prioritisation system, with the focus on leveraging human genetic data to prioritise potential drug targets at the gene, pathway and network level. The long-term goal is to use such information to enhance early-stage target validation. Based on evidence of disease association from genome-wide association studies (GWAS), this prioritisation system is able to generate evidence to support identification of the specific modulated genes (seed genes) that are responsible for the genetic association signal by utilising knowledge of linkage disequilibrium (co-inherited genetic variants), distance of associated variants from the gene, and evidence of independent genetic association with gene expression in disease relevant cell/tissue types and states. Seed genes are scored in an integrative way, quantifying the genetic influence. Scored seed genes are subsequently used as baits to rank seed genes plus additional (non-seed) genes; this is achieved by iteratively exploring the global connectivity of a gene interaction network. Genes with the highest priority are further used to identify/prioritise pathways that are significantly enriched with highly prioritised genes. Prioritised genes are also used to identify a gene network interconnecting highly prioritised genes and a minimal number of less prioritised genes (which act as linkers bringing together highly prioritised genes).
+output: 
+  BiocStyle::html_document:
+        toc: true
+        toc_depth: 2
+        number_sections: true
+        highlight: default
+bibliography: now.Pi.bib
+vignette: >
+ %\VignetteIndexEntry{Vignette Title}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse=TRUE, comment=">")
+knitr::opts_chunk$set(dpi=300)
+knitr::opts_chunk$set(cache=FALSE)
+knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(warning=FALSE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(fig_cap="yes")
+knitr::opts_chunk$set(eval=FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+cd ~/Sites/XGR
+################################################
+R
+rmarkdown::render("now.Pi_vignettes.Rmd", BiocStyle::html_document(toc=TRUE,toc_depth=2,number_sections=TRUE,hightlight="default",toc_float=FALSE))
+q('no')
+################################################
+scp now.Pi_vignettes.html galahad.well.ox.ac.uk:/var/www/Pi/Pi_vignettes.html
+scp now.Pi_vignettes.Rmd galahad.well.ox.ac.uk:/var/www/Pi/Pi_vignettes.Rmd
+```
+
+
+# Installation
+
+## R
+
+The latest version on different platforms can be installed following instructions at http://bioconductor.org/install/#install-R. 
+
+
+## Packages
+
+`Pi` together with dependant packages can be installed following instructions below:
+
+```{r eval=FALSE}
+source("http://bioconductor.org/biocLite.R")
+biocLite("Pi")
+```
+
+```{r eval=FALSE, echo=FALSE}
+# install the dependant packages including `XGR` and others
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("XGR","devtools"), siteRepos=c("http://cran.r-project.org"))
+
+# then install the `Pi` package itself
+library(devtools)
+install_github(c("hfang-bristol/Pi"), dependencies=TRUE)
+```
+
+
+# Workflow
+
+```{r fig.width=3, fig.height=2, fig.align="center", echo=FALSE, eval=TRUE}
+library(png)
+library(grid)
+img <- readPNG("saved.Pi.workflow.png")
+grid.raster(img)
+```
+
+
+# R functions
+
+Priority functions are designed in a nested way. The core relation follows this route: `xPierSNPs` -> `xPierGenes` -> `xPier` -> `xRWR`, achieving gene-level prioritisation from an input list of SNPs (along with their significant level). The output of this route is taken as the input of either `xPierManhattan` for visualising gene priority scores, `xPierPathways` for prioritising pathways, or `xPierSubnet` for identifying a network of top prioritised genes.
+
+```{r fig.width=1.2, fig.height=1.2, fig.align="center", echo=FALSE, eval=TRUE}
+library(png)
+library(grid)
+img <- readPNG("saved.Pi.functions.png")
+grid.raster(img)
+```
+
+## xRWR
+*[`xRWR`](http://rawgit.com/hfang-bristol/Pi/master/inst/xRWR.html)*: implements Random Walk with Restart (RWR) estimating the affinity score of nodes in a graph to a list of seed nodes. The affinity score can be viewed as the `influential impact` over the graph that is collectively imposed by seed nodes. If the seeds are not given, it will pre-compute affinity matrix for nodes in the input graph with respect to each starting node (as a seed) by looping over every node in the graph.  A higher-level function `xPier` directly relies on it.
+
+## xPier
+*[`xPier`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPier.html)*: uses RWR to calculate the affinity score of nodes in a graph to a list of seed nodes. A node that has a higher affinity score to seed nodes will receive a higher priority score. It is an internal function acting as a general template for RWR-based prioritisation. A higher-level function `xPierGenes` directly relies on it.
+
+## xPierGenes
+*[`xPierGenes`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierGenes.html)*: prioritises gene targets from an input gene interaction network and the score info imposed on its seed nodes/genes. This function can be considered to be a specific instance of `xPier`, that is, specifying a gene interaction network as a graph and seed nodes as seed genes.
+
+There are two sources of gene interaction network information: the STRING database [@Szklarczyk2015] and the Pathways Commons database [@Cerami2011]. STRING is a meta-integration of undirect interactions from a functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from a physical/pathway aspect. In addition to interaction type, users can choose the interactions of varying quality: 
+
+```{r, eval=TRUE, echo=FALSE}
+net <- list()
+net[['STRING_high']] <- c('STRING', 'Functional interactions (with high confidence scores>=700)', 'STRING_high')
+net[['STRING_medium']] <- c('STRING', 'Functional interactions (with medium confidence scores>=400)', 'STRING_medium')
+net[['PCommonsUN_high']] <- c('Pathways Commons', 'Physical/undirect interactions (with references & >=2 sources)', 'PCommonsUN_high')
+net[['PCommonsUN_medium']] <- c('Pathways Commons', 'Physical/undirect interactions (with references & >=1 sources)', 'PCommonsUN_medium')
+net[['PCommonsDN_high']] <- c('Pathways Commons', 'Pathway/direct interactions (with references & >=2 sources)', 'PCommonsDN_high')
+net[['PCommonsDN_medium']] <- c('Pathways Commons', 'Pathway/direct interactions (with references & >=1 sources)', 'PCommonsDN_medium')
+df_net <- do.call(rbind, net)
+colnames(df_net) <- c('Database', 'Interaction (type and quality)', 'Code')
+knitr::kable(df_net[,c(3,2,1)], caption="", row.names=FALSE)
+```
+
+## xPierSNPs
+*[`xPierSNPs`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierSNPs.html)*: prioritises gene targets from an input gene interaction network and a given list of SNPs together with the significance level (eg GWAS reported p-values). To do so, it first defines seed genes and their scores that are calculated in an integrative manner to quantify the genetic influence under SNPs. Genetic influential score on a seed gene is calculated from the SNP score (reflecting the SNP significant level), the gene-to-SNP distance weight and the eQTL mapping weight. This function can be considered to be a specific instance of `xPierGenes`, that is, specifying seed genes plus their scores. 
+
+Knowledge of co-inherited variants is also used to include additional SNPs that are in Linkage Disequilibrium (LD) with GWAS lead SNPs. LD SNPs are calculated based on 1000 Genomes Project data [@Project2012]. LD SNPs are defined to be any SNPs having R2 > 0.8 with GWAS lead SNPs. The user can choose the population used to calculate LD SNPs:
+
+```{r, eval=TRUE, echo=FALSE}
+pop <- list()
+pop[['AFR']] <- c('1000 Genomes Project', 'African', 'AFR')
+pop[['AMR']] <- c('1000 Genomes Project', 'Admixed American', 'AMR')
+pop[['EAS']] <- c('1000 Genomes Project', 'East Asian', 'EAS')
+pop[['EUR']] <- c('1000 Genomes Project', 'European', 'EUR')
+pop[['SAS']] <- c('1000 Genomes Project', 'South Asian', 'SAS')
+df_pop <- do.call(rbind, pop)
+colnames(df_pop) <- c('Project', 'Population', 'Code')
+knitr::kable(df_pop[,c(3,2,1)], caption="", row.names=FALSE)
+```
+
+## xPierManhattan
+*[`xPierManhattan`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierManhattan.html)*: visualises prioritised genes using manhattan plot, in which priority for genes is displayed on the Y-axis along with genomic locations on the X-axis. Also highlighted are genes with the top priority.
+
+## xPierPathways
+*[`xPierPathways`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierPathways.html)*: prioritises pathways based on enrichment analysis of genes with the top priority (eg top 100 genes) using a compendium of pathways. A highly prioritised pathway has its member genes with high gene-level priority scores, that is, having evidence of direct modulation by disease-associated lead (or LD) SNPs, and/or having evidence of indirect modulation at the network level.
+
+In addition to pathways, enrichment analysis can be extended to other ontologies, as listed below:
+
+```{r, eval=TRUE, echo=FALSE}
+obo <- list()
+obo[['DO']] <- c('Disease', 'Disease Ontology', 'DO')
+obo[['GOMF']] <- c('Function', 'Gene Ontology Molecular Function', 'GOMF')
+obo[['GOBP']] <- c('Function', 'Gene Ontology Biological Process', 'GOBP')
+obo[['GOCC']] <- c('Function', 'Gene Ontology Cellular Component', 'GOCC')
+obo[['HPPA']] <- c('Phenotype', 'Human Phenotype Phenotypic Abnormality', 'HPPA')
+obo[['HPMI']] <- c('Phenotype', 'Human Phenotype Mode of Inheritance', 'HPMI')
+obo[['HPCM']] <- c('Phenotype', 'Human Phenotype Clinical Modifier', 'HPCM')
+obo[['HPMA']] <- c('Phenotype', 'Human Phenotype Mortality Aging', 'HPMA')
+obo[['MP']] <- c('Phenotype', 'Mammalian/Mouse Phenotype', 'MP')
+obo[['DGIdb']] <- c('Druggable', 'DGI druggable gene categories', 'DGIdb')
+obo[['SF']] <- c('Domain', 'SCOP domain superfamilies', 'SF')
+obo[['PS2']] <- c('Evolution', 'phylostratific age information (our ancestors)', 'PS2')
+obo[['MsigdbH']] <- c('Hallmark (MsigDB)', 'Hallmark gene sets', 'MsigdbH')
+obo[['MsigdbC1']] <- c('Cytogenetics (MsigDB)', 'Chromosome and cytogenetic band positional gene sets', 'MsigdbC1')
+obo[['MsigdbC2CGP']] <- c('Perturbation (MsigDB)', 'Chemical and genetic perturbation gene sets', 'MsigdbC2CGP')
+obo[['MsigdbC2CPall']] <- c('Pathways (MsigDB)', 'All pathway gene sets', 'MsigdbC2CPall')
+obo[['MsigdbC2CP']] <- c('Pathways (MsigDB)', 'Canonical pathway gene sets', 'MsigdbC2CP')
+obo[['MsigdbC2KEGG']] <- c('Pathways (MsigDB)', 'KEGG pathway gene sets', 'MsigdbC2KEGG')
+obo[['MsigdbC2REACTOME']] <- c('Pathways (MsigDB)', 'Reactome pathway gene sets', 'MsigdbC2REACTOME')
+obo[['MsigdbC2BIOCARTA']] <- c('Pathways (MsigDB)', 'BioCarta pathway gene sets', 'MsigdbC2BIOCARTA')
+obo[['MsigdbC3TFT']] <- c('TF targets (MsigDB)', 'Transcription factor target gene sets', 'MsigdbC3TFT')
+obo[['MsigdbC3MIR']] <- c('microRNA targets (MsigDB)', 'microRNA target gene sets', 'MsigdbC3MIR')
+obo[['MsigdbC4CGN']] <- c('Cancer (MsigDB)', 'Cancer gene neighborhood gene sets', 'MsigdbC4CGN')
+obo[['MsigdbC4CM']] <- c('Cancer (MsigDB)', 'Cancer module gene sets', 'MsigdbC4CM')
+obo[['MsigdbC5BP']] <- c('Function (MsigDB)', 'GO biological process gene sets', 'MsigdbC5BP')
+obo[['MsigdbC5MF']] <- c('Function (MsigDB)', 'GO molecular function gene sets', 'MsigdbC5MF')
+obo[['MsigdbC5CC']] <- c('Function (MsigDB)', 'GO cellular component gene sets', 'MsigdbC5CC')
+obo[['MsigdbC6']] <- c('Oncology (MsigDB)', 'Oncogenic signature gene sets', 'MsigdbC6')
+obo[['MsigdbC7']] <- c('Immunology (MsigDB)', 'Immunologic signature gene sets', 'MsigdbC7')
+df_obo <- do.call(rbind, obo)
+colnames(df_obo) <- c('Category', 'Ontology', 'Code')
+knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
+```
+
+## xPierSubnet
+*[`xPierSubnet`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierSubnet.html)*: identifies a gene network that contains as many highly prioritised genes as possible but a few lowly prioritised genes as linkers. An iterative procedure of choosing different priority cutoff is also used to identify the network with a desired number of nodes/genes.
+
+
+# Showcases
+
+In this section, we use GWAS SNPs about an inflammatory disease `Spondyloarthritis` (including `Ankylosing Spondylitis` and `Psoriatic Arthritis`) as a case study, and give a step-by-step demo showing how to use `Pi` to achieve disease-specific genetic prioritisation of targets at the gene, pathway and network level.
+
+**First of all, load the packages including `Pi`:**
+
+```{r, eval=TRUE, include=TRUE}
+library(Pi)
+
+# optionally, specify the local location of built-in RData
+# by default:
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
+```
+
+```{r, eval=TRUE, echo=FALSE}
+# This intends to use the local version of data
+RData.location <- "~/Sites/SVN/github/bigdata"
+```
+
+## Input data
+
+Spondyloarthritis-associated GWAS lead SNPs are collected mainly from GWAS Catalog [@Welter2014], complemented by [ImmunoBase](http://www.immunobase.org) and latest publications. 
+
+```{r, eval=TRUE}
+data.file <- "http://galahad.well.ox.ac.uk/bigdata/Spondyloarthritis.txt"
+data <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
+```
+
+The first 15 rows of `data` are shown below, with the column `SNP` for GWAS SNPs and the column `Pval` for GWAS-detected P-values.
+
+```{r, eval=TRUE, echo=FALSE}
+knitr::kable(data[1:15,], digits=200, caption="", row.names=FALSE)
+```
+
+## Gene-level prioritisation
+
+It includes the following steps:
+
+- `define seed genes`, that is, seed genes are defined based on distance-to-SNP window and genetic association with gene expression: `nearby genes` that are located within defined distance window (by default, 50kb) of lead or Linkage Disequilibrium (LD) SNPs that are calculated based on European population data from 1000 Genome Project; `expression associated genes (eQTL genes)` for which gene expression is, either in a cis- or trans-acting manner, significantly associated with lead or LD SNPs, based on eQTL mapping.
+
+- `score seed genes`, that is, quantifying the genetic influence under lead or LD SNPs.
+
+- `prioritise target genes`, that is, estimating their global network connectivity to seed genes. With scored seed genes superposed onto a gene interaction network, RWR algorithm is implemented to prioritise candidate target genes based on their network connectivity/affinity to seed genes. As such, a gene that has a higher affinity score to seed genes will receive a higher priority score.
+
+> **Specify parameters**
+
+```{r, eval=TRUE, include=TRUE, echo=TRUE}
+include.eQTL <- c("JKscience_TS2A","JKscience_TS2B","JKscience_TS3A","JKng_bcell","JKng_mono","JKnc_neutro","JK_nk", "GTEx_V4_Whole_Blood")
+include.LD <- 'EUR'
+LD.r2 <- 0.8
+significance.threshold <- 5e-5
+distance.max <- 50000
+decay.kernel <- "rapid"
+decay.exponent <- 2
+GR.SNP <- "dbSNP_GWAS"
+GR.Gene <- "UCSC_knownGene"
+cdf.function <- "empirical"
+scoring.scheme <- 'max'
+network <- "STRING_high"
+restart <- 0.75
+```
+
+> **Do prioritisation**
+
+```{r, results="hide"}
+pNode <- xPierSNPs(data, include.LD=include.LD, LD.r2=LD.r2, significance.threshold=significance.threshold, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=include.eQTL, cdf.function=cdf.function, scoring.scheme=scoring.scheme, network=network, restart=restart, RData.location=RData.location)
+```
+
+The results are stored in the data frame `pNode$priority`, which can be saved into a file `Genes_priority.txt`:
+```{r, results="hide"}
+write.table(pNode$priority, file="Genes_priority.txt", sep="\t", row.names=FALSE)
+```
+
+> **Visualise in manhattan plot**
+
+Top genes can be highlighted in manhattan plot, in which priority scores for genes are displayed on the Y-axis along with genomic locations on the X-axis. 
+
+```{r, fig.width=10, fig.height=5, echo=TRUE}
+mp_AS <- xPierManhattan(pNode, highlight.top=20, cex=0.5, highlight.col="red", highlight.label.size=3, RData.location=RData.location)
+print(mp_AS)
+```
+```{r, eval=FALSE, echo=FALSE}
+png(file="saved.Pi.gene_manhattan.png", height=360, width=720)
+print(mp_AS)
+dev.off()
+```
+```{r fig.width=4, fig.height=2, fig.align="center", echo=FALSE, eval=TRUE}
+library(png)
+library(grid)
+img <- readPNG("saved.Pi.gene_manhattan.png")
+grid.raster(img)
+```
+
+
+## Pathway-level prioritisation
+
+Pathway-level prioritisation is based on top 100 genes using a compendium of pathways from diverse sources (Canonical, KEGG, BioCarta and Reactome). Since diverse sources are used, it is necessary to remove redundant pathways (of the same granularity to the similar pathways with higher priority scores).
+
+```{r, results="hide"}
+eTerm <- xPierPathways(pNode, priority.top=100, ontology="MsigdbC2CPall", RData.location=RData.location)
+eTerm_nonred <- xEnrichConciser(eTerm)
+
+# view the top pathways/terms
+xEnrichViewer(eTerm_nonred)
+
+# save results to a file `Pathways_priority.nonredundant.txt`
+Pathways_nonred <- xEnrichViewer(eTerm_nonred, top_num=length(eTerm_nonred$adjp), sortBy="fdr", details=TRUE)
+output <- data.frame(term=rownames(Pathways_nonred), Pathways_nonred)
+write.table(output, file="Pathways_priority.nonredundant.txt", sep="\t", row.names=FALSE)
+```
+
+Barplot of prioritised pathways (non-redundant and informative):
+```{r, fig.width=10, fig.height=5, echo=TRUE}
+bp <- xEnrichBarplot(eTerm_nonred, top_num="auto", displayBy="fdr", FDR.cutoff=1e-3, wrap.width=100)
+bp
+```
+```{r, eval=FALSE, echo=FALSE}
+png(file="saved.Pi.pathway_barplot.png", height=360, width=720)
+print(bp)
+dev.off()
+```
+```{r fig.width=4, fig.height=2, fig.align="center", echo=FALSE, eval=TRUE}
+library(png)
+library(grid)
+img <- readPNG("saved.Pi.pathway_barplot.png")
+grid.raster(img)
+```
+
+## Network-level prioritisation
+
+Network-level prioritisation is to identify a gene network that contains as many highly prioritised genes as possible but a few lowly prioritised genes as linkers. Given a gene network (the same as used in gene-level prioritisation) with nodes labelled with gene priority scores, the search for a maximum-scoring gene subnetwork is briefed as follows: 
+
+- `score transformation`, that is, given a threshold of tolerable priority scores, nodes above this threshold (nodes of interest) are scored positively, and negative scores for nodes below the threshold (intolerable).
+
+- `subnetwork identification`, that is, to find an interconnected gene subnetwork enriched with positive-score nodes but allowing for a few negative-score nodes as linkers, done via heuristically solving prize-collecting Steiner tree problem [@Fang2014c].
+
+- `controlling the subnetwork size`, that is, an iterative procedure of scanning different priority thresholds is used to identify the network with a desired number of nodes/genes.
+
+Notably, the preferential use of the same network as used in gene-level prioritisation is due to the fact that gene-level affinity/priority scores are smoothly distributed over the network after being walked. In other words, the chance of identifying such a gene network enriched with top prioritised genes is much higher. To reduce the runtime, by default only top 10% prioritised genes will be used to search for the maximum-scoring gene network.
+
+```{r, cache=FALSE}
+# find maximum-scoring gene network with the desired node number=50
+g <- xPierSubnet(pNode, priority.quantite=0.1, subnet.size=50, RData.location=RData.location)
+```
+
+The identified gene network has nodes/genes colored according to their priority scores (see below). Notably, if nodes appear abnormally, please remove `vertex.shape="sphere"` when running the function `xVisNet`.
+
+```{r, fig.width=6, fig.height=6, echo=TRUE}
+pattern <- as.numeric(V(g)$priority)
+zmax <- ceiling(quantile(pattern,0.75)*1000)/1000
+xVisNet(g, pattern=pattern, vertex.shape="sphere", colormap="yr", newpage=FALSE, edge.arrow.size=0.3, vertex.label.color="blue", vertex.label.dist=0.35, vertex.label.font=2, zlim=c(0,zmax))
+```
+```{r, eval=FALSE, cache=FALSE, echo=FALSE}
+png(file="saved.Pi.network_vis.png", height=540, width=540)
+xVisNet(g, pattern=pattern, vertex.shape="sphere", colormap="yr", newpage=FALSE, vertex.label.color="blue", vertex.label.dist=0.35, vertex.label.font=2, zlim=c(0,zmax))
+dev.off()
+```
+```{r fig.width=2, fig.height=2, fig.align="center", echo=FALSE, eval=TRUE}
+library(png)
+library(grid)
+img <- readPNG("saved.Pi.network_vis.png")
+grid.raster(img)
+```
+
+
+# Session Info
+
+**Here is the output of `sessionInfo()` on the system on which this user manual was compiled:**
+
+```{r sessionInfo, echo=FALSE, eval=TRUE}
+sessionInfo()
+```
+
+
+# References
+
+**Below is the list of references that Pi stands on:**

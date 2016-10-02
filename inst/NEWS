@@ -1,0 +1,8 @@
+CHANGES IN VERSION 0.99.0
+-----------------------
+
+NEW FEATURES
+
+    o A genomic-led target prioritisation system
+
+    o Leveraging genetic data to prioritise targets at the gene, pathway and network level
