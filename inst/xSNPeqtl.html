@@ -1,28 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to define eQTL genes given a list of SNPs or a...</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to extract eQTL-gene pairs given a list of SNPs or a...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
-<table width="100%" summary="page for xSNP2eGenes"><tr><td>xSNP2eGenes</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table width="100%" summary="page for xSNPeqtl"><tr><td>xSNPeqtl</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to define eQTL genes given a list of SNPs or a customised eQTL mapping data</h2>
+<h2>Function to extract eQTL-gene pairs given a list of SNPs or a customised eQTL mapping data</h2>
 
 <h3>Description</h3>
 
-<p><code>xSNP2eGenes</code> is supposed to define eQTL genes given a list of
-SNPs or a customised eQTL mapping data. The eQTL weight is calcualted
-as Cumulative Distribution Function of negative log-transformed
-eQTL-reported signficance level.
+<p><code>xSNPeqtl</code> is supposed to extract eQTL-gene pairs given a list of
+SNPs or a customised eQTL mapping data.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
-"JKscience_TS2B",
-"JKscience_TS3A", "JKng_bcell", "JKng_mono", "JKnc_neutro", "JK_nk",
-"GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
+xSNPeqtl(data = NULL, include.eQTL = c(NA, "JKscience_TS2A",
+"JKscience_TS2B", "JKscience_TS3A", "JKng_bcell", "JKng_mono",
+"JKnc_neutro",
+"JK_nk", "GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
 "GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
 "GTEx_V4_Lung", "GTEx_V4_Muscle_Skeletal", "GTEx_V4_Nerve_Tibial",
@@ -30,7 +28,6 @@ xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
 "GTEx_V4_Thyroid",
 "GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14", "eQTLdb_LPS2",
 "eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL,
-cdf.function = c("empirical", "exponential"), plot = FALSE,
 verbose = TRUE,
 RData.location =
 "https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
@@ -42,10 +39,11 @@ RData.location =
 <table summary="R argblock">
 <tr valign="top"><td><code>data</code></td>
 <td>
-<p>a input vector containing SNPs. SNPs should be provided as
-dbSNP ID (ie starting with rs). Alternatively, they can be in the
-format of 'chrN:xxx', where N is either 1-22 or X, xxx is number; for
-example, 'chr16:28525386'</p>
+<p>NULL or a input vector containing SNPs. If NULL, all SNPs
+will be considered. If a input vector containing SNPs, SNPs should be
+provided as dbSNP ID (ie starting with rs). Alternatively, they can be
+in the format of 'chrN:xxx', where N is either 1-22 or X, xxx is
+number; for example, 'chr16:28525386'</p>
 </td></tr>
 <tr valign="top"><td><code>include.eQTL</code></td>
 <td>
@@ -70,18 +68,6 @@ eQTL mapping significance level (p-values or FDR). It is designed to
 allow the user analysing their eQTL data. This customisation (if
 provided) has the high priority over built-in eQTL data.</p>
 </td></tr>
-<tr valign="top"><td><code>cdf.function</code></td>
-<td>
-<p>a character specifying a Cumulative Distribution
-Function (cdf). It can be one of 'exponential' based on exponential
-cdf, 'empirical' for empirical cdf</p>
-</td></tr>
-<tr valign="top"><td><code>plot</code></td>
-<td>
-<p>logical to indicate whether the histogram plot (plus
-density or CDF plot) should be drawn. By default, it sets to false for
-no plotting</p>
-</td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
 <p>logical to indicate whether the messages will be
@@ -101,17 +87,16 @@ RData files. See <code>xRDataLoader</code> for details</p>
 </p>
 
 <ul>
-<li><p><code>Gene</code>: eQTL-containing genes
-</p>
-</li>
 <li><p><code>SNP</code>: eQTLs
 </p>
 </li>
-<li><p><code>Sig</code>: the eQTL mapping significant level (the
-best/minimum)
+<li><p><code>Gene</code>: eQTL-containing genes
 </p>
 </li>
-<li><p><code>Weight</code>: the eQTL weight
+<li><p><code>Sig</code>: the eQTL mapping significant level
+</p>
+</li>
+<li><p><code>Context</code>: the context in which eQTL data was generated
 </p>
 </li></ul>
 
@@ -147,7 +132,7 @@ gr &lt;- ImmunoBase$AS$variants
 AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 # b) define eQTL genes
-df_eGenes &lt;- xSNP2eGenes(data=AS[,1], include.eQTL="JKscience_TS2A")
+df_SGS &lt;- xSNPeqtl(data=AS[,1], include.eQTL="JKscience_TS2A")
 </pre>
 
 

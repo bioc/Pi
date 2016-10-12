@@ -6,7 +6,8 @@
 \usage{
 xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "STRING_medium",
-"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
+"PCommonsDN_high",
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
@@ -34,26 +35,28 @@ physical/pathway aspect. Both have scores to control the confidence of
 interactions. Therefore, the user can choose the different quality of
 the interactions. In STRING, "STRING_highest" indicates interactions
 with highest confidence (confidence scores>=900), "STRING_high" for
-interactions with high confidence (confidence scores>=700), and
+interactions with high confidence (confidence scores>=700),
 "STRING_medium" for interactions with medium confidence (confidence
-scores>=400). For undirect/physical interactions from Pathways Commons,
-"PCommonsUN_high" indicates undirect interactions with high confidence
-(supported with the PubMed references plus at least 2 different
-sources), "PCommonsUN_medium" for undirect interactions with medium
-confidence (supported with the PubMed references). For direct
-(pathway-merged) interactions from Pathways Commons, "PCommonsDN_high"
-indicates direct interactions with high confidence (supported with the
-PubMed references plus at least 2 different sources), and
-"PCommonsUN_medium" for direct interactions with medium confidence
-(supported with the PubMed references). In addtion to pooled version of
-pathways from all data sources, the user can also choose the
-pathway-merged network from individual sources, that is,
-"PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for
-those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc,
-"PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those
-from PANTHER, "PCommonsDN_ReconX" for those from ReconX,
-"PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite"
-for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD}
+scores>=400), and "STRING_low" for interactions with low confidence
+(confidence scores>=150). For undirect/physical interactions from
+Pathways Commons, "PCommonsUN_high" indicates undirect interactions
+with high confidence (supported with the PubMed references plus at
+least 2 different sources), "PCommonsUN_medium" for undirect
+interactions with medium confidence (supported with the PubMed
+references). For direct (pathway-merged) interactions from Pathways
+Commons, "PCommonsDN_high" indicates direct interactions with high
+confidence (supported with the PubMed references plus at least 2
+different sources), and "PCommonsUN_medium" for direct interactions
+with medium confidence (supported with the PubMed references). In
+addtion to pooled version of pathways from all data sources, the user
+can also choose the pathway-merged network from individual sources,
+that is, "PCommonsDN_Reactome" for those from Reactome,
+"PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those
+from HumanCyc, "PCommonsDN_PID" for those froom PID,
+"PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for
+those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC,
+"PCommonsDN_PhosphoSite" for those from PhosphoSite, and
+"PCommonsDN_CTD" for those from CTD}
 
 \item{weighted}{logical to indicate whether edge weights should be
 considered. By default, it sets to false. If true, it only works for

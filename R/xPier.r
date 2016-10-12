@@ -127,7 +127,7 @@ xPier <- function(seeds, g, normalise=c("laplacian","row","column","none"), rest
     	weights[flag[!is.na(flag)]] <- setSeeds[!is.na(flag),1]
     	
     	df <- data.frame(name=rownames(PTmatrix), seed=seeds, weight=weights, priority=as.matrix(PTmatrix), stringsAsFactors=FALSE)
-    	df <- df[order(-df$priority), ]
+    	df <- df[order(-df$priority,-df$seed), ]
     	df <- cbind(df, rank=rank(-df$priority,ties.method='min'))
     }
     

@@ -42,6 +42,7 @@ cdf.function = c("empirical", "exponential"), relative.importance =
 c(0.5,
 0.5), scoring.scheme = c("max", "sum", "sequential"),
 network = c("STRING_highest", "STRING_high", "STRING_medium",
+"STRING_low",
 "PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
@@ -132,7 +133,8 @@ so, first save your RData file (containing an GR object) into your
 local computer, and make sure the GR object content names refer to
 dbSNP IDs. Then, tell &quot;GR.SNP&quot; with your RData file name (with or
 without extension), plus specify your file RData path in
-&quot;RData.location&quot;</p>
+&quot;RData.location&quot;. Note: you can also load your customised GR object
+directly</p>
 </td></tr>
 <tr valign="top"><td><code>GR.Gene</code></td>
 <td>
@@ -146,7 +148,8 @@ first save your RData file (containing an GR object) into your local
 computer, and make sure the GR object content names refer to Gene
 Symbols. Then, tell &quot;GR.Gene&quot; with your RData file name (with or
 without extension), plus specify your file RData path in
-&quot;RData.location&quot;</p>
+&quot;RData.location&quot;. Note: you can also load your customised GR object
+directly</p>
 </td></tr>
 <tr valign="top"><td><code>include.eQTL</code></td>
 <td>
@@ -201,26 +204,28 @@ physical/pathway aspect. Both have scores to control the confidence of
 interactions. Therefore, the user can choose the different quality of
 the interactions. In STRING, &quot;STRING_highest&quot; indicates interactions
 with highest confidence (confidence scores&gt;=900), &quot;STRING_high&quot; for
-interactions with high confidence (confidence scores&gt;=700), and
+interactions with high confidence (confidence scores&gt;=700),
 &quot;STRING_medium&quot; for interactions with medium confidence (confidence
-scores&gt;=400). For undirect/physical interactions from Pathways Commons,
-&quot;PCommonsUN_high&quot; indicates undirect interactions with high confidence
-(supported with the PubMed references plus at least 2 different
-sources), &quot;PCommonsUN_medium&quot; for undirect interactions with medium
-confidence (supported with the PubMed references). For direct
-(pathway-merged) interactions from Pathways Commons, &quot;PCommonsDN_high&quot;
-indicates direct interactions with high confidence (supported with the
-PubMed references plus at least 2 different sources), and
-&quot;PCommonsUN_medium&quot; for direct interactions with medium confidence
-(supported with the PubMed references). In addtion to pooled version of
-pathways from all data sources, the user can also choose the
-pathway-merged network from individual sources, that is,
-&quot;PCommonsDN_Reactome&quot; for those from Reactome, &quot;PCommonsDN_KEGG&quot; for
-those from KEGG, &quot;PCommonsDN_HumanCyc&quot; for those from HumanCyc,
-&quot;PCommonsDN_PID&quot; for those froom PID, &quot;PCommonsDN_PANTHER&quot; for those
-from PANTHER, &quot;PCommonsDN_ReconX&quot; for those from ReconX,
-&quot;PCommonsDN_TRANSFAC&quot; for those from TRANSFAC, &quot;PCommonsDN_PhosphoSite&quot;
-for those from PhosphoSite, and &quot;PCommonsDN_CTD&quot; for those from CTD</p>
+scores&gt;=400), and &quot;STRING_low&quot; for interactions with low confidence
+(confidence scores&gt;=150). For undirect/physical interactions from
+Pathways Commons, &quot;PCommonsUN_high&quot; indicates undirect interactions
+with high confidence (supported with the PubMed references plus at
+least 2 different sources), &quot;PCommonsUN_medium&quot; for undirect
+interactions with medium confidence (supported with the PubMed
+references). For direct (pathway-merged) interactions from Pathways
+Commons, &quot;PCommonsDN_high&quot; indicates direct interactions with high
+confidence (supported with the PubMed references plus at least 2
+different sources), and &quot;PCommonsUN_medium&quot; for direct interactions
+with medium confidence (supported with the PubMed references). In
+addtion to pooled version of pathways from all data sources, the user
+can also choose the pathway-merged network from individual sources,
+that is, &quot;PCommonsDN_Reactome&quot; for those from Reactome,
+&quot;PCommonsDN_KEGG&quot; for those from KEGG, &quot;PCommonsDN_HumanCyc&quot; for those
+from HumanCyc, &quot;PCommonsDN_PID&quot; for those froom PID,
+&quot;PCommonsDN_PANTHER&quot; for those from PANTHER, &quot;PCommonsDN_ReconX&quot; for
+those from ReconX, &quot;PCommonsDN_TRANSFAC&quot; for those from TRANSFAC,
+&quot;PCommonsDN_PhosphoSite&quot; for those from PhosphoSite, and
+&quot;PCommonsDN_CTD&quot; for those from CTD</p>
 </td></tr>
 <tr valign="top"><td><code>weighted</code></td>
 <td>
@@ -313,12 +318,14 @@ non-seeds), &quot;weight&quot; (weight/score values for seed genes), &quot;prior
 </li>
 <li><p><code>SNP</code>: a data frame of nSNP X 3 containing input SNPs and/or
 LD SNPs info, where nSNP is the number of input SNPs and/or LD SNPs,
-and the 3 columns are &quot;SNP&quot; (dbSNP), &quot;Score&quot; (the SNP score), &quot;Pval&quot;
-(the SNP p-value)
+and the 4 columns are &quot;SNP&quot; (dbSNP), &quot;Score&quot; (the SNP score), &quot;Pval&quot;
+(the SNP p-value), &quot;Flag&quot; (indicative of Lead SNPs or LD SNPs)
 </p>
 </li>
-<li><p><code>Gene2SNP</code>: a matrix of Genes X SNPs, each non-zero cell
-telling an SNP's genetic influential score on a seed gene
+<li><p><code>Gene2SNP</code>: a data frame of nPair X 3 containing Gene-SNP
+pair info, where nPair is the number of Gene-SNP pairs, and the 3
+columns are &quot;Gene&quot; (seed genes), &quot;SNP&quot; (dbSNP), &quot;Score&quot; (an SNP's
+genetic influential score on a seed gene), &quot;Pval&quot; (the SNP p-value)
 </p>
 </li>
 <li><p><code>call</code>: the call that produced this result
@@ -363,7 +370,7 @@ the seeds.
 
 <p><code>xSNPscores</code>, <code>xSNP2nGenes</code>,
 <code>xSNP2eGenes</code>, <code>xSparseMatrix</code>,
-<code>xPier</code>, <code>xPierGenes</code>,
+<code>xSM2DF</code>, <code>xPier</code>, <code>xPierGenes</code>,
 <code>xPierPathways</code>
 </p>
 

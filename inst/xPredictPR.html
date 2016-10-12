@@ -10,7 +10,7 @@
 <h3>Description</h3>
 
 <p><code>xPredictPR</code> is supposed to assess the prediction performance via
-Precision-Recall (PR) analysis. It requires two inputS: 1) Glod
+Precision-Recall (PR) analysis. It requires two inputs: 1) Gold
 Standard Positive (GSP) containing targets; 2) prediction containing
 predicted targets and predictive scores.
 </p>
@@ -19,8 +19,9 @@ predicted targets and predictive scores.
 <h3>Usage</h3>
 
 <pre>
-xPredictPR(GSP, prediction, num.threshold = 100, bin = c("quantile",
-"uniform"), recall.prediction = FALSE, plot = FALSE, verbose = TRUE)
+xPredictPR(GSP, prediction, num.threshold = 20, bin = c("quantile",
+"uniform"), recall.prediction = FALSE, GSN = NULL, plot = TRUE,
+smooth = FALSE, verbose = TRUE)
 </pre>
 
 
@@ -29,7 +30,7 @@ xPredictPR(GSP, prediction, num.threshold = 100, bin = c("quantile",
 <table summary="R argblock">
 <tr valign="top"><td><code>GSP</code></td>
 <td>
-<p>a vector containing Glod Standard Positive (GSP)</p>
+<p>a vector containing Gold Standard Positive (GSP)</p>
 </td></tr>
 <tr valign="top"><td><code>prediction</code></td>
 <td>
@@ -52,13 +53,25 @@ number)</p>
 <tr valign="top"><td><code>recall.prediction</code></td>
 <td>
 <p>logical to indicate whether the calculation of
-recall is based on preditable GSP. By default, it sets to FALSE</p>
+recall is based on predictable GSP. By default, it sets to FALSE</p>
+</td></tr>
+<tr valign="top"><td><code>GSN</code></td>
+<td>
+<p>a vector containing Gold Standard Negative (GSN). It is
+optional. By default (NULL), GSN is not provided</p>
 </td></tr>
 <tr valign="top"><td><code>plot</code></td>
 <td>
 <p>logical to indicate whether to return an object of class
 &quot;ggplot&quot; for plotting PR curve. By default, it sets to FALSE. If TRUE,
-it will return a ggplot object after being appended with 'PR'</p>
+it will return a ggplot object after being appended with 'PR' and
+'Fmax'</p>
+</td></tr>
+<tr valign="top"><td><code>smooth</code></td>
+<td>
+<p>logical to indicate whether to smooth the curve by making
+sure a non-increasing order for precision. By default, it sets to
+FALSE</p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -70,13 +83,13 @@ displayed in the screen. By default, it sets to TRUE for display</p>
 
 <h3>Value</h3>
 
-<p>If plot is FALSE (by default), a data frame containing two columns: 1st
-column 'Precision' for precision, 2nd 'Recall' for recall. The row has
-the names corresponding to the score threshold.
+<p>If plot is FALSE (by default), a data frame containing three columns:
+1st column 'Threshold' for the score threshold, 2nd column 'Precision'
+for precision, 3rd 'Recall' for recall.
 If plot is TRUE, it will return a ggplot object after being appended
-with 'PR' (a data frame containing two columns: 1st column 'Precision'
-for precision, 2nd 'Recall' for recall. The row has the names
-corresponding to the score threshold).
+with 'PR' (a data frame containing three columns: 1st column
+'Threshold' for the score threshold, 2nd column 'Precision' for
+precision, 3rd 'Recall' for recall), and 'Fmax' for maximum F-measure.
 </p>
 
 

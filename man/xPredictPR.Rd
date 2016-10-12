@@ -4,11 +4,12 @@
 \alias{xPredictPR}
 \title{Function to assess the prediction performance via Precision-Recall (PR) analysis}
 \usage{
-xPredictPR(GSP, prediction, num.threshold = 100, bin = c("quantile",
-"uniform"), recall.prediction = FALSE, plot = FALSE, verbose = TRUE)
+xPredictPR(GSP, prediction, num.threshold = 20, bin = c("quantile",
+"uniform"), recall.prediction = FALSE, GSN = NULL, plot = TRUE,
+smooth = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{GSP}{a vector containing Glod Standard Positive (GSP)}
+\item{GSP}{a vector containing Gold Standard Positive (GSP)}
 
 \item{prediction}{a data frame containing predictions along with
 predictive scores. It has two columns: 1st column for target, 2nd
@@ -23,27 +24,35 @@ scores with equal interval (ie with uniform distribution), and
 number)}
 
 \item{recall.prediction}{logical to indicate whether the calculation of
-recall is based on preditable GSP. By default, it sets to FALSE}
+recall is based on predictable GSP. By default, it sets to FALSE}
+
+\item{GSN}{a vector containing Gold Standard Negative (GSN). It is
+optional. By default (NULL), GSN is not provided}
 
 \item{plot}{logical to indicate whether to return an object of class
 "ggplot" for plotting PR curve. By default, it sets to FALSE. If TRUE,
-it will return a ggplot object after being appended with 'PR'}
+it will return a ggplot object after being appended with 'PR' and
+'Fmax'}
+
+\item{smooth}{logical to indicate whether to smooth the curve by making
+sure a non-increasing order for precision. By default, it sets to
+FALSE}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to TRUE for display}
 }
 \value{
-If plot is FALSE (by default), a data frame containing two columns: 1st
-column 'Precision' for precision, 2nd 'Recall' for recall. The row has
-the names corresponding to the score threshold.
+If plot is FALSE (by default), a data frame containing three columns:
+1st column 'Threshold' for the score threshold, 2nd column 'Precision'
+for precision, 3rd 'Recall' for recall.
 If plot is TRUE, it will return a ggplot object after being appended
-with 'PR' (a data frame containing two columns: 1st column 'Precision'
-for precision, 2nd 'Recall' for recall. The row has the names
-corresponding to the score threshold).
+with 'PR' (a data frame containing three columns: 1st column
+'Threshold' for the score threshold, 2nd column 'Precision' for
+precision, 3rd 'Recall' for recall), and 'Fmax' for maximum F-measure.
 }
 \description{
 \code{xPredictPR} is supposed to assess the prediction performance via
-Precision-Recall (PR) analysis. It requires two inputS: 1) Glod
+Precision-Recall (PR) analysis. It requires two inputs: 1) Gold
 Standard Positive (GSP) containing targets; 2) prediction containing
 predicted targets and predictive scores.
 }

@@ -32,6 +32,7 @@
 #' @importFrom grDevices rgb
 #' @importFrom graphics curve hist
 #' @importFrom stats median quantile
+#' @importFrom glmnet glmnet cv.glmnet
 #' @seealso \code{\link{xPier}}
 #' @include xRWR.r
 #' @examples
