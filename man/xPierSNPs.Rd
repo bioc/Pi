@@ -119,7 +119,7 @@ cis- and trans-eQTLs in neutrophils ('JKnc_neutro') from Nature
 Communications 2015, 7(6):7545; cis-eQTLs in NK cells ('JK_nk') which
 is unpublished. Also supported are GTEx cis-eQTLs from Science 2015,
 348(6235):648-60, including 13 tissues:
-'GTEx_Adipose_Subcutaneous','GTEx_Artery_Aorta','GTEx_Artery_Tibial','GTEx_Esophagus_Mucosa','GTEx_Esophagus_Muscularis','GTEx_Heart_Left_Ventricle','GTEx_Lung','GTEx_Muscle_Skeletal','GTEx_Nerve_Tibial','GTEx_Skin_Sun_Exposed_Lower_leg','GTEx_Stomach','GTEx_Thyroid','GTEx_Whole_Blood'.}
+"GTEx_V4_Adipose_Subcutaneous","GTEx_V4_Artery_Aorta","GTEx_V4_Artery_Tibial","GTEx_V4_Esophagus_Mucosa","GTEx_V4_Esophagus_Muscularis","GTEx_V4_Heart_Left_Ventricle","GTEx_V4_Lung","GTEx_V4_Muscle_Skeletal","GTEx_V4_Nerve_Tibial","GTEx_V4_Skin_Sun_Exposed_Lower_leg","GTEx_V4_Stomach","GTEx_V4_Thyroid","GTEx_V4_Whole_Blood".}
 
 \item{eQTL.customised}{a user-input matrix or data frame with 3
 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, and 3rd for
