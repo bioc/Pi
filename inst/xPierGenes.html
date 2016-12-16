@@ -32,8 +32,7 @@ xPierGenes(data, network = c("STRING_highest", "STRING_high",
 normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
 normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
 multicores = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -161,12 +160,12 @@ RData files. See <code>xRDataLoader</code> for details</p>
 </p>
 
 <ul>
-<li><p><code>priority</code>: a matrix of nNode X 4 containing node priority
+<li><p><code>priority</code>: a matrix of nNode X 5 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are &quot;name&quot; (node names), &quot;seed&quot; (1 for seeds, 0 for
+the 5 columns are &quot;name&quot; (node names), &quot;seed&quot; (1 for seeds, 0 for
 non-seeds), &quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores
 that are rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority
-scores)
+scores), &quot;description&quot; (node description)
 </p>
 </li>
 <li><p><code>g</code>: an input &quot;igraph&quot; object
@@ -201,9 +200,11 @@ library(Pi)
 
 ## End(Not run)
 
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase
-ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 ## get genes within 500kb away from AS GWAS lead SNPs
 seeds.genes &lt;- ImmunoBase$AS$genes_variants
 ## seeds weighted according to distance away from lead SNPs
@@ -211,7 +212,8 @@ data &lt;- 1- seeds.genes/500000
 
 ## Not run: 
 # b) perform priority analysis
-pNode &lt;- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+pNode &lt;- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7,
+RData.location=RData.location)
 
 # c) save to the file called 'Genes_priority.txt'
 write.table(pNode$priority, file="Genes_priority.txt", sep="\t",

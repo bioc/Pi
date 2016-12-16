@@ -1,15 +1,16 @@
 Package: Pi
 Type: Package
 Title: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene, Pathway and Network Level
-Version: 1.1.0
-Date: 2016-10-12
+Version: 1.1.1
+Date: 2016-12-16
 Author: Hai Fang, the ULTRA-DD Consortium, Julian C Knight
 Maintainer: Hai Fang <hfang@well.ox.ac.uk>
-Depends: XGR, igraph, dnet, ggplot2
-Imports: Matrix, MASS, ggbio, GenomicRanges, GenomeInfoDb, supraHex, scales, grDevices, graphics, stats, ggrepel, glmnet
-Suggests: foreach, doMC, BiocStyle, knitr, rmarkdown, png, GGally
-Description: Priority index or Pi is developed as a genomic-led target prioritisation system, with the focus on leveraging human genetic data to prioritise potential drug targets at the gene, pathway and network level. The long term goal is to use such information to enhance early-stage target validation. Based on evidence of disease association from genome-wide association studies (GWAS), this prioritisation system is able to generate evidence to support identification of the specific modulated genes (seed genes) that are responsible for the genetic association signal by utilising knowledge of linkage disequilibrium (co-inherited genetic variants), distance of associated variants from the gene, and evidence of independent genetic association with gene expression in disease-relevant tissues, cell types and states. Seed genes are scored in an integrative way, quantifying the genetic influence. Scored seed genes are subsequently used as baits to rank seed genes plus additional (non-seed) genes; this is achieved by iteratively exploring the global connectivity of a gene interaction network. Genes with the highest priority are further used to identify/prioritise pathways that are significantly enriched with highly prioritised genes. Prioritised genes are also used to identify a gene network interconnecting highly prioritised genes and a minimal number of less prioritised genes (which act as linkers bringing together highly prioritised genes).
+Depends: XGR, igraph, dnet, ggplot2, graphics, stats
+Imports: Matrix, MASS, ggbio, GenomicRanges, GenomeInfoDb, supraHex, scales, grDevices, ggrepel, glmnet, ROCR, e1071, randomForest
+Suggests: foreach, doMC, BiocStyle, knitr, rmarkdown, png, GGally, gridExtra
+Description: Priority index or Pi is developed as a genomic-led target prioritisation system, with the focus on leveraging human genetic data to prioritise potential drug targets at the gene, pathway and network level. The long term goal is to use such information to enhance early-stage target validation. Based on evidence of disease association from genome-wide association studies (GWAS), this prioritisation system is able to generate evidence to support identification of the specific modulated genes (seed genes) that are responsible for the genetic association signal by utilising knowledge of linkage disequilibrium (co-inherited genetic variants), distance of associated variants from the gene, evidence of independent genetic association with gene expression in disease-relevant tissues, cell types and states, and evidence of physical interactions between disease-associated genetic variants and gene promoters based on genome-wide capture HiC-generated promoter interactomes in primary blood cell types. Seed genes are scored in an integrative way, quantifying the genetic influence. Scored seed genes are subsequently used as baits to rank seed genes plus additional (non-seed) genes; this is achieved by iteratively exploring the global connectivity of a gene interaction network. Genes with the highest priority are further used to identify/prioritise pathways that are significantly enriched with highly prioritised genes. Prioritised genes are also used to identify a gene network interconnecting highly prioritised genes and a minimal number of less prioritised genes (which act as linkers bringing together highly prioritised genes).
 URL: http://pi314.r-forge.r-project.org
+BugReports: https://github.com/hfang-bristol/Pi/issues
 Collate: 
     'xRWR.r'
     'xPier.r'
@@ -18,10 +19,17 @@ Collate:
     'xPierPathways.r'
     'xPierManhattan.r'
     'xPierSubnet.r'
+    'xPierMatrix.r'
     'xSNPeqtl.r'
     'xSNP2eGenes.r'
     'xPierSNPsConsensus.r'
-    'xPredictPR.r'
+    'xPredictROCR.r'
+    'xPredictCompare.r'
+    'xContour.r'
+    'xSNPhic.r'
+    'xPCHiCplot.r'
+    'xSNP2cGenes.r'
+    'xMLrandomforest.r'
 License: GPL-3
 VignetteBuilder: knitr
-biocViews: Software, Genetics, GraphAndNetwork, Pathways, GeneExpression, GeneTarget, GenomeWideAssociation, LinkageDisequilibrium, Network
+biocViews: Software, Genetics, GraphAndNetwork, Pathways, GeneExpression, GeneTarget, GenomeWideAssociation, LinkageDisequilibrium, Network, HiC

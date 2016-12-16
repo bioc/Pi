@@ -16,7 +16,7 @@
 #' @return
 #' an object of class "pNode", a list with following components:
 #' \itemize{
-#'  \item{\code{priority}: a matrix of nNode X 4 containing node priority information, where nNode is the number of nodes in the input graph, and the 4 columns are "name" (node names), "seed" (1 for seeds, 0 for non-seeds), "weight" (weight values),  "priority" (the priority scores that are rescaled to the range [0,1]), "rank" (ranks of the priority scores)}
+#'  \item{\code{priority}: a matrix of nNode X 5 containing node priority information, where nNode is the number of nodes in the input graph, and the 5 columns are "name" (node names), "seed" (1 for seeds, 0 for non-seeds), "weight" (weight values),  "priority" (the priority scores that are rescaled to the range [0,1]), "rank" (ranks of the priority scores), "description" (node description)}
 #'  \item{\code{g}: an input "igraph" object}
 #'  \item{\code{call}: the call that produced this result}
 #' }
@@ -30,9 +30,10 @@
 #' library(Pi)
 #' }
 #'
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' # a) provide the seed nodes/genes with the weight info
 #' ## load ImmunoBase
-#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', RData.location=RData.location)
 #' ## get genes within 500kb away from AS GWAS lead SNPs
 #' seeds.genes <- ImmunoBase$AS$genes_variants
 #' ## seeds weighted according to distance away from lead SNPs
@@ -40,14 +41,14 @@
 #'
 #' \dontrun{
 #' # b) perform priority analysis
-#' pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+#' pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7, RData.location=RData.location)
 #'
 #' # c) save to the file called 'Genes_priority.txt'
 #' write.table(pNode$priority, file="Genes_priority.txt", sep="\t", row.names=FALSE)
 #' }
 
 
-xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), weighted=FALSE, network.customised=NULL, normalise=c("laplacian","row","column","none"), restart=0.75, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), weighted=FALSE, network.customised=NULL, normalise=c("laplacian","row","column","none"), restart=0.75, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
     startT <- Sys.time()
@@ -91,6 +92,9 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=150])"))
 			}
 			
+			########################
+			# because of the way storing the network from the STRING database
+			## extract relations (by symbol)
 			V(g)$name <- V(g)$symbol
 			if(weighted){
 				relations <- igraph::get.data.frame(g, what="edges")[, c(1,2,10)]
@@ -99,7 +103,16 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 				relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
 				colnames(relations) <- c("from","to")
 			}
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE)
+			## do removal for node extraction (without 'name'; othewise failed to do so using the function 'igraph::get.data.frame')
+			g <- igraph::delete_vertex_attr(g, "name")
+			g <- igraph::delete_vertex_attr(g, "seqid")
+			g <- igraph::delete_vertex_attr(g, "geneid")
+			nodes <- igraph::get.data.frame(g, what="vertices")
+			### remove the duplicated
+			nodes <- nodes[!duplicated(nodes), ]			
+			########################
+			
+			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
 			
         }else if(length(grep('PCommonsUN',network,perl=TRUE)) > 0){
 			g <- xRDataLoader(RData.customised='org.Hs.PCommons_UN', RData.location=RData.location, verbose=verbose)
@@ -115,7 +128,8 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 			
 			relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
 			colnames(relations) <- c("from","to")
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE)
+			nodes <- igraph::get.data.frame(g, what="vertices")[, c(3,4)]
+			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
 			
         }else if(length(grep('PCommonsDN',network,perl=TRUE)) > 0){
 			flag <- unlist(strsplit(network,"_"))[2]
@@ -136,7 +150,8 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 			
 			relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
 			colnames(relations) <- c("from","to")
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE)
+			nodes <- igraph::get.data.frame(g, what="vertices")[, c(3,4)]
+			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
         }
 	
 	}
@@ -145,6 +160,21 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
     pNode <- xPier(seeds=data, g=g, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose)
     
     ####################################################################################
+    
+    #########################################################
+    ## append "description" to both pNode$g  pNode$priority
+    if (class(pNode) == "pNode" ){
+		if(is.null(vertex_attr(pNode$g, "description"))){
+			V(pNode$g)$description <- V(pNode$g)$name
+		}
+		df_nodes <- igraph::get.data.frame(pNode$g, what="vertices")[,c("name","description")]
+		
+		ind <- match(pNode$priority$name, df_nodes$name)
+		pNode$priority$description <- df_nodes$description[ind]
+    }
+    #########################################################    
+    
+    
     endT <- Sys.time()
     if(verbose){
         message(paste(c("\nFinish at ",as.character(endT)), collapse=""), appendLF=TRUE)

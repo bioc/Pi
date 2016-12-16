@@ -19,8 +19,9 @@ class &quot;eTerm&quot;. It is done via enrichment analysis.
 
 <pre>
 xPierPathways(pNode, priority.top = 100, background = NULL,
-ontology = c("GOBP", "GOMF", "GOCC", "PS", "PS2", "SF", "DO", "HPPA",
-"HPMI", "HPCM", "HPMA", "MP", "MsigdbH", "MsigdbC1", "MsigdbC2CGP",
+ontology = c("GOBP", "GOMF", "GOCC", "PS", "PS2", "SF", "Pfam", "DO",
+"HPPA", "HPMI", "HPCM", "HPMA", "MP", "MsigdbH", "MsigdbC1",
+"MsigdbC2CGP",
 "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME",
 "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN",
 "MsigdbC4CM",
@@ -33,8 +34,7 @@ ontology.algorithm = c("none", "pc", "elim", "lea"), elim.pvalue =
 0.01,
 lea.depth = 2, path.mode = c("all_paths", "shortest_paths",
 "all_shortest_paths"), true.path.rule = FALSE, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -43,7 +43,7 @@ RData.location =
 <table summary="R argblock">
 <tr valign="top"><td><code>pNode</code></td>
 <td>
-<p>an object of class &quot;pNode&quot;</p>
+<p>an object of class &quot;pNode&quot; (or &quot;pTarget&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>priority.top</code></td>
 <td>
@@ -63,16 +63,17 @@ Gene Ontology Biological Process, &quot;GOMF&quot; for Gene Ontology Molecular
 Function, &quot;GOCC&quot; for Gene Ontology Cellular Component, &quot;PS&quot; for
 phylostratific age information, &quot;PS2&quot; for the collapsed PS version
 (inferred ancestors being collapsed into one with the known taxonomy
-information), &quot;SF&quot; for domain superfamily assignments, &quot;DO&quot; for Disease
-Ontology, &quot;HPPA&quot; for Human Phenotype Phenotypic Abnormality, &quot;HPMI&quot; for
-Human Phenotype Mode of Inheritance, &quot;HPCM&quot; for Human Phenotype
-Clinical Modifier, &quot;HPMA&quot; for Human Phenotype Mortality Aging, &quot;MP&quot; for
-Mammalian Phenotype, and Drug-Gene Interaction database (DGIdb) for
-drugable categories, and the molecular signatures database (Msigdb,
-including &quot;MsigdbH&quot;, &quot;MsigdbC1&quot;, &quot;MsigdbC2CGP&quot;, &quot;MsigdbC2CPall&quot;,
-&quot;MsigdbC2CP&quot;, &quot;MsigdbC2KEGG&quot;, &quot;MsigdbC2REACTOME&quot;, &quot;MsigdbC2BIOCARTA&quot;,
-&quot;MsigdbC3TFT&quot;, &quot;MsigdbC3MIR&quot;, &quot;MsigdbC4CGN&quot;, &quot;MsigdbC4CM&quot;,
-&quot;MsigdbC5BP&quot;, &quot;MsigdbC5MF&quot;, &quot;MsigdbC5CC&quot;, &quot;MsigdbC6&quot;, &quot;MsigdbC7&quot;)</p>
+information), &quot;SF&quot; for domain superfamily assignments, &quot;Pfam&quot; for Pfam
+domain families, &quot;DO&quot; for Disease Ontology, &quot;HPPA&quot; for Human Phenotype
+Phenotypic Abnormality, &quot;HPMI&quot; for Human Phenotype Mode of Inheritance,
+&quot;HPCM&quot; for Human Phenotype Clinical Modifier, &quot;HPMA&quot; for Human
+Phenotype Mortality Aging, &quot;MP&quot; for Mammalian Phenotype, and Drug-Gene
+Interaction database (DGIdb) for drugable categories, and the molecular
+signatures database (Msigdb, including &quot;MsigdbH&quot;, &quot;MsigdbC1&quot;,
+&quot;MsigdbC2CGP&quot;, &quot;MsigdbC2CPall&quot;, &quot;MsigdbC2CP&quot;, &quot;MsigdbC2KEGG&quot;,
+&quot;MsigdbC2REACTOME&quot;, &quot;MsigdbC2BIOCARTA&quot;, &quot;MsigdbC3TFT&quot;, &quot;MsigdbC3MIR&quot;,
+&quot;MsigdbC4CGN&quot;, &quot;MsigdbC4CM&quot;, &quot;MsigdbC5BP&quot;, &quot;MsigdbC5MF&quot;, &quot;MsigdbC5CC&quot;,
+&quot;MsigdbC6&quot;, &quot;MsigdbC7&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>size.range</code></td>
 <td>
@@ -270,21 +271,24 @@ library(Pi)
 
 ## End(Not run)
 
-# a) provide the seed nodes/genes with the weight info
-## load ImmunoBase
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+# a) provide the SNPs with the significance info
+## get lead SNPs reported in AS GWAS and their significance info (p-values)
+#data.file &lt;- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
+#AS &lt;- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
 ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase')
-## get genes within 500kb away from AS GWAS lead SNPs
-seeds.genes &lt;- ImmunoBase$AS$genes_variants
-## seeds weighted according to distance away from lead SNPs
-data &lt;- 1- seeds.genes/500000
+gr &lt;- ImmunoBase$AS$variants
+AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 ## Not run: 
 # b) perform priority analysis
-pNode &lt;- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+pNode &lt;- xPierSNPs(data=AS, include.eQTL="JKng_mono",
+include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,
+RData.location=RData.location)
 
 # c) derive pathway-level priority
 eTerm &lt;- xPierPathways(pNode=pNode, priority.top=100,
-ontology="MsigdbC2CP")
+ontology="MsigdbC2CP", RData.location=RData.location)
 
 # d) view enrichment results for the top significant terms
 xEnrichViewer(eTerm)

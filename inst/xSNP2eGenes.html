@@ -20,8 +20,12 @@ eQTL-reported signficance level.
 
 <pre>
 xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
-"JKscience_TS2B",
-"JKscience_TS3A", "JKng_bcell", "JKng_mono", "JKnc_neutro", "JK_nk",
+"JKscience_TS2A_CD14", "JKscience_TS2A_LPS2", "JKscience_TS2A_LPS24",
+"JKscience_TS2A_IFN", "JKscience_TS2B", "JKscience_TS2B_CD14",
+"JKscience_TS2B_LPS2", "JKscience_TS2B_LPS24", "JKscience_TS2B_IFN",
+"JKscience_TS3A", "JKng_bcell", "JKng_bcell_cis", "JKng_bcell_trans",
+"JKng_mono", "JKng_mono_cis", "JKng_mono_trans", "JKnc_neutro",
+"JKnc_neutro_cis", "JKnc_neutro_trans", "JK_nk",
 "GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
 "GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
@@ -31,9 +35,8 @@ xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
 "GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14", "eQTLdb_LPS2",
 "eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL,
 cdf.function = c("empirical", "exponential"), plot = FALSE,
-verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+verbose = TRUE, RData.location =
+"http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -51,16 +54,8 @@ example, 'chr16:28525386'</p>
 <td>
 <p>genes modulated by eQTL (also Lead SNPs or in LD
 with Lead SNPs) are also included. By default, it is 'NA' to disable
-this option. Otherwise, those genes modulated by eQTL will be included:
-immune stimulation in monocytes ('JKscience_TS1A' and 'JKscience_TS2B'
-for cis-eQTLs or 'JKscience_TS3A' for trans-eQTLs) from Science 2014,
-343(6175):1246949; cis- and trans-eQTLs in B cells ('JKng_bcell') and
-in monocytes ('JKng_mono') from Nature Genetics 2012, 44(5):502-510;
-cis- and trans-eQTLs in neutrophils ('JKnc_neutro') from Nature
-Communications 2015, 7(6):7545; cis-eQTLs in NK cells ('JK_nk') which
-is unpublished. Also supported are GTEx cis-eQTLs from Science 2015,
-348(6235):648-60, including 13 tissues:
-&quot;GTEx_V4_Adipose_Subcutaneous&quot;,&quot;GTEx_V4_Artery_Aorta&quot;,&quot;GTEx_V4_Artery_Tibial&quot;,&quot;GTEx_V4_Esophagus_Mucosa&quot;,&quot;GTEx_V4_Esophagus_Muscularis&quot;,&quot;GTEx_V4_Heart_Left_Ventricle&quot;,&quot;GTEx_V4_Lung&quot;,&quot;GTEx_V4_Muscle_Skeletal&quot;,&quot;GTEx_V4_Nerve_Tibial&quot;,&quot;GTEx_V4_Skin_Sun_Exposed_Lower_leg&quot;,&quot;GTEx_V4_Stomach&quot;,&quot;GTEx_V4_Thyroid&quot;,&quot;GTEx_V4_Whole_Blood&quot;.</p>
+this option. Otherwise, those genes modulated by eQTL will be included.
+Pre-built eQTL datasets are detailed in the section 'Note'</p>
 </td></tr>
 <tr valign="top"><td><code>eQTL.customised</code></td>
 <td>
@@ -119,8 +114,161 @@ best/minimum)
 
 <h3>Note</h3>
 
-<p>None
+<p>Pre-built eQTL datasets are described below according to the data
+sources.<br />
+1. Context-specific eQTLs in monocytes: resting and activating states.
+Sourced from Science 2014, 343(6175):1246949
 </p>
+
+<ul>
+<li><p><code>JKscience_TS2A</code>: cis-eQTLs in either state (based on 228
+individuals with expression data available for all experimental
+conditions).
+</p>
+</li>
+<li><p><code>JKscience_TS2A_CD14</code>: cis-eQTLs only in the resting/CD14+
+state (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2A_LPS2</code>: cis-eQTLs only in the activating
+state induced by 2-hour LPS (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2A_LPS24</code>: cis-eQTLs only in the activating
+state induced by 24-hour LPS (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2A_IFN</code>: cis-eQTLs only in the activating state
+induced by 24-hour interferon-gamma (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2B</code>: cis-eQTLs in either state (based on 432
+individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2B_CD14</code>: cis-eQTLs only in the resting/CD14+
+state (based on 432 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2B_LPS2</code>: cis-eQTLs only in the activating
+state induced by 2-hour LPS (based on 432 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2B_LPS24</code>: cis-eQTLs only in the activating
+state induced by 24-hour LPS (based on 432 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS2B_IFN</code>: cis-eQTLs only in the activating state
+induced by 24-hour interferon-gamma (based on 432 individuals).
+</p>
+</li>
+<li><p><code>JKscience_TS3A</code>: trans-eQTLs in either state.
+</p>
+</li></ul>
+
+<p>2. eQTLs in B cells. Sourced from Nature Genetics 2012, 44(5):502-510
+</p>
+
+<ul>
+<li><p><code>JKng_bcell</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>JKng_bcell_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>JKng_bcell_trans</code>: trans-eQTLs only.
+</p>
+</li></ul>
+
+<p>3. eQTLs in monocytes. Sourced from Nature Genetics 2012, 44(5):502-510
+</p>
+
+<ul>
+<li><p><code>JKng_mono</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>JKng_mono_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>JKng_mono_trans</code>: trans-eQTLs only.
+</p>
+</li></ul>
+
+<p>4. eQTLs in neutrophils. Sourced from Nature Communications 2015,
+7(6):7545
+</p>
+
+<ul>
+<li><p><code>JKnc_neutro</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>JKnc_neutro_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>JKnc_neutro_trans</code>: trans-eQTLs only.
+</p>
+</li></ul>
+
+<p>5. eQTLs in NK cells. Unpublished
+</p>
+
+<ul>
+<li><p><code>JK_nk</code>: cis-eQTLs.
+</p>
+</li></ul>
+
+<p>6. Tissue-specific eQTLs from GTEx (version 4; incuding 13 tissues).
+Sourced from Science 2015, 348(6235):648-60
+</p>
+
+<ul>
+<li><p><code>GTEx_V4_Adipose_Subcutaneous</code>: cis-eQTLs in tissue 'Adipose
+Subcutaneous'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Artery_Aorta</code>: cis-eQTLs in tissue 'Artery Aorta'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Artery_Tibial</code>: cis-eQTLs in tissue 'Artery
+Tibial'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Esophagus_Mucosa</code>: cis-eQTLs in tissue 'Esophagus
+Mucosa'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Esophagus_Muscularis</code>: cis-eQTLs in tissue
+'Esophagus Muscularis'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Heart_Left_Ventricle</code>: cis-eQTLs in tissue 'Heart
+Left Ventricle'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Lung</code>: cis-eQTLs in tissue 'Lung'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Muscle_Skeletal</code>: cis-eQTLs in tissue 'Muscle
+Skeletal'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Nerve_Tibial</code>: cis-eQTLs in tissue 'Nerve Tibial'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Skin_Sun_Exposed_Lower_leg</code>: cis-eQTLs in tissue
+'Skin Sun Exposed Lower leg'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Stomach</code>: cis-eQTLs in tissue 'Stomach'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Thyroid</code>: cis-eQTLs in tissue 'Thyroid'.
+</p>
+</li>
+<li><p><code>GTEx_V4_Whole_Blood</code>: cis-eQTLs in tissue 'Whole Blood'.
+</p>
+</li></ul>
+
 
 
 <h3>See Also</h3>
@@ -138,16 +286,22 @@ library(Pi)
 
 ## End(Not run)
 
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file &lt;- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
 #AS &lt;- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 gr &lt;- ImmunoBase$AS$variants
 AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
+## Not run: 
 # b) define eQTL genes
-df_eGenes &lt;- xSNP2eGenes(data=AS[,1], include.eQTL="JKscience_TS2A")
+df_eGenes &lt;- xSNP2eGenes(data=AS[,1], include.eQTL="JKscience_TS2A",
+RData.location=RData.location)
+
+## End(Not run)
 </pre>
 
 

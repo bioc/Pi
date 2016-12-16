@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to integrate predictor matrix in a supervised manner...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xMLrandomforest"><tr><td>xMLrandomforest</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to integrate predictor matrix in a supervised manner via machine learning algorithm random forest.</h2>
+
+<h3>Description</h3>
+
+<p><code>xMLrandomforest</code> is supposed to integrate predictor matrix in a
+supervised manner via machine learning algorithm random forest. It
+requires three inputs: 1) Gold Standard Positive (GSP) targets; 2) Gold
+Standard Negative (GSN) targets; 3) a predictor matrix containing genes
+in rows and predictors in columns, with their predictive scores inside
+it. It returns an object of class 'pTarget'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xMLrandomforest(df_predictor, GSP, GSN, nfold = 3, mtry = NULL,
+ntree = 2000, verbose = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>df_predictor</code></td>
+<td>
+<p>a data frame containing genes (in rows) and
+predictors (in columns), with their predictive scores inside it. This
+data frame must has gene symbols as row names</p>
+</td></tr>
+<tr valign="top"><td><code>GSP</code></td>
+<td>
+<p>a vector containing Gold Standard Positive (GSP)</p>
+</td></tr>
+<tr valign="top"><td><code>GSN</code></td>
+<td>
+<p>a vector containing Gold Standard Negative (GSN)</p>
+</td></tr>
+<tr valign="top"><td><code>nfold</code></td>
+<td>
+<p>an integer specifying the number of folds for cross
+validataion</p>
+</td></tr>
+<tr valign="top"><td><code>mtry</code></td>
+<td>
+<p>an integer specifying the number of predictors randomly
+sampled as candidates at each split. If NULL, it will be tuned by
+'randomForest::tuneRF', with starting value as sqrt(p) where p is the
+number of predictors. The minimum value is 3</p>
+</td></tr>
+<tr valign="top"><td><code>ntree</code></td>
+<td>
+<p>an integer specifying the number of trees to grow. By
+default, it sets to 2000</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to TRUE for display</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional graphic parameters. Please refer to
+'randomForest::randomForest' for the complete list.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class &quot;pTarget&quot;, a list with following components:
+</p>
+
+<ul>
+<li><p><code>model</code>: a list of models, each results from per-fold train
+set
+</p>
+</li>
+<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
+priority information, where nGene is the number of genes in the input
+data frame, and the 6 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
+'Putative'), &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the priority
+scores), &quot;pvalue&quot; (the cross-fold aggregated p-value of being GSP,
+per-fold p-value converted from empirical cumulative distribution of
+the probability of being GSP), &quot;fdr&quot; (fdr adjusted from the aggregated
+p-value), &quot;priority&quot; (-log10(fdr))
+</p>
+</li>
+<li><p><code>predictor</code>: a data frame, which is the same as the input
+data frame but inserting an additional column 'GS' in the first column
+</p>
+</li>
+<li><p><code>prob2fold</code>: a data frame of nGene X 2+nfold containing the
+probability of being GSP, where nGene is the number of genes in the
+input data frame, nfold is the number of folds for cross validataion,
+and the first two columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
+'Putative'), &quot;name&quot; (gene names), and the rest columns storing the
+per-fold probability of being GSP
+</p>
+</li>
+<li><p><code>importance2fold</code>: a data frame of nPredictor X 4+nfold
+containing the predictor importance info, where nPredictor is the
+number of predictors, nfold is the number of folds for cross
+validataion, and the first 4 columns are &quot;median&quot; (the median of the
+importance across folds), &quot;mad&quot; (the median of absolute deviation of
+the importance across folds), &quot;min&quot; (the minimum of the importance
+across folds), &quot;max&quot; (the maximum of the importance across folds), and
+the rest columns storing the per-fold importance
+</p>
+</li>
+<li><p><code>roc2fold</code>: a data frame of 1+nPredictor X 4+nfold
+containing the integrated/predictor ROC info (AUC values), where
+nPredictor is the number of predictors, nfold is the number of folds
+for cross validataion, and the first 4 columns are &quot;median&quot; (the median
+of the AUC values across folds), &quot;mad&quot; (the median of absolute
+deviation of the AUC values across folds), &quot;min&quot; (the minimum of the
+AUC values across folds), &quot;max&quot; (the maximum of the AUC values across
+folds), and the rest columns storing the per-fold AUC values
+</p>
+</li>
+<li><p><code>fmax2fold</code>: a data frame of 1+nPredictor X 4+nfold
+containing the integrated/predictor PR info (F-max values), where
+nPredictor is the number of predictors, nfold is the number of folds
+for cross validataion, and the first 4 columns are &quot;median&quot; (the median
+of the F-max values across folds), &quot;mad&quot; (the median of absolute
+deviation of the F-max values across folds), &quot;min&quot; (the minimum of the
+F-max values across folds), &quot;max&quot; (the maximum of the F-max values
+across folds), and the rest columns storing the per-fold F-max values
+</p>
+</li>
+<li><p><code>call</code>: the call that produced this result
+</p>
+</li></ul>
+
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+pTarget &lt;- xMLrandomforest(df_prediction, GSP, GSN)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

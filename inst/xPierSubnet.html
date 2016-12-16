@@ -19,7 +19,7 @@ class &quot;igraph&quot;.
 <h3>Usage</h3>
 
 <pre>
-xPierSubnet(pNode, priority.quantite = 0.1, network = c(NULL,
+xPierSubnet(pNode, priority.quantite = 0.1, network = c(NA,
 "STRING_highest", "STRING_high", "STRING_medium", "STRING_low",
 "PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
@@ -28,8 +28,7 @@ xPierSubnet(pNode, priority.quantite = 0.1, network = c(NULL,
 "PCommonsDN_CTD"), network.customised = NULL, subnet.significance =
 0.01,
 subnet.size = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -38,7 +37,7 @@ RData.location =
 <table summary="R argblock">
 <tr valign="top"><td><code>pNode</code></td>
 <td>
-<p>an object of class &quot;pNode&quot;</p>
+<p>an object of class &quot;pNode&quot; (or &quot;pTarget&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>priority.quantite</code></td>
 <td>
@@ -48,7 +47,7 @@ analysis. If NULL or NA, all prioritised genes will be used</p>
 </td></tr>
 <tr valign="top"><td><code>network</code></td>
 <td>
-<p>the built-in network. If NULL, the network used for
+<p>the built-in network. If NA, the network used for
 prioritisation will be used, which is part of the object of class
 &quot;pNode&quot;. Otherwise, choose the other network of interest. Currently two
 sources of network information are supported: the STRING database
@@ -161,21 +160,26 @@ library(Pi)
 
 ## End(Not run)
 
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file &lt;- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
 #AS &lt;- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 gr &lt;- ImmunoBase$AS$variants
 AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 ## Not run: 
 # b) perform priority analysis
-pNode &lt;- xPierSNPs(data=AS, network="PCommonsUN_medium",restart=0.7)
+pNode &lt;- xPierSNPs(data=AS, include.eQTL="JKng_mono",
+include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,
+RData.location=RData.location)
 
 # c) perform network analysis
 # find maximum-scoring subnet with the desired node number=50
-subnet &lt;- xPierSubnet(pNode, priority.quantite=0.1, subnet.size=50)
+subnet &lt;- xPierSubnet(pNode, priority.quantite=0.1, subnet.size=50,
+RData.location=RData.location)
 
 # d) save subnet results to the files called 'subnet_edges.txt' and 'subnet_nodes.txt'
 output &lt;- igraph::get.data.frame(subnet, what="edges")

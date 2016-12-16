@@ -4,35 +4,41 @@
 \alias{xPierManhattan}
 \title{Function to visualise prioritised genes using manhattan plot}
 \usage{
-xPierManhattan(pNode, color = c("darkred", "darkgreen"), cex = 0.5,
-highlight.top = 20, highlight.col = "deepskyblue",
-highlight.label.size = 2, highlight.label.offset = 0.02,
-highlight.label.col = "darkblue", y.scale = c("normal", "sqrt",
-"log10"),
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+xPierManhattan(pNode, color = c("darkred", "darkgreen"), top = 50,
+top.label.type = c("box", "text"), top.label.size = 2,
+top.label.col = "darkblue", top.label.query = NULL,
+label.query.only = FALSE, y.scale = c("normal", "sqrt"),
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), signature = TRUE,
+verbose = TRUE, RData.location =
+"http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode"}
+\item{pNode}{an object of class "pNode" (or "pTarget")}
 
-\item{color}{a character vector for point colors to alternate}
+\item{color}{a character vector for colors to alternate chromosome
+colorings. If NULL, ggplot2 default colors will be used. If a single
+character is provided, it can be "jet" (jet colormap) or "rainbow"
+(rainbow colormap, that is, red-yellow-green-cyan-blue-magenta)}
 
-\item{cex}{a numeric value for point size}
+\item{top}{the number of the top targets to be labelled/highlighted}
 
-\item{highlight.top}{the number of the top targets to be highlighted}
+\item{top.label.type}{how to label the top targets. It can be "box"
+drawing a box around the labels , and "text" for the text only}
 
-\item{highlight.col}{the highlight colors}
+\item{top.label.size}{the highlight label size}
 
-\item{highlight.label.size}{the highlight label size}
+\item{top.label.col}{the highlight label color}
 
-\item{highlight.label.offset}{the highlight label offset}
+\item{top.label.query}{which top genes in query will be labelled. By
+default, it sets to NULL meaning all top genes will be displayed. If
+labels in query can not be found, then all will be displayed}
 
-\item{highlight.label.col}{the highlight label color}
+\item{label.query.only}{logical to indicate whether only genes in query
+will be displayed. By default, it sets to FALSE. It only works when
+labels in query are enabled/found}
 
 \item{y.scale}{how to transform the y scale. It can be "normal" for no
-transformation, "sqrt" for square transformation, and "log10" for
-10-based log-transformation}
+transformation, and "sqrt" for square transformation}
 
 \item{GR.Gene}{the genomic regions of genes. By default, it is
 'UCSC_knownGene', that is, UCSC known genes (together with genomic
@@ -46,6 +52,9 @@ Symbols. Then, tell "GR.Gene" with your RData file name (with or
 without extension), plus specify your file RData path in
 "RData.location"}
 
+\item{signature}{logical to indicate whether the signature is assigned
+to the plot caption. By default, it sets TRUE}
+
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to false for no display}
 
@@ -53,7 +62,7 @@ displayed in the screen. By default, it sets to false for no display}
 RData files. See \code{\link{xRDataLoader}} for details}
 }
 \value{
-an object of class "ggplot"
+an object of class "ggplot", appended by an GR object called 'gr'
 }
 \description{
 \code{xPierManhattan} is supposed to visualise prioritised genes using
@@ -69,23 +78,44 @@ none
 library(Pi)
 }
 
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
 #AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 gr <- ImmunoBase$AS$variants
 AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 \dontrun{
 # b) perform priority analysis
-pNode <- xPierSNPs(data=AS, network="PCommonsUN_medium",restart=0.7)
+pNode <- xPierSNPs(data=AS, include.eQTL="JKng_mono",
+include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,
+RData.location=RData.location)
 
 # c) manhattan plot
-mp <- xPierManhattan(pNode, highlight.top=10)
+## default plot
+mp <- xPierManhattan(pNode, RData.location=RData.location)
 #pdf(file="Gene_manhattan.pdf", height=6, width=12, compress=TRUE)
 print(mp)
 #dev.off()
+mp$gr
+## control visuals
+mp <- xPierManhattan(pNode, color='ggplot2', top=50,
+top.label.col="black", y.scale="sqrt", RData.location=RData.location)
+mp
+## control labels
+# only IL genes will be labelled
+ind <- grep('^IL', rownames(pNode$priority))
+top.label.query <- rownames(pNode$priority)[ind]
+mp <- xPierManhattan(pNode, top.label.query=top.label.query,
+RData.location=RData.location)
+mp
+# only IL genes will be displayed
+mp <- xPierManhattan(pNode, top.label.query=top.label.query,
+label.query.only=TRUE, RData.location=RData.location)
+mp
 }
 }
 \seealso{

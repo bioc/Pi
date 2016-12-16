@@ -25,13 +25,16 @@
 #' @import dnet
 #' @import XGR
 #' @import ggplot2
-#' @importFrom ggbio plotGrandLinear
-#' @importFrom ggrepel geom_text_repel
-#' @importFrom supraHex sDistance
+#' @import graphics
+#' @import e1071
+#' @import randomForest
+#' @import stats
+#' @importFrom ggbio autoplot
+#' @importFrom ggrepel geom_text_repel geom_label_repel
+#' @importFrom ROCR prediction performance plot
+#' @importFrom supraHex sDistance visColormap
 #' @importFrom scales sqrt_trans log_trans trans_breaks trans_format math_format
-#' @importFrom grDevices rgb
-#' @importFrom graphics curve hist
-#' @importFrom stats median quantile
+#' @importFrom grDevices rgb cm.colors
 #' @importFrom glmnet glmnet cv.glmnet
 #' @seealso \code{\link{xPier}}
 #' @include xRWR.r

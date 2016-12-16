@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to extract priority matrix from a list of pNode...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xPierMatrix"><tr><td>xPierMatrix</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to extract priority matrix from a list of pNode objects</h2>
+
+<h3>Description</h3>
+
+<p><code>xPierMatrix</code> is supposed to extract priority matrix from a list
+of pNode objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xPierMatrix(list_pNode, displayBy = c("score", "rank"),
+combineBy = c("intersect", "union"), verbose = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>list_pNode</code></td>
+<td>
+<p>a list of &quot;pNode&quot; objects</p>
+</td></tr>
+<tr valign="top"><td><code>displayBy</code></td>
+<td>
+<p>which priority will be extracted. It can be &quot;score&quot;
+for priority score (by default), &quot;rank&quot; for priority rank</p>
+</td></tr>
+<tr valign="top"><td><code>combineBy</code></td>
+<td>
+<p>how to resolve nodes/targets from a list of &quot;pNode&quot;
+objects. It can be &quot;intersect&quot; for intersecting nodes (by default),
+&quot;union&quot; for unionising nodes</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a data frame containing priority matrix.
+</p>
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xPierSNPs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+df_score &lt;- xPierMatrix(ls_pNode)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

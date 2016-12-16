@@ -15,8 +15,7 @@ xPierGenes(data, network = c("STRING_highest", "STRING_high",
 normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
 normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
 multicores = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
 \item{data}{a named input vector containing a list of seed nodes (ie
@@ -112,12 +111,12 @@ RData files. See \code{\link{xRDataLoader}} for details}
 \value{
 an object of class "pNode", a list with following components:
 \itemize{
-\item{\code{priority}: a matrix of nNode X 4 containing node priority
+\item{\code{priority}: a matrix of nNode X 5 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are "name" (node names), "seed" (1 for seeds, 0 for
+the 5 columns are "name" (node names), "seed" (1 for seeds, 0 for
 non-seeds), "weight" (weight values), "priority" (the priority scores
 that are rescaled to the range [0,1]), "rank" (ranks of the priority
-scores)}
+scores), "description" (node description)}
 \item{\code{g}: an input "igraph" object}
 \item{\code{call}: the call that produced this result}
 }
@@ -140,9 +139,11 @@ The input graph will treat as an unweighted graph if there is no
 library(Pi)
 }
 
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 ## get genes within 500kb away from AS GWAS lead SNPs
 seeds.genes <- ImmunoBase$AS$genes_variants
 ## seeds weighted according to distance away from lead SNPs
@@ -150,7 +151,8 @@ data <- 1- seeds.genes/500000
 
 \dontrun{
 # b) perform priority analysis
-pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7,
+RData.location=RData.location)
 
 # c) save to the file called 'Genes_priority.txt'
 write.table(pNode$priority, file="Genes_priority.txt", sep="\\t",

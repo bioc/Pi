@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise a numeric matrix as a contour plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xContour"><tr><td>xContour</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to visualise a numeric matrix as a contour plot</h2>
+
+<h3>Description</h3>
+
+<p><code>xContour</code> is supposed to visualise a numeric matrix as a contour
+plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xContour(data, main = "", xlab = "", ylab = "", key = "",
+nlevels = 50, colormap = c("darkblue-lightblue-lightyellow-darkorange",
+"bwr", "jet", "gbr", "wyr", "br", "yr", "rainbow", "wb"),
+highlight = c("none", "min", "max"), highlight.col = "white",
+x.label.cex = 0.95, x.label.srt = 30, signature = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>a numeric matrix for the contour plot</p>
+</td></tr>
+<tr valign="top"><td><code>main</code></td>
+<td>
+<p>an overall title for the plot</p>
+</td></tr>
+<tr valign="top"><td><code>xlab</code></td>
+<td>
+<p>a title for the x axis. If specified, it will override
+'names(dimnames(data))[1]'</p>
+</td></tr>
+<tr valign="top"><td><code>ylab</code></td>
+<td>
+<p>a title for the y axis. If specified, it will override
+'names(dimnames(data))[2]'</p>
+</td></tr>
+<tr valign="top"><td><code>key</code></td>
+<td>
+<p>a title for the key plot (on the right)</p>
+</td></tr>
+<tr valign="top"><td><code>nlevels</code></td>
+<td>
+<p>the number of levels to partition the input matrix
+values. The same level has the same color mapped to</p>
+</td></tr>
+<tr valign="top"><td><code>colormap</code></td>
+<td>
+<p>short name for the colormap. It can be one of &quot;jet&quot;
+(jet colormap), &quot;bwr&quot; (blue-white-red colormap), &quot;gbr&quot; (green-black-red
+colormap), &quot;wyr&quot; (white-yellow-red colormap), &quot;br&quot; (black-red
+colormap), &quot;yr&quot; (yellow-red colormap), &quot;wb&quot; (white-black colormap), and
+&quot;rainbow&quot; (rainbow colormap, that is,
+red-yellow-green-cyan-blue-magenta). Alternatively, any
+hyphen-separated HTML color names, e.g. &quot;blue-black-yellow&quot;,
+&quot;royalblue-white-sandybrown&quot;, &quot;darkgreen-white-darkviolet&quot;. A list of
+standard color names can be found in
+<a href="http://html-color-codes.info/color-names">http://html-color-codes.info/color-names</a></p>
+</td></tr>
+<tr valign="top"><td><code>highlight</code></td>
+<td>
+<p>how to highlight the point. It can be 'none' for no
+highlight (by default), 'min' for highlighting the point with the
+minimum value of the matrix, and 'max' for highlighting the point with
+the maximum value of the matrix</p>
+</td></tr>
+<tr valign="top"><td><code>highlight.col</code></td>
+<td>
+<p>the highlight colors</p>
+</td></tr>
+<tr valign="top"><td><code>x.label.cex</code></td>
+<td>
+<p>the x-axis label size</p>
+</td></tr>
+<tr valign="top"><td><code>x.label.srt</code></td>
+<td>
+<p>the x-axis label angle (in degree from horizontal)</p>
+</td></tr>
+<tr valign="top"><td><code>signature</code></td>
+<td>
+<p>a logical to indicate whether the signature is
+assigned to the plot caption. By default, it sets FALSE</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional graphic parameters. For most parameters, please
+refer to
+<a href="http://stat.ethz.ch/R-manual/R-devel/library/graphics/html/filled.contour.html">http://stat.ethz.ch/R-manual/R-devel/library/graphics/html/filled.contour.html</a></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>invisible
+</p>
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xContour</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- y &lt;- seq(-4*pi, 4*pi, len=10)
+r &lt;- sqrt(outer(x^2, y^2, "+"))
+data &lt;- cos(r^2)*exp(-r/(2*pi))
+xContour(data)
+#xContour(data, signature=TRUE)
+</pre>
+
+
+</body></html>
