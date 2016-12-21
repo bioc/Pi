@@ -46,9 +46,9 @@ network = c("STRING_highest", "STRING_high", "STRING_medium",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
 "PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.75, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -202,6 +202,10 @@ customisation (if provided) has the high priority over built-in
 network. If the user provides the "igraph" object with the "weight"
 edge attribute, RWR will assume to walk on the weighted network}
 
+\item{seeds.inclusive}{logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk}
+
 \item{normalise}{the way to normalise the adjacency matrix of the input
 graph. It can be 'laplacian' for laplacian normalisation, 'row' for
 row-wise normalisation, 'column' for column-wise normalisation, or
@@ -245,14 +249,15 @@ RData files. See \code{\link{xRDataLoader}} for details}
 \value{
 an object of class "pNode", a list with following components:
 \itemize{
-\item{\code{priority}: a matrix of nNode X 5 containing node priority
+\item{\code{priority}: a matrix of nNode X 6 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 5 columns are "name" (node names), "seed" (1 for seeds, 0 for
-non-seeds), "weight" (weight values), "priority" (the priority scores
-that are rescaled to the range [0,1]), "rank" (ranks of the priority
-scores), "description" (node description)}
+the 6 columns are "name" (node names), "node" (1 for network genes, 0
+for non-network seed genes), "seed" (1 for seeds, 0 for non-seeds),
+"weight" (weight values), "priority" (the priority scores that are
+rescaled to the range [0,1]), "rank" (ranks of the priority scores),
+"description" (node description)}
 \item{\code{g}: an input "igraph" object}
-\item{\code{SNP}: a data frame of nSNP X 3 containing input SNPs and/or
+\item{\code{SNP}: a data frame of nSNP X 4 containing input SNPs and/or
 LD SNPs info, where nSNP is the number of input SNPs and/or LD SNPs,
 and the 4 columns are "SNP" (dbSNP), "Score" (the SNP score), "Pval"
 (the SNP p-value), "Flag" (indicative of Lead SNPs or LD SNPs)}
@@ -458,8 +463,8 @@ write.table(pNode$priority, file="SNPs_priority.txt", sep="\\t",
 row.names=FALSE)
 
 # d) manhattan plot
-mp <- xPierManhattan(pNode, highlight.top=20, highlight.label.size=1.5,
-y.scale="sqrt", RData.location=RData.location)
+mp <- xPierManhattan(pNode, top=20, top.label.size=1.5, y.scale="sqrt",
+RData.location=RData.location)
 #pdf(file="Gene_manhattan.pdf", height=6, width=12, compress=TRUE)
 print(mp)
 #dev.off()

@@ -69,7 +69,7 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
     y.scale <- match.arg(y.scale)
 
     if(class(pNode) == "pNode"){
-        df_priority <- pNode$priority[, c(2,3,4)]
+        df_priority <- pNode$priority[, c("seed","weight","priority")]
     }else if(class(pNode) == "pTarget"){
     	df_priority <- pNode$priority[, c(4,5,6)]
     }else{

@@ -53,7 +53,7 @@
 #' 
 #' # f) visualise the identified subnet as a circos plot
 #' library(RCircos)
-#' xCircos(g=subnet, entity="Gene")
+#' xCircos(g=subnet, entity="Gene", RData.location=RData.location)
 #' }
 
 xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NA,"STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
@@ -67,7 +67,7 @@ xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NA,"STRING_highe
     ####################################################################################
     
     if(class(pNode) == "pNode"){
-        df_priority <- pNode$priority[, c(2,3,4)]
+        df_priority <- pNode$priority[, c("seed","weight","priority")]
         
 		network <- network[1]
 		if(!is.na(network)){

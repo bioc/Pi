@@ -88,7 +88,7 @@ xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=c("
     path.mode <- match.arg(path.mode)
     
     if(class(pNode) == "pNode"){
-        df_priority <- pNode$priority[, c(2,3,4)]
+        df_priority <- pNode$priority[, c("seed","weight","priority")]
     }else if(class(pNode) == "pTarget"){
     	df_priority <- pNode$priority[, c(4,5,6)]
     }else{

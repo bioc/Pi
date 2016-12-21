@@ -29,9 +29,9 @@ xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
 "PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.75, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
@@ -97,6 +97,12 @@ customisation (if provided) has the high priority over built-in
 network. If the user provides the &quot;igraph&quot; object with the &quot;weight&quot;
 edge attribute, RWR will assume to walk on the weighted network</p>
 </td></tr>
+<tr valign="top"><td><code>seeds.inclusive</code></td>
+<td>
+<p>logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk</p>
+</td></tr>
 <tr valign="top"><td><code>normalise</code></td>
 <td>
 <p>the way to normalise the adjacency matrix of the input
@@ -160,12 +166,13 @@ RData files. See <code>xRDataLoader</code> for details</p>
 </p>
 
 <ul>
-<li><p><code>priority</code>: a matrix of nNode X 5 containing node priority
+<li><p><code>priority</code>: a matrix of nNode X 6 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 5 columns are &quot;name&quot; (node names), &quot;seed&quot; (1 for seeds, 0 for
-non-seeds), &quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores
-that are rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority
-scores), &quot;description&quot; (node description)
+the 5 columns are &quot;name&quot; (node names), &quot;node&quot; (1 for network genes, 0
+for non-network seed genes), &quot;seed&quot; (1 for seeds, 0 for non-seeds),
+&quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores that are
+rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority scores),
+&quot;description&quot; (node description)
 </p>
 </li>
 <li><p><code>g</code>: an input &quot;igraph&quot; object

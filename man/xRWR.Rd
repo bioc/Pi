@@ -97,7 +97,8 @@ The input graph will treat as an unweighted graph if there is no
 }
 \examples{
 # 1) generate a random graph according to the ER model
-g <- erdos.renyi.game(100, 1/100)
+set.seed(123)
+g <- erdos.renyi.game(10, 1/10)
 
 \dontrun{
 # 2) produce the induced subgraph only based on the nodes in query
@@ -108,8 +109,8 @@ V(subg)$name <- 1:vcount(subg)
 PTmatrix <- xRWR(g=subg, normalise="laplacian", restart=0.75,
 parallel=FALSE)
 # visualise affinity matrix
-visHeatmapAdv(PTmatrix, Rowv=FALSE, Colv=FALSE, colormap="wyr",
-KeyValueName="Affinity")
+visHeatmapAdv(as.matrix(PTmatrix), Rowv=FALSE, Colv=FALSE,
+colormap="wyr", KeyValueName="Affinity")
 
 # 4) obtain affinity matrix given sets of seeds
 # define sets of seeds
