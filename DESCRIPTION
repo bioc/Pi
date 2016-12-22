@@ -2,7 +2,7 @@ Package: Pi
 Type: Package
 Title: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene, Pathway and Network Level
 Version: 1.1.2
-Date: 2016-12-21
+Date: 2016-12-22
 Author: Hai Fang, the ULTRA-DD Consortium, Julian C Knight
 Maintainer: Hai Fang <hfang@well.ox.ac.uk>
 Depends: XGR, igraph, dnet, ggplot2, graphics, stats
