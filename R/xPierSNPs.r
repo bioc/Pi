@@ -51,7 +51,6 @@
 #' \item{v) define seed genes as the nearby genes in ii) and the eQTL genes in iii) and the HiC genes in iv), which are then scored in an integrative manner.}
 #' \item{vi) \code{\link{xPierGenes}} used to prioritise genes using an input graph and a list of seed genes and their scores from v). The priority score is the affinity score estimated by Random Walk with Restart (RWR), measured as the affinity of all nodes in the graph to the seeds.}
 #' }
-#' \cr
 #' Pre-built eQTL datasets are described below according to the data sources.\cr
 #' 1. Context-specific eQTLs in monocytes: resting and activating states. Sourced from Science 2014, 343(6175):1246949
 #' \itemize{
@@ -105,7 +104,6 @@
 #'  \item{\code{GTEx_V4_Thyroid}: cis-eQTLs in tissue 'Thyroid'.}
 #'  \item{\code{GTEx_V4_Whole_Blood}: cis-eQTLs in tissue 'Whole Blood'.}
 #' }
-#' \cr
 #' Pre-built HiC datasets are described below according to the data sources.\cr
 #' 1. Promoter Capture HiC datasets in 17 primary blood cell types. Sourced from Cell 2016, 167(5):1369-1384.e19
 #' \itemize{

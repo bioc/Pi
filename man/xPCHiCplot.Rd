@@ -118,8 +118,8 @@ to the interaction strength}
 \item{\code{node color}: a node is colored in pink if it harbors SNPs
 in query; otherwise skyblue}
 \item{\code{node label}: a node is labelled with three pieces of
-information (if any): genomic regions, SNPs in query (marked by a
-container icon), genes associated (marked by an @ icon)}
+information (if any): genomic regions, SNPs in query, genes associated
+(marked by an @ icon)}
 }
 }
 \examples{

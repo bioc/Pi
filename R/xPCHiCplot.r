@@ -28,7 +28,7 @@
 #'  \item{\code{edge arrow}: interactions are represented as a direct graph (bait-prey)}
 #'  \item{\code{edge thickness}: the thickness in an edge is proportional to the interaction strength}
 #'  \item{\code{node color}: a node is colored in pink if it harbors SNPs in query; otherwise skyblue}
-#'  \item{\code{node label}: a node is labelled with three pieces of information (if any): genomic regions, SNPs in query (marked by a container icon), genes associated (marked by an @ icon)}
+#'  \item{\code{node label}: a node is labelled with three pieces of information (if any): genomic regions, SNPs in query, genes associated (marked by an @ icon)}
 #' }
 #' @export
 #' @seealso \code{\link{xSNPhic}}
@@ -90,10 +90,10 @@ xPCHiCplot <- function(g, node.info=c("smart", "none", "GR", "GR_SNP", "GR_SNP_t
 		vertex.label <- switch(node.info,
 						   none = NULL,
 						   GR = V(subg)$name,
-						   GR_SNP = paste(V(subg)$name, '\n©',V(subg)$SNP, sep=""),
-						   GR_SNP_target = paste(V(subg)$name, '\n©',V(subg)$SNP, '\n@', V(subg)$target, sep=""),
-						   SNP_target = paste('©',V(subg)$SNP, '\n@', V(subg)$target, sep=""),
-						   smart = paste(V(subg)$name, '\n©',V(subg)$SNP, '\n@', V(subg)$target, sep=""),
+						   GR_SNP = paste(V(subg)$name, '\n',V(subg)$SNP, sep=""),
+						   GR_SNP_target = paste(V(subg)$name, '\n',V(subg)$SNP, '\n@', V(subg)$target, sep=""),
+						   SNP_target = paste(V(subg)$SNP, '\n@', V(subg)$target, sep=""),
+						   smart = paste(V(subg)$name, '\n',V(subg)$SNP, '\n@', V(subg)$target, sep=""),
 		)
 		
 		for(i in 1:length(vertex.label)){
@@ -101,11 +101,11 @@ xPCHiCplot <- function(g, node.info=c("smart", "none", "GR", "GR_SNP", "GR_SNP_t
 		}
 		
 		if(!is.null(vertex.label)){
-			vertex.label <- gsub('\n©NA','',vertex.label)
+			vertex.label <- gsub('\nNA','',vertex.label)
 			vertex.label <- gsub('\n@\\.','',vertex.label)
-			vertex.label <- gsub('©NA\n','',vertex.label)
+			vertex.label <- gsub('NA\n','',vertex.label)
 			
-			vertex.label[vertex.label=='©NA'] <- ''
+			vertex.label[vertex.label=='NA'] <- ''
 			
 			if(node.info=='smart'){
 				res_ls <- lapply(strsplit(vertex.label,'\n'), function(x){

@@ -18,7 +18,7 @@
 #' @note The input graph will treat as an unweighted graph if there is no 'weight' edge attribute associated with
 #' @export
 #' @import MASS
-#' @import Matrix
+#' @importFrom Matrix Diagonal rowSums colSums Matrix
 #' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame
 #' @importFrom GenomeInfoDb seqlevels
 #' @import igraph
@@ -27,7 +27,7 @@
 #' @import ggplot2
 #' @import graphics
 #' @import e1071
-#' @import randomForest
+#' @importFrom randomForest randomForest tuneRF importance
 #' @import stats
 #' @importFrom ggbio autoplot
 #' @importFrom ggrepel geom_text_repel geom_label_repel

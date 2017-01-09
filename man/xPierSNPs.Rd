@@ -304,7 +304,6 @@ priority score is the affinity score estimated by Random Walk with
 Restart (RWR), measured as the affinity of all nodes in the graph to
 the seeds.}
 }
-\cr
 Pre-built eQTL datasets are described below according to the data
 sources.\cr
 1. Context-specific eQTLs in monocytes: resting and activating states.
@@ -380,7 +379,6 @@ Skeletal'.}
 \item{\code{GTEx_V4_Thyroid}: cis-eQTLs in tissue 'Thyroid'.}
 \item{\code{GTEx_V4_Whole_Blood}: cis-eQTLs in tissue 'Whole Blood'.}
 }
-\cr
 Pre-built HiC datasets are described below according to the data
 sources.\cr
 1. Promoter Capture HiC datasets in 17 primary blood cell types.
