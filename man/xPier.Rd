@@ -80,8 +80,8 @@ rescaled to the range [0,1]), "rank" (ranks of the priority scores)}
 list of seed nodes. It implements Random Walk with Restart (RWR) and
 calculates the affinity score of all nodes in the graph to the seeds.
 The priority score is the affinity score. Parallel computing is also
-supported for Linux or Mac operating systems. It returns an object of
-class "pNode".
+supported for Linux-like or Windows operating systems. It returns an
+object of class "pNode".
 }
 \note{
 The input graph will treat as an unweighted graph if there is no

@@ -290,7 +290,7 @@ xRWR <- function(g, normalise=c("laplacian","row","column","none"), setSeeds=NUL
         flag_parallel <- FALSE
         if(parallel==TRUE){
 
-            flag_parallel <- dCheckParallel(multicores=multicores, verbose=verbose)
+            flag_parallel <- xCheckParallel(multicores=multicores, verbose=verbose)
             if(flag_parallel){
                 j <- 1
                 PTmatrix <- foreach::`%dopar%` (foreach::foreach(j=1:ncol(P0matrix), .inorder=TRUE, .combine='cbind'), {

@@ -281,8 +281,8 @@ defines and scores seed genes: nearby genes and eQTL genes. With seed
 genes and their scores, it then uses Random Walk with Restart (RWR) to
 calculate the affinity score of all nodes in the input graph to the
 seed genes. The priority score is the affinity score. Parallel
-computing is also supported for Linux or Mac operating systems. It
-returns an object of class "pNode".
+computing is also supported for Linux-like or Windows operating
+systems. It returns an object of class "pNode".
 }
 \note{
 The search procedure is heuristic to find the subgraph with the maximum
