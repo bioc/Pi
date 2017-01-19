@@ -29,8 +29,7 @@ cdf.function = c("empirical", "exponential"), scoring.scheme = c("max",
 network.customised = NULL, normalise = c("laplacian", "row", "column",
 "none"), restart = 0.75, normalise.affinity.matrix = c("none",
 "quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
 \item{data}{a named input vector containing the sinificance level for

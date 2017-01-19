@@ -2,9 +2,9 @@
 #'
 #' \code{xPierSubnet} is supposed to identify maximum-scoring gene subnetwork from a graph with the node information on priority scores, both are part of an object of class "pNode". It returns an object of class "igraph". 
 #'
-#' @param pNode an object of class "pNode"
+#' @param pNode an object of class "pNode" (or "pTarget")
 #' @param priority.quantite the quantite of the top priority genes. By default, 10% of top prioritised genes will be used for network analysis. If NULL or NA, all prioritised genes will be used
-#' @param network the built-in network. If NULL, the network used for prioritisation will be used, which is part of the object of class "pNode". Otherwise, choose the other network of interest. Currently two sources of network information are supported: the STRING database (version 10) and the Pathways Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addtion to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
+#' @param network the built-in network. If NA, the network used for prioritisation will be used, which is part of the object of class "pNode". Otherwise, choose the other network of interest. Currently two sources of network information are supported: the STRING database (version 10) and the Pathways Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addtion to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
 #' @param network.customised an object of class "igraph". By default, it is NULL. It is designed to allow the user analysing their customised network data that are not listed in the above argument 'network'. This customisation (if provided) has the high priority over built-in network
 #' @param subnet.significance the given significance threshold. By default, it is set to NULL, meaning there is no constraint on nodes/genes. If given, those nodes/genes with p-values below this are considered significant and thus scored positively. Instead, those p-values above this given significance threshold are considered insigificant and thus scored negatively
 #' @param subnet.size the desired number of nodes constrained to the resulting subnet. It is not nulll, a wide range of significance thresholds will be scanned to find the optimal significance threshold leading to the desired number of nodes in the resulting subnet. Notably, the given significance threshold will be overwritten by this option
@@ -22,21 +22,22 @@
 #' library(Pi)
 #' }
 #'
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
 #' #AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', RData.location=RData.location)
 #' gr <- ImmunoBase$AS$variants
 #' AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 #'
 #' \dontrun{
 #' # b) perform priority analysis
-#' pNode <- xPierSNPs(data=AS, network="PCommonsUN_medium",restart=0.7)
+#' pNode <- xPierSNPs(data=AS, include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location)
 #' 
 #' # c) perform network analysis
 #' # find maximum-scoring subnet with the desired node number=50
-#' subnet <- xPierSubnet(pNode, priority.quantite=0.1, subnet.size=50)
+#' subnet <- xPierSubnet(pNode, priority.quantite=0.1, subnet.size=50, RData.location=RData.location)
 #'
 #' # d) save subnet results to the files called 'subnet_edges.txt' and 'subnet_nodes.txt'
 #' output <- igraph::get.data.frame(subnet, what="edges")
@@ -52,10 +53,10 @@
 #' 
 #' # f) visualise the identified subnet as a circos plot
 #' library(RCircos)
-#' xCircos(g=subnet, entity="Gene")
+#' xCircos(g=subnet, entity="Gene", RData.location=RData.location)
 #' }
 
-xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NULL,"STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, verbose=TRUE, RData.location="https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NA,"STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
     startT <- Sys.time()
@@ -65,29 +66,51 @@ xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NULL,"STRING_hig
     }
     ####################################################################################
     
-    ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
-    network <- match.arg(network)
-    
-    if(is.null(network)){
-    	network.customised <- pNode$g
+    if(class(pNode) == "pNode"){
+        df_priority <- pNode$priority[, c("seed","weight","priority")]
+        
+		network <- network[1]
+		if(!is.na(network)){
+			network <- match.arg(network)
+		}else{
+			if(is.null(network.customised)){
+				network.customised <- pNode$g
+			}
+		}
+		
+		priority <- df_priority$priority
+		names(priority) <- rownames(df_priority)
+		
+		## scale to the range [0 100] and then convert to pvalue-like signficant level
+		x <- priority
+		y <- (x - min(x,na.rm=TRUE)) / (max(x,na.rm=TRUE) - min(x,na.rm=TRUE))
+		pval <- 10^(-100*y)
+		
+    }else if(class(pNode) == "pTarget"){
+    	df_priority <- pNode$priority[, c(4,5,6)]
+    	
+    	network <- network[1]
+		if(!is.na(network)){
+			network <- match.arg(network)
+		}else{
+			stop("The network must be provided given a 'pTarget' object.\n")
+		}
+		
+		priority <- df_priority$priority
+		names(priority) <- rownames(df_priority)
+		
+		x <- priority
+		pval <- 10^(-x)
+		
+    }else{
+    	stop("The function must apply to a 'pNode' or 'pTarget' object.\n")
     }
-    
-    if (class(pNode) != "pNode" ){
-        stop("The function must apply to a 'pNode' object.\n")
-    }
-    
-    priority <- pNode$priority$priority
-    names(priority) <- rownames(pNode$priority)
+
     
 	if(verbose){
 		now <- Sys.time()
 		message(sprintf("The 'pNode' object contains %d prioritised genes", length(priority)), appendLF=TRUE)
 	}
-    
-    ## scale to the range [0 100] and then convert to pvalue-like signficant level
-	x <- priority
-	y <- (x - min(x,na.rm=TRUE)) / (max(x,na.rm=TRUE) - min(x,na.rm=TRUE))
-	pval <- 10^(-100*y)
 	
 	## only keep the top priority (qunatile)
 	## priority quantite
@@ -120,13 +143,17 @@ xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NULL,"STRING_hig
         message(sprintf("#######################################################", appendLF=TRUE))
     }
     
-    subg <- xSubneterGenes(data=pval, network=network, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, verbose=verbose, RData.location=RData.location)
+    if(is.na(network)){
+    	subg <- xSubneterGenes(data=pval, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, verbose=verbose, RData.location=RData.location)
+    }else{
+    	subg <- xSubneterGenes(data=pval, network=network, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, verbose=verbose, RData.location=RData.location)
+	}
 	
 	# extract relevant info
 	if(ecount(subg)>0 && class(subg)=="igraph"){
 		relations <- igraph::get.data.frame(subg, what="edges")[,c(1,2)]
 		nodes <- igraph::get.data.frame(subg, what="vertices")
-		nodes <- cbind(symbol=nodes$name, description=nodes$description, significance=nodes$significance, score=nodes$score, priority=priority[rownames(nodes)])
+		nodes <- cbind(name=nodes$name, description=nodes$description, significance=nodes$significance, score=nodes$score, priority=priority[rownames(nodes)])
 		if(is.directed(subg)){
 			subg <- igraph::graph.data.frame(d=relations, directed=TRUE, vertices=nodes)
 		}else{

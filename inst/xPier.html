@@ -13,17 +13,19 @@
 list of seed nodes. It implements Random Walk with Restart (RWR) and
 calculates the affinity score of all nodes in the graph to the seeds.
 The priority score is the affinity score. Parallel computing is also
-supported for Linux or Mac operating systems. It returns an object of
-class &quot;pNode&quot;.
+supported for Linux-like or Windows operating systems. It returns an
+object of class &quot;pNode&quot;.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-xPier(seeds, g, normalise = c("laplacian", "row", "column", "none"),
-restart = 0.75, normalise.affinity.matrix = c("none", "quantile"),
-parallel = TRUE, multicores = NULL, verbose = TRUE)
+xPier(seeds, g, seeds.inclusive = TRUE, normalise = c("laplacian",
+"row",
+"column", "none"), restart = 0.75, normalise.affinity.matrix =
+c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE)
 </pre>
 
 
@@ -43,6 +45,12 @@ weight values</p>
 <td>
 <p>an object of class &quot;igraph&quot; to represent network. It can be a
 weighted graph with the node attribute 'weight'</p>
+</td></tr>
+<tr valign="top"><td><code>seeds.inclusive</code></td>
+<td>
+<p>logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk</p>
 </td></tr>
 <tr valign="top"><td><code>normalise</code></td>
 <td>
@@ -102,12 +110,12 @@ displayed in the screen. By default, it sets to true for display</p>
 </p>
 
 <ul>
-<li><p><code>priority</code>: a matrix of nNode X 4 containing node priority
+<li><p><code>priority</code>: a matrix of nNode X 5 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are &quot;name&quot; (node names), &quot;seed&quot; (1 for seeds, 0 for
-non-seeds), &quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores
-that are rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority
-scores)
+the 5 columns are &quot;name&quot; (node names), &quot;node&quot; (1 for network genes, 0
+for non-network seed genes), &quot;seed&quot; (1 for seeds, 0 for non-seeds),
+&quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores that are
+rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority scores)
 </p>
 </li>
 <li><p><code>g</code>: an input &quot;igraph&quot; object
@@ -143,15 +151,18 @@ library(Pi)
 
 ## End(Not run)
 
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the input nodes/genes with the significance info
 sig &lt;- rbeta(500, shape1=0.5, shape2=1)
 ## Not run: 
 ## load human genes
-org.Hs.eg &lt;- xRDataLoader(RData='org.Hs.eg')
+org.Hs.eg &lt;- xRDataLoader(RData='org.Hs.eg',
+RData.location=RData.location)
 data &lt;- data.frame(symbols=org.Hs.eg$gene_info$Symbol[1:500], sig)
 
 # b) provide the network
-g &lt;- xRDataLoader(RData.customised='org.Hs.string')
+g &lt;- xRDataLoader(RData.customised='org.Hs.PCommons_UN',
+RData.location=RData.location)
 
 # c) perform priority analysis
 pNode &lt;- xPier(seeds=data, g=g, restart=0.75)

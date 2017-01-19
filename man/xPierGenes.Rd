@@ -2,7 +2,7 @@
 % Please edit documentation in R/xPierGenes.r
 \name{xPierGenes}
 \alias{xPierGenes}
-\title{Function to priorise genes from an input network and the weight info imposed on its nodes}
+\title{Function to prioritise genes from an input network and the weight info imposed on its nodes}
 \usage{
 xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "STRING_medium",
@@ -12,11 +12,10 @@ xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
 "PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.75, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
 \item{data}{a named input vector containing a list of seed nodes (ie
@@ -69,6 +68,10 @@ customisation (if provided) has the high priority over built-in
 network. If the user provides the "igraph" object with the "weight"
 edge attribute, RWR will assume to walk on the weighted network}
 
+\item{seeds.inclusive}{logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk}
+
 \item{normalise}{the way to normalise the adjacency matrix of the input
 graph. It can be 'laplacian' for laplacian normalisation, 'row' for
 row-wise normalisation, 'column' for column-wise normalisation, or
@@ -112,12 +115,13 @@ RData files. See \code{\link{xRDataLoader}} for details}
 \value{
 an object of class "pNode", a list with following components:
 \itemize{
-\item{\code{priority}: a matrix of nNode X 4 containing node priority
+\item{\code{priority}: a matrix of nNode X 6 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are "name" (node names), "seed" (1 for seeds, 0 for
-non-seeds), "weight" (weight values), "priority" (the priority scores
-that are rescaled to the range [0,1]), "rank" (ranks of the priority
-scores)}
+the 5 columns are "name" (node names), "node" (1 for network genes, 0
+for non-network seed genes), "seed" (1 for seeds, 0 for non-seeds),
+"weight" (weight values), "priority" (the priority scores that are
+rescaled to the range [0,1]), "rank" (ranks of the priority scores),
+"description" (node description)}
 \item{\code{g}: an input "igraph" object}
 \item{\code{call}: the call that produced this result}
 }
@@ -127,8 +131,8 @@ scores)}
 and a list of seed nodes. It implements Random Walk with Restart (RWR)
 and calculates the affinity score of all nodes in the graph to the
 seeds. The priority score is the affinity score. Parallel computing is
-also supported for Linux or Mac operating systems. It returns an object
-of class "pNode".
+also supported for Linux-like or Windows operating systems. It returns
+an object of class "pNode".
 }
 \note{
 The input graph will treat as an unweighted graph if there is no
@@ -140,9 +144,11 @@ The input graph will treat as an unweighted graph if there is no
 library(Pi)
 }
 
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 ## get genes within 500kb away from AS GWAS lead SNPs
 seeds.genes <- ImmunoBase$AS$genes_variants
 ## seeds weighted according to distance away from lead SNPs
@@ -150,7 +156,8 @@ data <- 1- seeds.genes/500000
 
 \dontrun{
 # b) perform priority analysis
-pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7,
+RData.location=RData.location)
 
 # c) save to the file called 'Genes_priority.txt'
 write.table(pNode$priority, file="Genes_priority.txt", sep="\\t",

@@ -1,4 +1,28 @@
-CHANGES IN VERSION 0.99.5
+CHANGES IN VERSION 1.1.3
+-----------------------
+
+NEW FEATURES
+
+    o Initialise integral functions ('xMLrandomforest') for machine learning
+    
+    o Allow parallel computing on Windows
+    
+    o Speed up the calculation of defining and scoring seed genes from SNP or genomic regions
+    
+    
+CHANGES IN VERSION 1.1.1
+-----------------------
+
+NEW FEATURES
+
+    o Add functions ('xPredictROCR', 'xPredictCompare', 'xContour') for performance evaluation
+    
+    o Add functions ('xSNPhic.r', 'xPCHiCplot.r') for dealing with promoter capture HiC data
+
+    o Modify the function 'xPierSNPs.r' to incorporate promoter capture HiC data
+    
+    
+CHANGES IN VERSION 1.0.0
 -----------------------
 
 NEW FEATURES

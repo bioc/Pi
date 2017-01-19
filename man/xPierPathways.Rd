@@ -5,25 +5,30 @@
 \title{Function to prioritise pathways based on enrichment analysis of top prioritised genes}
 \usage{
 xPierPathways(pNode, priority.top = 100, background = NULL,
-ontology = c("GOBP", "GOMF", "GOCC", "PS", "PS2", "SF", "DO", "HPPA",
-"HPMI", "HPCM", "HPMA", "MP", "MsigdbH", "MsigdbC1", "MsigdbC2CGP",
+ontology = c("GOBP", "GOMF", "GOCC", "PS", "PS2", "SF", "Pfam", "DO",
+"HPPA", "HPMI", "HPCM", "HPMA", "MP", "MsigdbH", "MsigdbC1",
+"MsigdbC2CGP",
 "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME",
 "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN",
 "MsigdbC4CM",
 "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7",
-"DGIdb"),
-size.range = c(10, 2000), min.overlap = 3, which.distance = NULL,
-test = c("hypergeo", "fisher", "binomial"), p.adjust.method = c("BH",
-"BY", "bonferroni", "holm", "hochberg", "hommel"),
+"DGIdb",
+"GTExV4", "GTExV6", "CreedsDisease", "CreedsDiseaseUP",
+"CreedsDiseaseDN",
+"CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene",
+"CreedsGeneUP",
+"CreedsGeneDN"), size.range = c(10, 2000), min.overlap = 3,
+which.distance = NULL, test = c("hypergeo", "fisher", "binomial"),
+p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
+"hommel"),
 ontology.algorithm = c("none", "pc", "elim", "lea"), elim.pvalue =
 0.01,
 lea.depth = 2, path.mode = c("all_paths", "shortest_paths",
 "all_shortest_paths"), true.path.rule = FALSE, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode"}
+\item{pNode}{an object of class "pNode" (or "pTarget")}
 
 \item{priority.top}{the number of the top targets to be analysed for
 pathway enrichment}
@@ -37,12 +42,17 @@ Gene Ontology Biological Process, "GOMF" for Gene Ontology Molecular
 Function, "GOCC" for Gene Ontology Cellular Component, "PS" for
 phylostratific age information, "PS2" for the collapsed PS version
 (inferred ancestors being collapsed into one with the known taxonomy
-information), "SF" for domain superfamily assignments, "DO" for Disease
-Ontology, "HPPA" for Human Phenotype Phenotypic Abnormality, "HPMI" for
-Human Phenotype Mode of Inheritance, "HPCM" for Human Phenotype
-Clinical Modifier, "HPMA" for Human Phenotype Mortality Aging, "MP" for
-Mammalian Phenotype, and Drug-Gene Interaction database (DGIdb) for
-drugable categories, and the molecular signatures database (Msigdb,
+information), "SF" for SCOP domain superfamilies, "Pfam" for Pfam
+domain families, "DO" for Disease Ontology, "HPPA" for Human Phenotype
+Phenotypic Abnormality, "HPMI" for Human Phenotype Mode of Inheritance,
+"HPCM" for Human Phenotype Clinical Modifier, "HPMA" for Human
+Phenotype Mortality Aging, "MP" for Mammalian Phenotype, Drug-Gene
+Interaction database ("DGIdb") for drugable categories, tissue-specific
+eQTL-containing genes from GTEx ("GTExV4" and "GTExV6"), crowd
+extracted expression of differential signatures from CREEDS
+("CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug",
+"CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP" and
+"CreedsGeneDN"), and the molecular signatures database (Msigdb,
 including "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall",
 "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA",
 "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM",
@@ -177,21 +187,24 @@ maximum of both p-values in these two calculations.}
 library(Pi)
 }
 
-# a) provide the seed nodes/genes with the weight info
-## load ImmunoBase
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+# a) provide the SNPs with the significance info
+## get lead SNPs reported in AS GWAS and their significance info (p-values)
+#data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
+#AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
 ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
-## get genes within 500kb away from AS GWAS lead SNPs
-seeds.genes <- ImmunoBase$AS$genes_variants
-## seeds weighted according to distance away from lead SNPs
-data <- 1- seeds.genes/500000
+gr <- ImmunoBase$AS$variants
+AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 \dontrun{
 # b) perform priority analysis
-pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+pNode <- xPierSNPs(data=AS, include.eQTL="JKng_mono",
+include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,
+RData.location=RData.location)
 
 # c) derive pathway-level priority
 eTerm <- xPierPathways(pNode=pNode, priority.top=100,
-ontology="MsigdbC2CP")
+ontology="MsigdbC2CP", RData.location=RData.location)
 
 # d) view enrichment results for the top significant terms
 xEnrichViewer(eTerm)

@@ -2,26 +2,43 @@
 % Please edit documentation in R/xPierSNPs.r
 \name{xPierSNPs}
 \alias{xPierSNPs}
-\title{Function to priorise genes given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)}
+\title{Function to prioritise genes given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)}
 \usage{
 xPierSNPs(data, include.LD = NA, LD.customised = NULL, LD.r2 = 0.8,
-significance.threshold = 5e-05, distance.max = 2e+05,
-decay.kernel = c("rapid", "slow", "linear"), decay.exponent = 2,
-GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"), GR.Gene = c("UCSC_knownGene",
-"UCSC_knownCanonical"), include.eQTL = c(NA, "JKscience_TS2A",
-"JKscience_TS2B", "JKscience_TS3A", "JKng_bcell", "JKng_mono",
-"JKnc_neutro",
-"JK_nk", "GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
+significance.threshold = 5e-05, score.cap = 10, distance.max = 2e+05,
+decay.kernel = c("rapid", "slow", "linear", "constant"),
+decay.exponent = 2, GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"),
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), include.eQTL =
+c(NA,
+"JKscience_TS2A", "JKscience_TS2A_CD14", "JKscience_TS2A_LPS2",
+"JKscience_TS2A_LPS24", "JKscience_TS2A_IFN", "JKscience_TS2B",
+"JKscience_TS2B_CD14", "JKscience_TS2B_LPS2", "JKscience_TS2B_LPS24",
+"JKscience_TS2B_IFN", "JKscience_TS3A", "JKng_bcell", "JKng_bcell_cis",
+"JKng_bcell_trans", "JKng_mono", "JKng_mono_cis", "JKng_mono_trans",
+"JKnc_neutro", "JKnc_neutro_cis", "JKnc_neutro_trans", "JK_nk",
+"GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
 "GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
 "GTEx_V4_Lung", "GTEx_V4_Muscle_Skeletal", "GTEx_V4_Nerve_Tibial",
 "GTEx_V4_Skin_Sun_Exposed_Lower_leg", "GTEx_V4_Stomach",
 "GTEx_V4_Thyroid",
 "GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14", "eQTLdb_LPS2",
-"eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL,
+"eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL, include.HiC =
+c(NA,
+"Monocytes", "Macrophages_M0", "Macrophages_M1", "Macrophages_M2",
+"Neutrophils", "Megakaryocytes", "Endothelial_precursors",
+"Erythroblasts",
+"Fetal_thymus", "Naive_CD4_T_cells", "Total_CD4_T_cells",
+"Activated_total_CD4_T_cells", "Nonactivated_total_CD4_T_cells",
+"Naive_CD8_T_cells", "Total_CD8_T_cells", "Naive_B_cells",
+"Total_B_cells",
+"PE.Monocytes", "PE.Macrophages_M0", "PE.Macrophages_M1",
+"PE.Macrophages_M2",
+"PE.Neutrophils", "PE.Megakaryocytes", "PE.Erythroblasts",
+"PE.Naive_CD4_T_cells", "PE.Naive_CD8_T_cells"),
 cdf.function = c("empirical", "exponential"), relative.importance =
-c(0.5,
-0.5), scoring.scheme = c("max", "sum", "sequential"),
+c(1/3,
+1/3, 1/3), scoring.scheme = c("max", "sum", "sequential"),
 network = c("STRING_highest", "STRING_high", "STRING_medium",
 "STRING_low",
 "PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
@@ -29,11 +46,10 @@ network = c("STRING_highest", "STRING_high", "STRING_medium",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
 "PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.75, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
 \item{data}{a named input vector containing the sinificance level for
@@ -71,6 +87,9 @@ into scores. If given, those SNPs below this are considered significant
 and thus scored positively. Instead, those above this are considered
 insigificant and thus receive no score}
 
+\item{score.cap}{the maximum score being capped. By default, it is set
+to 10. If NULL, no capping is applied}
+
 \item{distance.max}{the maximum distance between genes and SNPs. Only
 those genes no far way from this distance will be considered as seed
 genes. This parameter will influence the distance-component weights
@@ -78,7 +97,8 @@ calculated for nearby SNPs per gene}
 
 \item{decay.kernel}{a character specifying a decay kernel function. It
 can be one of 'slow' for slow decay, 'linear' for linear decay, and
-'rapid' for rapid decay}
+'rapid' for rapid decay. If no distance weight is used, please select
+'constant'}
 
 \item{decay.exponent}{an integer specifying a decay exponent. By
 default, it sets to 2}
@@ -110,29 +130,28 @@ directly}
 
 \item{include.eQTL}{genes modulated by eQTL (also Lead SNPs or in LD
 with Lead SNPs) are also included. By default, it is 'NA' to disable
-this option. Otherwise, those genes modulated by eQTL will be included:
-immune stimulation in monocytes ('JKscience_TS1A' and 'JKscience_TS2B'
-for cis-eQTLs or 'JKscience_TS3A' for trans-eQTLs) from Science 2014,
-343(6175):1246949; cis- and trans-eQTLs in B cells ('JKng_bcell') and
-in monocytes ('JKng_mono') from Nature Genetics 2012, 44(5):502-510;
-cis- and trans-eQTLs in neutrophils ('JKnc_neutro') from Nature
-Communications 2015, 7(6):7545; cis-eQTLs in NK cells ('JK_nk') which
-is unpublished. Also supported are GTEx cis-eQTLs from Science 2015,
-348(6235):648-60, including 13 tissues:
-"GTEx_V4_Adipose_Subcutaneous","GTEx_V4_Artery_Aorta","GTEx_V4_Artery_Tibial","GTEx_V4_Esophagus_Mucosa","GTEx_V4_Esophagus_Muscularis","GTEx_V4_Heart_Left_Ventricle","GTEx_V4_Lung","GTEx_V4_Muscle_Skeletal","GTEx_V4_Nerve_Tibial","GTEx_V4_Skin_Sun_Exposed_Lower_leg","GTEx_V4_Stomach","GTEx_V4_Thyroid","GTEx_V4_Whole_Blood".}
+this option. Otherwise, those genes modulated by eQTL will be included.
+Pre-built eQTL datasets are detailed in the section 'Note'}
 
 \item{eQTL.customised}{a user-input matrix or data frame with 3
 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, and 3rd for
 eQTL mapping significance level (p-values or FDR). It is designed to
 allow the user analysing their eQTL data. This customisation (if
-provided) has the high priority over built-in eQTL data.}
+provided) has the high priority over built-in eQTL data}
+
+\item{include.HiC}{genes linked to input SNPs are also included. By
+default, it is 'NA' to disable this option. Otherwise, those genes
+linked to SNPs will be included according to Promoter Capture HiC
+(PCHiC) datasets. Pre-built HiC datasets are detailed in the section
+'Note'}
 
 \item{cdf.function}{a character specifying a Cumulative Distribution
 Function (cdf). It can be one of 'exponential' based on exponential
 cdf, 'empirical' for empirical cdf}
 
 \item{relative.importance}{a vector specifying the relative importance
-of the distance weight and eQTL weight}
+of nearby genes, eQTL genes and HiC genes. By default, it sets c(1/3,
+1/3, 1/3)}
 
 \item{scoring.scheme}{the method used to calculate seed gene scores
 under a set of SNPs. It can be one of "sum" for adding up, "max" for
@@ -183,6 +202,10 @@ customisation (if provided) has the high priority over built-in
 network. If the user provides the "igraph" object with the "weight"
 edge attribute, RWR will assume to walk on the weighted network}
 
+\item{seeds.inclusive}{logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk}
+
 \item{normalise}{the way to normalise the adjacency matrix of the input
 graph. It can be 'laplacian' for laplacian normalisation, 'row' for
 row-wise normalisation, 'column' for column-wise normalisation, or
@@ -226,14 +249,15 @@ RData files. See \code{\link{xRDataLoader}} for details}
 \value{
 an object of class "pNode", a list with following components:
 \itemize{
-\item{\code{priority}: a matrix of nNode X 4 containing node priority
+\item{\code{priority}: a matrix of nNode X 6 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are "name" (node names), "seed" (1 for seeds, 0 for
-non-seeds), "weight" (weight/score values for seed genes), "priority"
-(the priority scores that are rescaled to the range [0,1]), "rank"
-(ranks of the priority scores)}
+the 6 columns are "name" (node names), "node" (1 for network genes, 0
+for non-network seed genes), "seed" (1 for seeds, 0 for non-seeds),
+"weight" (weight values), "priority" (the priority scores that are
+rescaled to the range [0,1]), "rank" (ranks of the priority scores),
+"description" (node description)}
 \item{\code{g}: an input "igraph" object}
-\item{\code{SNP}: a data frame of nSNP X 3 containing input SNPs and/or
+\item{\code{SNP}: a data frame of nSNP X 4 containing input SNPs and/or
 LD SNPs info, where nSNP is the number of input SNPs and/or LD SNPs,
 and the 4 columns are "SNP" (dbSNP), "Score" (the SNP score), "Pval"
 (the SNP p-value), "Flag" (indicative of Lead SNPs or LD SNPs)}
@@ -241,35 +265,173 @@ and the 4 columns are "SNP" (dbSNP), "Score" (the SNP score), "Pval"
 pair info, where nPair is the number of Gene-SNP pairs, and the 3
 columns are "Gene" (seed genes), "SNP" (dbSNP), "Score" (an SNP's
 genetic influential score on a seed gene), "Pval" (the SNP p-value)}
+\item{\code{nGenes}: if not NULL, it is a data frame containing
+nGene-SNP pair info}
+\item{\code{eGenes}: if not NULL, it is a data frame containing
+eGene-SNP pair info per context}
+\item{\code{cGenes}: if not NULL, it is a data frame containing
+cGene-SNP pair info per context}
 \item{\code{call}: the call that produced this result}
 }
 }
 \description{
-\code{xPierSNPs} is supposed to priorise genes given a list of seed
-SNPs together with the significance level. To priorise genes, it first
-defines and scores seed genes: nearby genes and eQTL genes. With seed
-genes and their scores, it then uses Random Walk with Restart (RWR) to
-calculate the affinity score of all nodes in the input graph to the
-seed genes. The priority score is the affinity score. Parallel
-computing is also supported for Linux or Mac operating systems. It
-returns an object of class "pNode".
+\code{xPierSNPs} is supposed to prioritise genes given a list of seed
+SNPs together with the significance level. To prioritise genes, it
+first defines and scores seed genes: nearby genes and eQTL genes. With
+seed genes and their scores, it then uses Random Walk with Restart
+(RWR) to calculate the affinity score of all nodes in the input graph
+to the seed genes. The priority score is the affinity score. Parallel
+computing is also supported for Linux-like or Windows operating
+systems. It returns an object of class "pNode".
 }
 \note{
-The search procedure is heuristic to find the subgraph with the maximum
-score:
+The prioritisation procedure (from SNPs to target genes) consists of
+following steps:
 \itemize{
 \item{i) \code{\link{xSNPscores}} used to calculate the SNP score.}
 \item{ii) \code{\link{xSNP2nGenes}} used to define and score the nearby
 genes.}
 \item{iii) \code{\link{xSNP2eGenes}} used to define and score the eQTL
 genes.}
-\item{iv) define seed genes as the nearby genes in ii) and the eQTL
-genes in iii), which are then scored in an integrative manner.}
-\item{v) \code{\link{xPierGenes}} used to prioritise genes using an
-input graph and a list of seed genes and their scores from iv). The
+\item{iv) \code{\link{xSNP2cGenes}} used to define and score the HiC
+genes.}
+\item{v) define seed genes as the nearby genes in ii) and the eQTL
+genes in iii) and the HiC genes in iv), which are then scored in an
+integrative manner.}
+\item{vi) \code{\link{xPierGenes}} used to prioritise genes using an
+input graph and a list of seed genes and their scores from v). The
 priority score is the affinity score estimated by Random Walk with
 Restart (RWR), measured as the affinity of all nodes in the graph to
 the seeds.}
+}
+Pre-built eQTL datasets are described below according to the data
+sources.\cr
+1. Context-specific eQTLs in monocytes: resting and activating states.
+Sourced from Science 2014, 343(6175):1246949
+\itemize{
+\item{\code{JKscience_TS2A}: cis-eQTLs in either state (based on 228
+individuals with expression data available for all experimental
+conditions).}
+\item{\code{JKscience_TS2A_CD14}: cis-eQTLs only in the resting/CD14+
+state (based on 228 individuals).}
+\item{\code{JKscience_TS2A_LPS2}: cis-eQTLs only in the activating
+state induced by 2-hour LPS (based on 228 individuals).}
+\item{\code{JKscience_TS2A_LPS24}: cis-eQTLs only in the activating
+state induced by 24-hour LPS (based on 228 individuals).}
+\item{\code{JKscience_TS2A_IFN}: cis-eQTLs only in the activating state
+induced by 24-hour interferon-gamma (based on 228 individuals).}
+\item{\code{JKscience_TS2B}: cis-eQTLs in either state (based on 432
+individuals).}
+\item{\code{JKscience_TS2B_CD14}: cis-eQTLs only in the resting/CD14+
+state (based on 432 individuals).}
+\item{\code{JKscience_TS2B_LPS2}: cis-eQTLs only in the activating
+state induced by 2-hour LPS (based on 432 individuals).}
+\item{\code{JKscience_TS2B_LPS24}: cis-eQTLs only in the activating
+state induced by 24-hour LPS (based on 432 individuals).}
+\item{\code{JKscience_TS2B_IFN}: cis-eQTLs only in the activating state
+induced by 24-hour interferon-gamma (based on 432 individuals).}
+\item{\code{JKscience_TS3A}: trans-eQTLs in either state.}
+}
+2. eQTLs in B cells. Sourced from Nature Genetics 2012, 44(5):502-510
+\itemize{
+\item{\code{JKng_bcell}: cis- and trans-eQTLs.}
+\item{\code{JKng_bcell_cis}: cis-eQTLs only.}
+\item{\code{JKng_bcell_trans}: trans-eQTLs only.}
+}
+3. eQTLs in monocytes. Sourced from Nature Genetics 2012, 44(5):502-510
+\itemize{
+\item{\code{JKng_mono}: cis- and trans-eQTLs.}
+\item{\code{JKng_mono_cis}: cis-eQTLs only.}
+\item{\code{JKng_mono_trans}: trans-eQTLs only.}
+}
+4. eQTLs in neutrophils. Sourced from Nature Communications 2015,
+7(6):7545
+\itemize{
+\item{\code{JKnc_neutro}: cis- and trans-eQTLs.}
+\item{\code{JKnc_neutro_cis}: cis-eQTLs only.}
+\item{\code{JKnc_neutro_trans}: trans-eQTLs only.}
+}
+5. eQTLs in NK cells. Unpublished
+\itemize{
+\item{\code{JK_nk}: cis-eQTLs.}
+}
+6. Tissue-specific eQTLs from GTEx (version 4; incuding 13 tissues).
+Sourced from Science 2015, 348(6235):648-60
+\itemize{
+\item{\code{GTEx_V4_Adipose_Subcutaneous}: cis-eQTLs in tissue 'Adipose
+Subcutaneous'.}
+\item{\code{GTEx_V4_Artery_Aorta}: cis-eQTLs in tissue 'Artery Aorta'.}
+\item{\code{GTEx_V4_Artery_Tibial}: cis-eQTLs in tissue 'Artery
+Tibial'.}
+\item{\code{GTEx_V4_Esophagus_Mucosa}: cis-eQTLs in tissue 'Esophagus
+Mucosa'.}
+\item{\code{GTEx_V4_Esophagus_Muscularis}: cis-eQTLs in tissue
+'Esophagus Muscularis'.}
+\item{\code{GTEx_V4_Heart_Left_Ventricle}: cis-eQTLs in tissue 'Heart
+Left Ventricle'.}
+\item{\code{GTEx_V4_Lung}: cis-eQTLs in tissue 'Lung'.}
+\item{\code{GTEx_V4_Muscle_Skeletal}: cis-eQTLs in tissue 'Muscle
+Skeletal'.}
+\item{\code{GTEx_V4_Nerve_Tibial}: cis-eQTLs in tissue 'Nerve Tibial'.}
+\item{\code{GTEx_V4_Skin_Sun_Exposed_Lower_leg}: cis-eQTLs in tissue
+'Skin Sun Exposed Lower leg'.}
+\item{\code{GTEx_V4_Stomach}: cis-eQTLs in tissue 'Stomach'.}
+\item{\code{GTEx_V4_Thyroid}: cis-eQTLs in tissue 'Thyroid'.}
+\item{\code{GTEx_V4_Whole_Blood}: cis-eQTLs in tissue 'Whole Blood'.}
+}
+Pre-built HiC datasets are described below according to the data
+sources.\cr
+1. Promoter Capture HiC datasets in 17 primary blood cell types.
+Sourced from Cell 2016, 167(5):1369-1384.e19
+\itemize{
+\item{\code{Monocytes}: physical interactions (CHiCAGO score >=5) of
+promoters (baits) with the other end (preys) in Monocytes.}
+\item{\code{Macrophages_M0}: promoter interactomes in Macrophages M0.}
+\item{\code{Macrophages_M1}: promoter interactomes in Macrophages M1.}
+\item{\code{Macrophages_M2}: promoter interactomes in Macrophages M2.}
+\item{\code{Neutrophils}: promoter interactomes in Neutrophils.}
+\item{\code{Megakaryocytes}: promoter interactomes in Megakaryocytes.}
+\item{\code{Endothelial_precursors}: promoter interactomes in
+Endothelial precursors.}
+\item{\code{Fetal_thymus}: promoter interactomes in Fetal thymus.}
+\item{\code{Naive_CD4_T_cells}: promoter interactomes in Naive CD4+ T
+cells.}
+\item{\code{Total_CD4_T_cells}: promoter interactomes in Total CD4+ T
+cells.}
+\item{\code{Activated_total_CD4_T_cells}: promoter interactomes in
+Activated total CD4+ T cells.}
+\item{\code{Nonactivated_total_CD4_T_cells}: promoter interactomes in
+Nonactivated total CD4+ T cells.}
+\item{\code{Naive_CD8_T_cells}: promoter interactomes in Naive CD8+ T
+cells.}
+\item{\code{Total_CD8_T_cells}: promoter interactomes in Total CD8+ T
+cells.}
+\item{\code{Naive_B_cells}: promoter interactomes in Naive B cells.}
+\item{\code{Total_B_cells}: promoter interactomes in Total B cells.}
+}
+2. Promoter Capture HiC datasets (involving active promoters and
+enhancers) in 9 primary blood cell types. Sourced from Cell 2016,
+167(5):1369-1384.e19
+\itemize{
+\item{\code{PE.Monocytes}: physical interactions (CHiCAGO score >=5) of
+promoters (baits) with the other end (enhancers as preys) in
+Monocytes.}
+\item{\code{PE.Macrophages_M0}: promoter-enhancer interactomes in
+Macrophages M0.}
+\item{\code{PE.Macrophages_M1}: promoter-enhancer interactomes in
+Macrophages M1.}
+\item{\code{PE.Macrophages_M2}: promoter-enhancer interactomes in
+Macrophages M2.}
+\item{\code{PE.Neutrophils}: promoter-enhancer interactomes in
+Neutrophils.}
+\item{\code{PE.Megakaryocytes}: promoter-enhancer interactomes in
+Megakaryocytes.}
+\item{\code{PE.Erythroblasts}: promoter-enhancer interactomes in
+Erythroblasts.}
+\item{\code{PE.Naive_CD4_T_cells}: promoter-enhancer interactomes in
+Naive CD4+ T cells.}
+\item{\code{PE.Naive_CD8_T_cells}: promoter-enhancer interactomes in
+Naive CD8+ T cells.}
 }
 }
 \examples{
@@ -278,26 +440,29 @@ the seeds.}
 library(Pi)
 }
 
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
 #AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 gr <- ImmunoBase$AS$variants
 AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 \dontrun{
 # b) perform priority analysis
-pNode <- xPierSNPs(data=AS, include.LD=NA,
-include.eQTL=c("JKscience_TS2A","JKscience_TS3A"),
-network="PCommonsUN_medium", restart=0.7)
+pNode <- xPierSNPs(data=AS, include.eQTL="JKng_mono",
+include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,
+RData.location=RData.location)
 
 # c) save to the file called 'SNPs_priority.txt'
 write.table(pNode$priority, file="SNPs_priority.txt", sep="\\t",
 row.names=FALSE)
 
 # d) manhattan plot
-mp <- xPierManhattan(pNode, highlight.top=10)
+mp <- xPierManhattan(pNode, top=20, top.label.size=1.5, y.scale="sqrt",
+RData.location=RData.location)
 #pdf(file="Gene_manhattan.pdf", height=6, width=12, compress=TRUE)
 print(mp)
 #dev.off()
@@ -305,8 +470,8 @@ print(mp)
 }
 \seealso{
 \code{\link{xSNPscores}}, \code{\link{xSNP2nGenes}},
-\code{\link{xSNP2eGenes}}, \code{\link{xSparseMatrix}},
-\code{\link{xSM2DF}}, \code{\link{xPier}}, \code{\link{xPierGenes}},
-\code{\link{xPierPathways}}
+\code{\link{xSNP2eGenes}}, \code{\link{xSNP2cGenes}},
+\code{\link{xSparseMatrix}}, \code{\link{xSM2DF}}, \code{\link{xPier}},
+\code{\link{xPierGenes}}, \code{\link{xPierPathways}}
 }
 

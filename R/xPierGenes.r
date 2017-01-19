@@ -1,11 +1,12 @@
-#' Function to priorise genes from an input network and the weight info imposed on its nodes
+#' Function to prioritise genes from an input network and the weight info imposed on its nodes
 #'
-#' \code{xPierGenes} is supposed to prioritise genes given an input graph and a list of seed nodes. It implements Random Walk with Restart (RWR) and calculates the affinity score of all nodes in the graph to the seeds. The priority score is the affinity score. Parallel computing is also supported for Linux or Mac operating systems. It returns an object of class "pNode". 
+#' \code{xPierGenes} is supposed to prioritise genes given an input graph and a list of seed nodes. It implements Random Walk with Restart (RWR) and calculates the affinity score of all nodes in the graph to the seeds. The priority score is the affinity score. Parallel computing is also supported for Linux-like or Windows operating systems. It returns an object of class "pNode". 
 #'
 #' @param data a named input vector containing a list of seed nodes (ie gene symbols). For this named vector, the element names are seed/node names (e.g. gene symbols), the element (non-zero) values used to weight the relative importance of seeds. Alternatively, it can be a matrix or data frame with two columns: 1st column for seed/node names, 2nd column for the weight values
 #' @param network the built-in network. Currently two sources of network information are supported: the STRING database (version 10) and the Pathways Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addtion to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
 #' @param weighted logical to indicate whether edge weights should be considered. By default, it sets to false. If true, it only works for the network from the STRING database 
 #' @param network.customised an object of class "igraph". By default, it is NULL. It is designed to allow the user analysing their customised network data that are not listed in the above argument 'network'. This customisation (if provided) has the high priority over built-in network. If the user provides the "igraph" object with the "weight" edge attribute, RWR will assume to walk on the weighted network
+#' @param seeds.inclusive logical to indicate whether non-network seed genes are included for prioritisation. If TRUE (by default), these genes will be added to the netowrk
 #' @param normalise the way to normalise the adjacency matrix of the input graph. It can be 'laplacian' for laplacian normalisation, 'row' for row-wise normalisation, 'column' for column-wise normalisation, or 'none'
 #' @param restart the restart probability used for Random Walk with Restart (RWR). The restart probability takes the value from 0 to 1, controlling the range from the starting nodes/seeds that the walker will explore. The higher the value, the more likely the walker is to visit the nodes centered on the starting nodes. At the extreme when the restart probability is zero, the walker moves freely to the neighbors at each step without restarting from seeds, i.e., following a random walk (RW)
 #' @param normalise.affinity.matrix the way to normalise the output affinity matrix. It can be 'none' for no normalisation, 'quantile' for quantile normalisation to ensure that columns (if multiple) of the output affinity matrix have the same quantiles
@@ -16,7 +17,7 @@
 #' @return
 #' an object of class "pNode", a list with following components:
 #' \itemize{
-#'  \item{\code{priority}: a matrix of nNode X 4 containing node priority information, where nNode is the number of nodes in the input graph, and the 4 columns are "name" (node names), "seed" (1 for seeds, 0 for non-seeds), "weight" (weight values),  "priority" (the priority scores that are rescaled to the range [0,1]), "rank" (ranks of the priority scores)}
+#'  \item{\code{priority}: a matrix of nNode X 6 containing node priority information, where nNode is the number of nodes in the input graph, and the 5 columns are "name" (node names), "node" (1 for network genes, 0 for non-network seed genes), "seed" (1 for seeds, 0 for non-seeds), "weight" (weight values),  "priority" (the priority scores that are rescaled to the range [0,1]), "rank" (ranks of the priority scores), "description" (node description)}
 #'  \item{\code{g}: an input "igraph" object}
 #'  \item{\code{call}: the call that produced this result}
 #' }
@@ -30,9 +31,10 @@
 #' library(Pi)
 #' }
 #'
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' # a) provide the seed nodes/genes with the weight info
 #' ## load ImmunoBase
-#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', RData.location=RData.location)
 #' ## get genes within 500kb away from AS GWAS lead SNPs
 #' seeds.genes <- ImmunoBase$AS$genes_variants
 #' ## seeds weighted according to distance away from lead SNPs
@@ -40,14 +42,14 @@
 #'
 #' \dontrun{
 #' # b) perform priority analysis
-#' pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+#' pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7, RData.location=RData.location)
 #'
 #' # c) save to the file called 'Genes_priority.txt'
 #' write.table(pNode$priority, file="Genes_priority.txt", sep="\t", row.names=FALSE)
 #' }
 
 
-xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), weighted=FALSE, network.customised=NULL, normalise=c("laplacian","row","column","none"), restart=0.75, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.75, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
     startT <- Sys.time()
@@ -91,6 +93,9 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=150])"))
 			}
 			
+			########################
+			# because of the way storing the network from the STRING database
+			## extract relations (by symbol)
 			V(g)$name <- V(g)$symbol
 			if(weighted){
 				relations <- igraph::get.data.frame(g, what="edges")[, c(1,2,10)]
@@ -99,7 +104,16 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 				relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
 				colnames(relations) <- c("from","to")
 			}
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE)
+			## do removal for node extraction (without 'name'; othewise failed to do so using the function 'igraph::get.data.frame')
+			g <- igraph::delete_vertex_attr(g, "name")
+			g <- igraph::delete_vertex_attr(g, "seqid")
+			g <- igraph::delete_vertex_attr(g, "geneid")
+			nodes <- igraph::get.data.frame(g, what="vertices")
+			### remove the duplicated
+			nodes <- nodes[!duplicated(nodes), ]			
+			########################
+			
+			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
 			
         }else if(length(grep('PCommonsUN',network,perl=TRUE)) > 0){
 			g <- xRDataLoader(RData.customised='org.Hs.PCommons_UN', RData.location=RData.location, verbose=verbose)
@@ -115,7 +129,8 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 			
 			relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
 			colnames(relations) <- c("from","to")
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE)
+			nodes <- igraph::get.data.frame(g, what="vertices")[, c(3,4)]
+			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
 			
         }else if(length(grep('PCommonsDN',network,perl=TRUE)) > 0){
 			flag <- unlist(strsplit(network,"_"))[2]
@@ -136,15 +151,38 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 			
 			relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
 			colnames(relations) <- c("from","to")
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE)
+			nodes <- igraph::get.data.frame(g, what="vertices")[, c(3,4)]
+			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
         }
 	
 	}
     ######################################################################################
     
-    pNode <- xPier(seeds=data, g=g, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose)
+    pNode <- xPier(seeds=data, g=g, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose)
     
     ####################################################################################
+    
+    #########################################################
+    ## append "description" to both pNode$g  pNode$priority
+    if (class(pNode) == "pNode" ){
+		if(is.null(vertex_attr(pNode$g, "description"))){
+			V(pNode$g)$description <- V(pNode$g)$name
+		}else{
+			ind <- which(is.na(V(pNode$g)$description))
+			if(length(ind)>0){
+				org.Hs.eg <- xRDataLoader(RData='org.Hs.eg', RData.location=RData.location)
+				flag <- match(V(pNode$g)$name, org.Hs.eg$gene_info$Symbol)
+				V(pNode$g)$description[ind] <- org.Hs.eg$gene_info$description[flag[ind]]
+			}
+		}
+		df_nodes <- igraph::get.data.frame(pNode$g, what="vertices")[,c("name","description")]
+		
+		ind <- match(pNode$priority$name, df_nodes$name)
+		pNode$priority$description <- df_nodes$description[ind]
+    }
+    #########################################################    
+    
+    
     endT <- Sys.time()
     if(verbose){
         message(paste(c("\nFinish at ",as.character(endT)), collapse=""), appendLF=TRUE)

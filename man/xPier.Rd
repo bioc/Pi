@@ -4,9 +4,11 @@
 \alias{xPier}
 \title{Function to do prioritisation through random walk techniques}
 \usage{
-xPier(seeds, g, normalise = c("laplacian", "row", "column", "none"),
-restart = 0.75, normalise.affinity.matrix = c("none", "quantile"),
-parallel = TRUE, multicores = NULL, verbose = TRUE)
+xPier(seeds, g, seeds.inclusive = TRUE, normalise = c("laplacian",
+"row",
+"column", "none"), restart = 0.75, normalise.affinity.matrix =
+c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE)
 }
 \arguments{
 \item{seeds}{a named input vector containing a list of seed nodes. For
@@ -18,6 +20,10 @@ weight values}
 
 \item{g}{an object of class "igraph" to represent network. It can be a
 weighted graph with the node attribute 'weight'}
+
+\item{seeds.inclusive}{logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk}
 
 \item{normalise}{the way to normalise the adjacency matrix of the input
 graph. It can be 'laplacian' for laplacian normalisation, 'row' for
@@ -59,12 +65,12 @@ displayed in the screen. By default, it sets to true for display}
 \value{
 an object of class "pNode", a list with following components:
 \itemize{
-\item{\code{priority}: a matrix of nNode X 4 containing node priority
+\item{\code{priority}: a matrix of nNode X 5 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are "name" (node names), "seed" (1 for seeds, 0 for
-non-seeds), "weight" (weight values), "priority" (the priority scores
-that are rescaled to the range [0,1]), "rank" (ranks of the priority
-scores)}
+the 5 columns are "name" (node names), "node" (1 for network genes, 0
+for non-network seed genes), "seed" (1 for seeds, 0 for non-seeds),
+"weight" (weight values), "priority" (the priority scores that are
+rescaled to the range [0,1]), "rank" (ranks of the priority scores)}
 \item{\code{g}: an input "igraph" object}
 \item{\code{call}: the call that produced this result}
 }
@@ -74,8 +80,8 @@ scores)}
 list of seed nodes. It implements Random Walk with Restart (RWR) and
 calculates the affinity score of all nodes in the graph to the seeds.
 The priority score is the affinity score. Parallel computing is also
-supported for Linux or Mac operating systems. It returns an object of
-class "pNode".
+supported for Linux-like or Windows operating systems. It returns an
+object of class "pNode".
 }
 \note{
 The input graph will treat as an unweighted graph if there is no
@@ -87,15 +93,18 @@ The input graph will treat as an unweighted graph if there is no
 library(Pi)
 }
 
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the input nodes/genes with the significance info
 sig <- rbeta(500, shape1=0.5, shape2=1)
 \dontrun{
 ## load human genes
-org.Hs.eg <- xRDataLoader(RData='org.Hs.eg')
+org.Hs.eg <- xRDataLoader(RData='org.Hs.eg',
+RData.location=RData.location)
 data <- data.frame(symbols=org.Hs.eg$gene_info$Symbol[1:500], sig)
 
 # b) provide the network
-g <- xRDataLoader(RData.customised='org.Hs.string')
+g <- xRDataLoader(RData.customised='org.Hs.PCommons_UN',
+RData.location=RData.location)
 
 # c) perform priority analysis
 pNode <- xPier(seeds=data, g=g, restart=0.75)

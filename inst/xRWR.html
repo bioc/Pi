@@ -81,13 +81,11 @@ output affinity matrix have the same quantiles</p>
 <td>
 <p>logical to indicate whether parallel computation with
 multicores is used. By default, it sets to true, but not necessarily
-does so. Partly because parallel backends available will be
-system-specific (now only Linux or Mac OS). Also, it will depend on
-whether these two packages &quot;foreach&quot; and &quot;doMC&quot; have been installed. It
-can be installed via:
+does so. It will depend on whether these two packages &quot;foreach&quot; and
+&quot;doParallel&quot; have been installed. It can be installed via:
 <code>source("http://bioconductor.org/biocLite.R");
-biocLite(c("foreach","doMC"))</code>. If not yet installed, this option will
-be disabled</p>
+biocLite(c("foreach","doParallel"))</code>. If not yet installed, this option
+will be disabled</p>
 </td></tr>
 <tr valign="top"><td><code>multicores</code></td>
 <td>
@@ -148,7 +146,8 @@ nodes/seeds.
 
 <pre>
 # 1) generate a random graph according to the ER model
-g &lt;- erdos.renyi.game(100, 1/100)
+set.seed(123)
+g &lt;- erdos.renyi.game(10, 1/10)
 
 ## Not run: 
 # 2) produce the induced subgraph only based on the nodes in query
@@ -159,8 +158,8 @@ V(subg)$name &lt;- 1:vcount(subg)
 PTmatrix &lt;- xRWR(g=subg, normalise="laplacian", restart=0.75,
 parallel=FALSE)
 # visualise affinity matrix
-visHeatmapAdv(PTmatrix, Rowv=FALSE, Colv=FALSE, colormap="wyr",
-KeyValueName="Affinity")
+visHeatmapAdv(as.matrix(PTmatrix), Rowv=FALSE, Colv=FALSE,
+colormap="wyr", KeyValueName="Affinity")
 
 # 4) obtain affinity matrix given sets of seeds
 # define sets of seeds

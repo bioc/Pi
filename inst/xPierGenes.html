@@ -1,11 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to priorise genes from an input network and the...</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to prioritise genes from an input network and the...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
 <table width="100%" summary="page for xPierGenes"><tr><td>xPierGenes</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to priorise genes from an input network and the weight info imposed on its nodes</h2>
+<h2>Function to prioritise genes from an input network and the weight info imposed on its nodes</h2>
 
 <h3>Description</h3>
 
@@ -13,8 +13,8 @@
 and a list of seed nodes. It implements Random Walk with Restart (RWR)
 and calculates the affinity score of all nodes in the graph to the
 seeds. The priority score is the affinity score. Parallel computing is
-also supported for Linux or Mac operating systems. It returns an object
-of class &quot;pNode&quot;.
+also supported for Linux-like or Windows operating systems. It returns
+an object of class &quot;pNode&quot;.
 </p>
 
 
@@ -29,11 +29,10 @@ xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
 "PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
-RData.location =
-"https://github.com/hfang-bristol/RDataCentre/blob/master/Portal")
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.75, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -98,6 +97,12 @@ customisation (if provided) has the high priority over built-in
 network. If the user provides the &quot;igraph&quot; object with the &quot;weight&quot;
 edge attribute, RWR will assume to walk on the weighted network</p>
 </td></tr>
+<tr valign="top"><td><code>seeds.inclusive</code></td>
+<td>
+<p>logical to indicate whether non-network seed
+genes are included for prioritisation. If TRUE (by default), these
+genes will be added to the netowrk</p>
+</td></tr>
 <tr valign="top"><td><code>normalise</code></td>
 <td>
 <p>the way to normalise the adjacency matrix of the input
@@ -161,12 +166,13 @@ RData files. See <code>xRDataLoader</code> for details</p>
 </p>
 
 <ul>
-<li><p><code>priority</code>: a matrix of nNode X 4 containing node priority
+<li><p><code>priority</code>: a matrix of nNode X 6 containing node priority
 information, where nNode is the number of nodes in the input graph, and
-the 4 columns are &quot;name&quot; (node names), &quot;seed&quot; (1 for seeds, 0 for
-non-seeds), &quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores
-that are rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority
-scores)
+the 5 columns are &quot;name&quot; (node names), &quot;node&quot; (1 for network genes, 0
+for non-network seed genes), &quot;seed&quot; (1 for seeds, 0 for non-seeds),
+&quot;weight&quot; (weight values), &quot;priority&quot; (the priority scores that are
+rescaled to the range [0,1]), &quot;rank&quot; (ranks of the priority scores),
+&quot;description&quot; (node description)
 </p>
 </li>
 <li><p><code>g</code>: an input &quot;igraph&quot; object
@@ -201,9 +207,11 @@ library(Pi)
 
 ## End(Not run)
 
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase
-ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase')
+ImmunoBase &lt;- xRDataLoader(RData.customised='ImmunoBase',
+RData.location=RData.location)
 ## get genes within 500kb away from AS GWAS lead SNPs
 seeds.genes &lt;- ImmunoBase$AS$genes_variants
 ## seeds weighted according to distance away from lead SNPs
@@ -211,7 +219,8 @@ data &lt;- 1- seeds.genes/500000
 
 ## Not run: 
 # b) perform priority analysis
-pNode &lt;- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7)
+pNode &lt;- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7,
+RData.location=RData.location)
 
 # c) save to the file called 'Genes_priority.txt'
 write.table(pNode$priority, file="Genes_priority.txt", sep="\t",
