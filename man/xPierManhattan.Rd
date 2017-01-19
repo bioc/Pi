@@ -13,7 +13,7 @@ verbose = TRUE, RData.location =
 "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode" (or "pTarget")}
+\item{pNode}{an object of class "pNode" (or "pTarget" or "aTarget")}
 
 \item{color}{a character vector for colors to alternate chromosome
 colorings. If NULL, ggplot2 default colors will be used. If a single

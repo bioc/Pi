@@ -2,7 +2,7 @@
 #'
 #' \code{xPierManhattan} is supposed to visualise prioritised genes using manhattan plot. Genes with the top priority are highlighed. It returns an object of class "ggplot".
 #'
-#' @param pNode an object of class "pNode" (or "pTarget")
+#' @param pNode an object of class "pNode" (or "pTarget" or "aTarget")
 #' @param color a character vector for colors to alternate chromosome colorings. If NULL, ggplot2 default colors will be used. If a single character is provided, it can be "jet" (jet colormap) or "rainbow" (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta)
 #' @param top the number of the top targets to be labelled/highlighted
 #' @param top.label.type how to label the top targets. It can be "box" drawing a box around the labels , and "text" for the text only
@@ -71,9 +71,11 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
     if(class(pNode) == "pNode"){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
     }else if(class(pNode) == "pTarget"){
-    	df_priority <- pNode$priority[, c(4,5,6)]
+    	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
+    }else if(class(pNode) == "aTarget"){
+    	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]	
     }else{
-    	stop("The function must apply to a 'pNode' or 'pTarget' object.\n")
+    	stop("The function must apply to a 'pNode' or 'pTarget' or 'aTarget' object.\n")
     }
     
 	if(verbose){

@@ -1,31 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to prioritise genes given a list of seed SNPs...</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to prepare genetic predictors given a list of seed...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
-<table width="100%" summary="page for xPierSNPs"><tr><td>xPierSNPs</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table width="100%" summary="page for xPierSNPsAdv"><tr><td>xPierSNPsAdv</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to prioritise genes given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)</h2>
+<h2>Function to prepare genetic predictors given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)</h2>
 
 <h3>Description</h3>
 
-<p><code>xPierSNPs</code> is supposed to prioritise genes given a list of seed
-SNPs together with the significance level. To prioritise genes, it
-first defines and scores seed genes: nearby genes and eQTL genes. With
-seed genes and their scores, it then uses Random Walk with Restart
-(RWR) to calculate the affinity score of all nodes in the input graph
-to the seed genes. The priority score is the affinity score. Parallel
-computing is also supported for Linux-like or Windows operating
-systems. It returns an object of class &quot;pNode&quot;.
+<p><code>xPierSNPsAdv</code> is supposed to prepare genetic predictors given a
+list of seed SNPs together with the significance level (e.g. GWAS
+reported p-values). Internally it calls <code>xPierSNPs</code> to
+prepare the distance predictor, the eQTL predictors (if required) and
+the HiC predictors (if required). It returns a list of class &quot;pNode&quot;
+objects.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-xPierSNPs(data, include.LD = NA, LD.customised = NULL, LD.r2 = 0.8,
-significance.threshold = 5e-05, score.cap = 10, distance.max = 2e+05,
-decay.kernel = c("rapid", "slow", "linear", "constant"),
+xPierSNPsAdv(data, include.LD = NA, LD.customised = NULL, LD.r2 = 0.8,
+significance.threshold = 5e-05, score.cap = 10, distance.max = 1000,
+decay.kernel = c("constant", "slow", "linear", "rapid"),
 decay.exponent = 2, GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"),
 GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), include.eQTL =
 c(NA,
@@ -55,19 +53,17 @@ c(NA,
 "PE.Macrophages_M2",
 "PE.Neutrophils", "PE.Megakaryocytes", "PE.Erythroblasts",
 "PE.Naive_CD4_T_cells", "PE.Naive_CD8_T_cells"),
-cdf.function = c("empirical", "exponential"), relative.importance =
-c(1/3,
-1/3, 1/3), scoring.scheme = c("max", "sum", "sequential"),
-network = c("STRING_highest", "STRING_high", "STRING_medium",
-"STRING_low",
-"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
-"PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
-"PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
-"PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
-seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
-"none"), restart = 0.75, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
+cdf.function = c("empirical", "exponential"), scoring.scheme = c("max",
+"sum", "sequential"), network = c("STRING_highest", "STRING_high",
+"STRING_medium", "STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
+"PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
+"PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
+"PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
+"PCommonsDN_PhosphoSite", "PCommonsDN_CTD"), weighted = FALSE,
+network.customised = NULL, seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
+normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
+multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
@@ -88,13 +84,9 @@ column for the significance level</p>
 <td>
 <p>additional SNPs in LD with Lead SNPs are also
 included. By default, it is 'NA' to disable this option. Otherwise, LD
-SNPs will be included based on one or more of 26 populations and 5
-super populations from 1000 Genomics Project data (phase 3). The
-population can be one of 5 super populations (&quot;AFR&quot;, &quot;AMR&quot;, &quot;EAS&quot;,
-&quot;EUR&quot;, &quot;SAS&quot;), or one of 26 populations (&quot;ACB&quot;, &quot;ASW&quot;, &quot;BEB&quot;, &quot;CDX&quot;,
-&quot;CEU&quot;, &quot;CHB&quot;, &quot;CHS&quot;, &quot;CLM&quot;, &quot;ESN&quot;, &quot;FIN&quot;, &quot;GBR&quot;, &quot;GIH&quot;, &quot;GWD&quot;, &quot;IBS&quot;,
-&quot;ITU&quot;, &quot;JPT&quot;, &quot;KHV&quot;, &quot;LWK&quot;, &quot;MSL&quot;, &quot;MXL&quot;, &quot;PEL&quot;, &quot;PJL&quot;, &quot;PUR&quot;, &quot;STU&quot;,
-&quot;TSI&quot;, &quot;YRI&quot;). Explanations for population code can be found at
+SNPs will be included based on one or more of 5 super-populations from
+1000 Genomics Project data (phase 3). They are &quot;AFR&quot;, &quot;AMR&quot;, &quot;EAS&quot;,
+&quot;EUR&quot;, and &quot;SAS&quot;. Explanations for population code can be found at
 <a href="http://www.1000genomes.org/faq/which-populations-are-part-your-study">http://www.1000genomes.org/faq/which-populations-are-part-your-study</a></p>
 </td></tr>
 <tr valign="top"><td><code>LD.customised</code></td>
@@ -201,12 +193,6 @@ linked to SNPs will be included according to Promoter Capture HiC
 <p>a character specifying a Cumulative Distribution
 Function (cdf). It can be one of 'exponential' based on exponential
 cdf, 'empirical' for empirical cdf</p>
-</td></tr>
-<tr valign="top"><td><code>relative.importance</code></td>
-<td>
-<p>a vector specifying the relative importance
-of nearby genes, eQTL genes and HiC genes. By default, it sets c(1/3,
-1/3, 1/3)</p>
 </td></tr>
 <tr valign="top"><td><code>scoring.scheme</code></td>
 <td>
@@ -330,7 +316,8 @@ RData files. See <code>xRDataLoader</code> for details</p>
 
 <h3>Value</h3>
 
-<p>an object of class &quot;pNode&quot;, a list with following components:
+<p>A list of class &quot;pNode&quot; objects, each object having a list with
+following components:
 </p>
 
 <ul>
@@ -378,40 +365,10 @@ cGene-SNP pair info per context
 
 <h3>Note</h3>
 
-<p>The prioritisation procedure (from SNPs to target genes) consists of
-following steps:
-</p>
-
-<ul>
-<li><p>i) <code>xSNPscores</code> used to calculate the SNP score.
-</p>
-</li>
-<li><p>ii) <code>xSNP2nGenes</code> used to define and score the nearby
-genes.
-</p>
-</li>
-<li><p>iii) <code>xSNP2eGenes</code> used to define and score the eQTL
-genes.
-</p>
-</li>
-<li><p>iv) <code>xSNP2cGenes</code> used to define and score the HiC
-genes.
-</p>
-</li>
-<li><p>v) define seed genes as the nearby genes in ii) and the eQTL
-genes in iii) and the HiC genes in iv), which are then scored in an
-integrative manner.
-</p>
-</li>
-<li><p>vi) <code>xPierGenes</code> used to prioritise genes using an
-input graph and a list of seed genes and their scores from v). The
-priority score is the affinity score estimated by Random Walk with
-Restart (RWR), measured as the affinity of all nodes in the graph to
-the seeds.
-</p>
-</li></ul>
-
-<p>Pre-built eQTL datasets are described below according to the data
+<p>This function calls <code>xPierSNPs</code> in a loop way generating
+the distance predictor, the eQTL predictors (if required) and the HiC
+predictors (if required).
+Pre-built eQTL datasets are described below according to the data
 sources.<br />
 1. Context-specific eQTLs in monocytes: resting and activating states.
 Sourced from Science 2014, 343(6175):1246949
@@ -678,10 +635,7 @@ Naive CD8+ T cells.
 
 <h3>See Also</h3>
 
-<p><code>xSNPscores</code>, <code>xSNP2nGenes</code>,
-<code>xSNP2eGenes</code>, <code>xSNP2cGenes</code>,
-<code>xSparseMatrix</code>, <code>xSM2DF</code>, <code>xPier</code>,
-<code>xPierGenes</code>, <code>xPierPathways</code>
+<p><code>xPierSNPs</code>, <code>xPierMatrix</code>
 </p>
 
 
@@ -706,20 +660,9 @@ AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
 ## Not run: 
 # b) perform priority analysis
-pNode &lt;- xPierSNPs(data=AS, include.eQTL="JKng_mono",
+ls_pNode &lt;- xPierSNPsAdv(data=AS, include.eQTL="JKng_mono",
 include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,
 RData.location=RData.location)
-
-# c) save to the file called 'SNPs_priority.txt'
-write.table(pNode$priority, file="SNPs_priority.txt", sep="\t",
-row.names=FALSE)
-
-# d) manhattan plot
-mp &lt;- xPierManhattan(pNode, top=20, top.label.size=1.5, y.scale="sqrt",
-RData.location=RData.location)
-#pdf(file="Gene_manhattan.pdf", height=6, width=12, compress=TRUE)
-print(mp)
-#dev.off()
 
 ## End(Not run)
 </pre>

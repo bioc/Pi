@@ -2,7 +2,7 @@
 % Please edit documentation in R/xPierGenes.r
 \name{xPierGenes}
 \alias{xPierGenes}
-\title{Function to priorise genes from an input network and the weight info imposed on its nodes}
+\title{Function to prioritise genes from an input network and the weight info imposed on its nodes}
 \usage{
 xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "STRING_medium",

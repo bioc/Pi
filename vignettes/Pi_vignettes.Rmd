@@ -10,11 +10,13 @@ vignette: >
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 output: 
-  BiocStyle::html_document:
+  BiocStyle::html_document2:
         toc: true
         toc_depth: 2
         number_sections: true
-        highlight: default
+        theme: journal
+        highlight: monochrome
+        toc_float: true
         code_folding: hide
 bibliography: now.Pi.bib
 ---

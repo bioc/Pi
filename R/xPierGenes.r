@@ -1,4 +1,4 @@
-#' Function to priorise genes from an input network and the weight info imposed on its nodes
+#' Function to prioritise genes from an input network and the weight info imposed on its nodes
 #'
 #' \code{xPierGenes} is supposed to prioritise genes given an input graph and a list of seed nodes. It implements Random Walk with Restart (RWR) and calculates the affinity score of all nodes in the graph to the seeds. The priority score is the affinity score. Parallel computing is also supported for Linux-like or Windows operating systems. It returns an object of class "pNode". 
 #'

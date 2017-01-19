@@ -17,8 +17,9 @@ of pNode objects
 <h3>Usage</h3>
 
 <pre>
-xPierMatrix(list_pNode, displayBy = c("score", "rank"),
-combineBy = c("intersect", "union"), verbose = TRUE)
+xPierMatrix(list_pNode, displayBy = c("score", "rank", "pvalue"),
+combineBy = c("intersect", "union"), aggregateBy = c("none",
+"orderStatistic", "fishers", "Ztransform"), verbose = TRUE)
 </pre>
 
 
@@ -32,7 +33,8 @@ combineBy = c("intersect", "union"), verbose = TRUE)
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
 <p>which priority will be extracted. It can be &quot;score&quot;
-for priority score (by default), &quot;rank&quot; for priority rank</p>
+for priority score (by default), &quot;rank&quot; for priority rank, &quot;pvalue&quot; for
+priority p-value</p>
 </td></tr>
 <tr valign="top"><td><code>combineBy</code></td>
 <td>
@@ -40,18 +42,19 @@ for priority score (by default), &quot;rank&quot; for priority rank</p>
 objects. It can be &quot;intersect&quot; for intersecting nodes (by default),
 &quot;union&quot; for unionising nodes</p>
 </td></tr>
+<tr valign="top"><td><code>aggregateBy</code></td>
+<td>
+<p>the aggregate method used. It can be either &quot;none&quot;
+for no aggregation, or &quot;orderStatistic&quot; for the method based on the
+order statistics of p-values, &quot;fishers&quot; for Fisher's method,
+&quot;Ztransform&quot; for Z-transform method</p>
+</td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
 <p>logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display</p>
 </td></tr>
 </table>
-
-
-<h3>Value</h3>
-
-<p>a data frame containing priority matrix.
-</p>
 
 
 <h3>Note</h3>
