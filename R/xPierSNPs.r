@@ -393,6 +393,13 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
         message(sprintf("#######################################################\n", appendLF=TRUE))
     }
     
+    #######################
+    ## if pNode==NULL, return NULL
+    if(is.null(pNode)){
+    	return(NULL)
+    }
+    #######################
+    
 	if(verbose){
 		now <- Sys.time()
 		message(sprintf("A total of %d genes are prioritised, based on:", nrow(pNode$priority)), appendLF=TRUE)

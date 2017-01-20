@@ -38,7 +38,8 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","pvalue"), combin
    	if(any(class(list_pNode) %in% c("pNode"))){
 		list_pNode <- list(list_pNode)
 	}else if(class(list_pNode)=="list"){
-		list_pNode <- list_pNode
+		## Remove null elements in a list
+		list_pNode <- base::Filter(base::Negate(is.null), list_pNode)
 	}else{
 		stop("The function must apply to an 'list' object or an 'pNode' object.\n")
 	}

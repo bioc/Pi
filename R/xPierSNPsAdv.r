@@ -187,6 +187,9 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 				message(sprintf("Preparing the eQTL predictor '%s' (%s) ...", x, as.character(now)), appendLF=TRUE)
 			}
 			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=x, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=c(0,1,0), scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=FALSE, RData.location=RData.location)
+			if(verbose & is.null(pNode)){
+				message(sprintf("\tNote: this predictor '%s' has NULL", x), appendLF=TRUE)
+			}
 		})
     }else{
     	ls_pNode_eQTL <- NULL
@@ -201,6 +204,9 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 				message(sprintf("Preparing the HiC predictor '%s' (%s) ...", x, as.character(now)), appendLF=TRUE)
 			}
 			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=NA, eQTL.customised=NULL, include.HiC=x, cdf.function=cdf.function, relative.importance=c(0,0,1), scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=FALSE, RData.location=RData.location)
+			if(verbose & is.null(pNode)){
+				message(sprintf("\tNote: this predictor '%s' has NULL", x), appendLF=TRUE)
+			}
 		})
 		names(ls_pNode_HiC) <- paste('HiC_', names(ls_pNode_HiC), sep='')
 	}else{
