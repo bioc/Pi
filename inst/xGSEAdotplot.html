@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise GSEA results using dot plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xGSEAdotplot"><tr><td>xGSEAdotplot</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to visualise GSEA results using dot plot</h2>
+
+<h3>Description</h3>
+
+<p><code>xGSEAdotplot</code> is supposed to visualise GSEA results using dot
+plot. It returns an object of class &quot;ggplot&quot; or a list of &quot;ggplot&quot;
+objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xGSEAdotplot(eGSEA, top = 1, priority.color = c("lightyellow",
+"orange"),
+peak = TRUE, compact = FALSE, signature = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>eGSEA</code></td>
+<td>
+<p>an object of class &quot;eGSEA&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>top</code></td>
+<td>
+<p>the number of the top enrichments to be visualised.
+Alternatively, the gene set names can be queried</p>
+</td></tr>
+<tr valign="top"><td><code>priority.color</code></td>
+<td>
+<p>a character vector for coloring priority scores</p>
+</td></tr>
+<tr valign="top"><td><code>peak</code></td>
+<td>
+<p>logical to indicate whether the peak info of leading genes
+is labelled</p>
+</td></tr>
+<tr valign="top"><td><code>compact</code></td>
+<td>
+<p>logical to indicate whether the compact/void theme is
+used. If TRUE, axes and legend info will be hidden</p>
+</td></tr>
+<tr valign="top"><td><code>signature</code></td>
+<td>
+<p>logical to indicate whether the signature is assigned
+to the plot caption. By default, it sets TRUE showing which function is
+used to draw this graph</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class &quot;ggplot&quot; or a list of &quot;ggplot&quot; objects.
+</p>
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xPierGSEA</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+gp &lt;- xGSEAdotplot(eGSEA, top=1)
+#gp &lt;- xGSEAdotplot(eGSEA, top=1, peak=FALSE, compact=TRUE, signature=FALSE)
+gp
+
+ls_gp &lt;- xGSEAdotplot(eGSEA, top=1:4, signature=FALSE)
+library(gridExtra)
+grid.arrange(grobs=ls_gp, ncol=2)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

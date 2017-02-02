@@ -22,7 +22,8 @@ it. It returns an object of class 'pTarget'.
 
 <pre>
 xMLrandomforest(df_predictor, GSP, GSN, nfold = 3, mtry = NULL,
-ntree = 2000, verbose = TRUE, ...)
+ntree = 2000, fold.aggregateBy = c("Ztransform", "logistic", "fishers",
+"orderStatistic"), verbose = TRUE, ...)
 </pre>
 
 
@@ -59,6 +60,21 @@ number of predictors. The minimum value is 3</p>
 <td>
 <p>an integer specifying the number of trees to grow. By
 default, it sets to 2000</p>
+</td></tr>
+<tr valign="top"><td><code>fold.aggregateBy</code></td>
+<td>
+<p>the aggregate method used to aggregate results
+from k-fold cross validataion. It can be either &quot;orderStatistic&quot; for
+the method based on the order statistics of p-values, or &quot;fishers&quot; for
+Fisher's method, &quot;Ztransform&quot; for Z-transform method, &quot;logistic&quot; for
+the logistic method. Without loss of generality, the Z-transform method
+does well in problems where evidence against the combined null is
+spread widely (equal footings) or when the total evidence is weak;
+Fisher's method does best in problems where the evidence is
+concentrated in a relatively small fraction of the individual tests or
+when the evidence is at least moderately strong; the logistic method
+provides a compromise between these two. Notably, the aggregate methods
+'Ztransform' and 'logistic' are preferred here</p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -106,8 +122,8 @@ per-fold probability of being GSP
 </p>
 </li>
 <li><p><code>importance2fold</code>: a data frame of nPredictor X 4+nfold
-containing the predictor importance info, where nPredictor is the
-number of predictors, nfold is the number of folds for cross
+containing the predictor importance info per fold, where nPredictor is
+the number of predictors, nfold is the number of folds for cross
 validataion, and the first 4 columns are &quot;median&quot; (the median of the
 importance across folds), &quot;mad&quot; (the median of absolute deviation of
 the importance across folds), &quot;min&quot; (the minimum of the importance
@@ -116,7 +132,7 @@ the rest columns storing the per-fold importance
 </p>
 </li>
 <li><p><code>roc2fold</code>: a data frame of 1+nPredictor X 4+nfold
-containing the integrated/predictor ROC info (AUC values), where
+containing the supervised/predictor ROC info (AUC values), where
 nPredictor is the number of predictors, nfold is the number of folds
 for cross validataion, and the first 4 columns are &quot;median&quot; (the median
 of the AUC values across folds), &quot;mad&quot; (the median of absolute
@@ -126,13 +142,30 @@ folds), and the rest columns storing the per-fold AUC values
 </p>
 </li>
 <li><p><code>fmax2fold</code>: a data frame of 1+nPredictor X 4+nfold
-containing the integrated/predictor PR info (F-max values), where
+containing the supervised/predictor PR info (F-max values), where
 nPredictor is the number of predictors, nfold is the number of folds
 for cross validataion, and the first 4 columns are &quot;median&quot; (the median
 of the F-max values across folds), &quot;mad&quot; (the median of absolute
 deviation of the F-max values across folds), &quot;min&quot; (the minimum of the
 F-max values across folds), &quot;max&quot; (the maximum of the F-max values
 across folds), and the rest columns storing the per-fold F-max values
+</p>
+</li>
+<li><p><code>importance</code>: a data frame of nPredictor X 2 containing the
+predictor importance info, where nPredictor is the number of
+predictors, two columns for two types (&quot;MeanDecreaseAccuracy&quot; and
+&quot;MeanDecreaseGini&quot;) of predictor importance measures.
+&quot;MeanDecreaseAccuracy&quot; sees how worse the model performs without each
+predictor (a high decrease in accuracy would be expected for very
+informative predictors), while &quot;MeanDecreaseGini&quot; measures how pure the
+nodes are at the end of the tree (a high score means the predictor was
+important if each predictor is taken out)
+</p>
+</li>
+<li><p><code>performance</code>: a data frame of 1+nPredictor X 2 containing
+the supervised/predictor performance info predictor importance info,
+where nPredictor is the number of predictors, two columns are &quot;ROC&quot;
+(AUC values) and &quot;Fmax&quot; (F-max values)
 </p>
 </li>
 <li><p><code>call</code>: the call that produced this result

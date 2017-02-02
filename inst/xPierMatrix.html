@@ -10,7 +10,9 @@
 <h3>Description</h3>
 
 <p><code>xPierMatrix</code> is supposed to extract priority matrix from a list
-of pNode objects
+of pNode objects. Also supported is the aggregation of priority matrix
+(similar to the meta-analysis) generating the priority results; we view
+this functionality as the discovery mode of the prioritisation.
 </p>
 
 
@@ -18,8 +20,8 @@ of pNode objects
 
 <pre>
 xPierMatrix(list_pNode, displayBy = c("score", "rank", "pvalue"),
-combineBy = c("intersect", "union"), aggregateBy = c("none",
-"orderStatistic", "fishers", "Ztransform"), verbose = TRUE)
+combineBy = c("intersect", "union"), aggregateBy = c("none", "fishers",
+"logistic", "Ztransform", "orderStatistic"), verbose = TRUE)
 </pre>
 
 
@@ -47,7 +49,15 @@ objects. It can be &quot;intersect&quot; for intersecting nodes (by default),
 <p>the aggregate method used. It can be either &quot;none&quot;
 for no aggregation, or &quot;orderStatistic&quot; for the method based on the
 order statistics of p-values, &quot;fishers&quot; for Fisher's method,
-&quot;Ztransform&quot; for Z-transform method</p>
+&quot;Ztransform&quot; for Z-transform method, &quot;logistic&quot; for the logistic
+method. Without loss of generality, the Z-transform method does well in
+problems where evidence against the combined null is spread widely
+(equal footings) or when the total evidence is weak; Fisher's method
+does best in problems where the evidence is concentrated in a
+relatively small fraction of the individual tests or when the evidence
+is at least moderately strong; the logistic method provides a
+compromise between these two. Notably, the aggregate methods 'fishers'
+and 'logistic' are preferred here</p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -55,6 +65,36 @@ order statistics of p-values, &quot;fishers&quot; for Fisher's method,
 displayed in the screen. By default, it sets to true for display</p>
 </td></tr>
 </table>
+
+
+<h3>Value</h3>
+
+<p>If aggregateBy is 'none' (by default), a data frame containing priority
+matrix, with each column/predictor for either priority score, or
+priorty rank or priority p-value.
+If aggregateBy is not 'none', an object of the class &quot;dTarget&quot;, a list
+with following components:
+</p>
+
+<ul>
+<li><p><code>priority</code>: a data frame of nGene X 5 containing gene
+priority (aggregated) information, where nGene is the number of genes,
+and the 5 columns are &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the
+priority scores), &quot;pvalue&quot; (the aggregated p-value, converted from
+empirical cumulative distribution of the probability of being GSP),
+&quot;fdr&quot; (fdr adjusted from the aggregated p-value), &quot;priority&quot;
+(-log10(pvalue) but rescaled into the 0-10 range)
+</p>
+</li>
+<li><p><code>predictor</code>: a data frame containing priority matrix, with
+each column/predictor for either priority score, or priorty rank or
+priority p-value
+</p>
+</li>
+<li><p><code>call</code>: the call that produced this result
+</p>
+</li></ul>
+
 
 
 <h3>Note</h3>

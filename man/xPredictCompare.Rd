@@ -27,7 +27,8 @@ assigned to the plot caption. By default, it sets TRUE showing which
 function is used to draw this graph}
 }
 \value{
-an object of class "ggplot"
+an object of class "ggplot" or NULL (if all input pPerf objects are
+NULL)
 }
 \description{
 \code{xPredictCompare} is supposed to compare prediction performance

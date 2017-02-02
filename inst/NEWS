@@ -1,3 +1,15 @@
+CHANGES IN VERSION 1.1.5
+-----------------------
+
+NEW FEATURES
+
+    o Add new functions ('xMLdotplot', 'xMLdensity', 'xMLzoom') for visualising machine learning results
+
+    o Add a new function ('xGSsimulator') for simulating gold standard negatives
+    
+    o Add new functions ('xPierGSEA', 'xGSEAdotplot', 'xGSEAbarplot') for gene set enrichment analysis of prioritisation results
+    
+
 CHANGES IN VERSION 1.1.3
 -----------------------
 
@@ -15,9 +27,9 @@ CHANGES IN VERSION 1.1.1
 
 NEW FEATURES
 
-    o Add functions ('xPredictROCR', 'xPredictCompare', 'xContour') for performance evaluation
+    o Add new functions ('xPredictROCR', 'xPredictCompare', 'xContour') for performance evaluation
     
-    o Add functions ('xSNPhic.r', 'xPCHiCplot.r') for dealing with promoter capture HiC data
+    o Add new functions ('xSNPhic.r', 'xPCHiCplot.r') for dealing with promoter capture HiC data
 
     o Modify the function 'xPierSNPs.r' to incorporate promoter capture HiC data
     

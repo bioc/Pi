@@ -8,7 +8,7 @@
 #' @param detail logical to indicate whether to label methods along with performance. By default, it sets TRUE
 #' @param facet logical to indicate whether to facet/wrap a 1d of panels into 2d. By default, it sets FALSE
 #' @param signature a logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
-#' @return an object of class "ggplot"
+#' @return an object of class "ggplot" or NULL (if all input pPerf objects are NULL)
 #' @note none
 #' @export
 #' @seealso \code{\link{xPredictROCR}}
@@ -35,7 +35,12 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), sort=TRUE, deta
    	if(any(class(list_pPerf) %in% c("gg","ggplot","pPerf"))){
 		list_pPerf <- list(list_pPerf)
 	}else if(class(list_pPerf)=="list"){
-		list_pPerf <- list_pPerf
+		## Remove null elements in a list
+		list_pPerf <- base::Filter(base::Negate(is.null), list_pPerf)
+		if(length(list_pPerf)==0){
+			warnings("All pPerf objects are NULL!")
+			return(NULL)
+		}
 	}else{
 		stop("The function must apply to an 'list' object, or an 'pPerf'/'ggplot' object.\n")
 	}

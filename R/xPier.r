@@ -77,8 +77,9 @@ xPier <- function(seeds, g, seeds.inclusive=TRUE, normalise=c("laplacian","row",
 			res_list <- lapply(data_list, function(x){
 				x <- as.numeric(x)
 				x <- x[!is.na(x)]
+				## maximum weight if multiple per gene
 				if(length(x)>0){
-					min(x)
+					max(x)
 				}else{
 					NULL
 				}

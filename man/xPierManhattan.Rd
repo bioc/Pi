@@ -13,7 +13,7 @@ verbose = TRUE, RData.location =
 "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode" (or "pTarget" or "aTarget")}
+\item{pNode}{an object of class "pNode" (or "pTarget" or "dTarget")}
 
 \item{color}{a character vector for colors to alternate chromosome
 colorings. If NULL, ggplot2 default colors will be used. If a single
@@ -38,7 +38,7 @@ will be displayed. By default, it sets to FALSE. It only works when
 labels in query are enabled/found}
 
 \item{y.scale}{how to transform the y scale. It can be "normal" for no
-transformation, and "sqrt" for square transformation}
+transformation, and "sqrt" for square root transformation}
 
 \item{GR.Gene}{the genomic regions of genes. By default, it is
 'UCSC_knownGene', that is, UCSC known genes (together with genomic

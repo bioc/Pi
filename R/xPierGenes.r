@@ -64,6 +64,16 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
     normalise <- match.arg(normalise)
     normalise.affinity.matrix <- match.arg(normalise.affinity.matrix)
     
+    ##########
+    ##########
+    if(is.vector(data)){
+		if(length(data)<=1){
+			return(NULL)
+		}
+    }
+    ##########
+    ##########
+        
     if(!is.null(network.customised) && class(network.customised)=="igraph"){
 		if(verbose){
 			now <- Sys.time()

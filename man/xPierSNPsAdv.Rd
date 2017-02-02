@@ -46,7 +46,7 @@ cdf.function = c("empirical", "exponential"), scoring.scheme = c("max",
 network.customised = NULL, seeds.inclusive = TRUE,
 normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
 normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
+multicores = NULL, verbose = TRUE, verbose.details = FALSE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -232,6 +232,10 @@ This option only works when parallel computation is enabled}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}
+
+\item{verbose.details}{logical to indicate whether the detailed
+messages from being-called functions will be displayed in the screen.
+By default, it sets to FALSE enabling messages}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}

@@ -138,13 +138,20 @@ colnames(df_pop) <- c('Project', 'Population', 'Code')
 knitr::kable(df_pop[,c(3,2,1)], caption="", row.names=FALSE)
 ```
 
-## xPierManhattan
+## xPierMatrix
+*[`xPierMatrix`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierMatrix.html)*: extracts priority matrix from a list of `pNode` objects, in which rows are genes and columns for the predictors (corresponding to the `pNode` objects). Also highlighted is to generate priority results in the discovery mode, that is, (similar to meta-analysis) aggregation of priority matrix.
+
+## xPierManhattan and xPierTrack
 *[`xPierManhattan`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierManhattan.html)*: visualises prioritised genes using manhattan plot, in which priority for genes is displayed on the Y-axis along with genomic locations on the X-axis. Also highlighted are genes with the top priority.
 
-## xPierPathways
-*[`xPierPathways`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierPathways.html)*: prioritises pathways based on enrichment analysis of genes with the top priority (eg top 100 genes) using a compendium of pathways. A highly prioritised pathway has its member genes with high gene-level priority scores, that is, having evidence of direct modulation by disease-associated lead (or LD) SNPs, and/or having evidence of indirect modulation at the network level.
+*[`xPierTrack`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierTrack.html)*: visualises prioritised genes using track plot, in which priority for the gene in query is displayed on the data track and nearby genes on the annotation track. Genomic locations on the X-axis are indicated on the X-axis, and the gene in query is highlighted.
 
-In addition to pathways, enrichment analysis can be extended to other ontologies, as listed below:
+## xPierPathways and xPierGSEA
+*[`xPierPathways`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierPathways.html)*: prioritises pathways based on enrichment analysis of genes with the top priority (eg top 100 genes) using a compendium of pathways. It returns an object of class `eTerm`. A highly prioritised pathway has its member genes with high gene-level priority scores, that is, having evidence of direct modulation by disease-associated lead (or LD) SNPs, and/or having evidence of indirect modulation at the network level.
+
+*[`xPierGSEA`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierGSEA.html)*: prioritises pathways based on gene set enrichment analysis (GSEA) of genes based on their priority using a compendium of pathways. It returns an object of class `eGSEA`. A highly prioritised pathway has its member genes with a tendency of having high gene-level priority scores.
+
+In addition to pathways, analysis can be extended to other ontologies, as listed below:
 
 ```{r, eval=TRUE, echo=FALSE}
 obo <- list()
@@ -186,19 +193,28 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 ## xPierSubnet
 *[`xPierSubnet`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierSubnet.html)*: identifies a gene network that contains as many highly prioritised genes as possible but a few lowly prioritised genes as linkers. An iterative procedure of choosing different priority cutoff is also used to identify the network with a desired number of nodes/genes.
 
-## xPredictROCR and xPredictCompare
+## Evaluation functions
 
 - *[`xPredictROCR`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPredictROCR.html)*: assess the prediction/prioritisation performance via Receiver Operating Characteristic (ROC) and Precision-Recall (PR) analysis.
 
 - *[`xPredictCompare`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPredictCompare.html)*: compares the prediction/prioritisation performance.
 
-## Integral functions (under development)
+- *[`xGSsimulator`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSsimulator.html)*: simulates the gold standard negatives (GSN) from gold standard positives (GSP) considering the gene interaction evidence.
+
+## Integral functions
 
 - *[`xMLrandomforest`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLrandomforest.html)*: integrates predictor matrix via machine learning algorithm random forest and returns an object of class `pTarget`.
 
+- *[`xMLdotplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdotplot.html)*: visualise machine learning results (a `pTarget` object) using dot plot and returns an object of class `ggplot`.
+
+- *[`xMLdensity`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdensity.html)*: visualise machine learning results (a `pTarget` object) using density plot and returns an object of class `ggplot`.
+
+- *[`xMLzoom`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLzoom.html)*: visualise machine learning results (a `pTarget` object) using zoom plot and returns an object of class `ggplot`.
+
+
 ## Elementary functions
 
-- *[`xPierMatrix`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierMatrix.html)*: extracts priority matrix from a list of `pNode` objects, in which rows are genes and columns for the predictors (corresponding to the `pNode` objects).
+- *[`xPierSNPsAdv`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierSNPs.html)*: prepares genetic predictors given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values). 
 
 - *[`xSNPeqtl`](http://rawgit.com/hfang-bristol/Pi/master/inst/xSNPeqtl.html)*: extracts eQTL-gene pairs given a list of SNPs.
 
@@ -211,6 +227,10 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 - *[`xPCHiCplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPCHiCplot.html)*: visualises promoter capture HiC data using different network layouts.
 
 - *[`xContour`](http://rawgit.com/hfang-bristol/Pi/master/inst/xContour.html)*: visualises a numeric matrix as a contour plot.
+
+- *[`xGSEAdotplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSEAdotplot.html)*: visualises GSEA results using dot plot.
+
+- *[`xGSEAbarplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSEAbarplot.html)*: visualises GSEA results using bar plot.
 
 
 # Showcases

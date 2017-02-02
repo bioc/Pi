@@ -28,10 +28,10 @@ lea.depth = 2, path.mode = c("all_paths", "shortest_paths",
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode" (or "pTarget")}
+\item{pNode}{an object of class "pNode" (or "pTarget" or "dTarget")}
 
-\item{priority.top}{the number of the top targets to be analysed for
-pathway enrichment}
+\item{priority.top}{the number of the top targets used for enrichment
+analysis. By default, it sets to 100}
 
 \item{background}{a background vector. It contains a list of Gene
 Symbols as the test background. If NULL, by default all annotatable are
