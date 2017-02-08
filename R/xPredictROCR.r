@@ -2,7 +2,7 @@
 #'
 #' \code{xPredictROCR} is supposed to assess the prediction performance via Receiver Operating Characteristic (ROC) and Precision-Recall (PR) analysis. It requires three inputs: 1) Gold Standard Positive (GSP) targets; 2) Gold Standard Negative (GSN) targets; 3) prediction containing predicted targets and predictive scores.
 #'
-#' @param prediction a data frame containing predictions along with predictive scores. It has two columns: 1st column for target, 2nd column for predictive scores (the higher the better). Alternatively, it can be an object of class "pNode" from which a data frame is extracted
+#' @param prediction a data frame containing predictions along with predictive scores. It has two columns: 1st column for target, 2nd column for predictive scores (the higher the better). Alternatively, it can be an object of class "pNode" (or "pTarget" or "dTarget") from which a data frame is extracted
 #' @param GSP a vector containing Gold Standard Positives (GSP)
 #' @param GSN a vector containing Gold Standard Negatives (GSN)
 #' @param rescale logical to indicate whether to linearly rescale predictive scores for GSP/GSN targets to the range [0,1]. By default, it sets to TRUE
@@ -45,6 +45,10 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 
     if (class(prediction) == "pNode" ){
         prediction <- prediction$priority[,c("name","priority")]
+    }else if(class(prediction) == "pTarget"){
+    	prediction <- prediction$priority[, c("name","priority")]
+    }else if(class(prediction) == "dTarget"){
+    	prediction <- prediction$priority[, c("name","priority")]
     }
 
     res_ls <- split(x=as.numeric(prediction[,2]), f=prediction[,1])

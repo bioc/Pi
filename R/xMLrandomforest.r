@@ -219,7 +219,7 @@ xMLrandomforest <- function(df_predictor, GSP, GSN, nfold=3, mtry=NULL, ntree=20
 	######################
 	## evaluation per fold
 	######################
-	ls_res <- lapply(1:length(ls_model), function(i){
+	lsls_predictors <- lapply(1:length(ls_model), function(i){
 		rf.model <- ls_model[[i]]
 		## prediction for testset: ?predict.randomForest
 		testindex <- index_sets[[i]]
@@ -234,6 +234,10 @@ xMLrandomforest <- function(df_predictor, GSP, GSN, nfold=3, mtry=NULL, ntree=20
 			data.frame(rownames(df_pred), df_pred[,x], stringsAsFactors=FALSE)
 		})
 		names(ls_predictors) <- colnames(df_pred)
+		return(ls_predictors)
+	})
+	ls_res <- lapply(1:length(lsls_predictors), function(i){
+		ls_predictors <- lsls_predictors[[i]]
 		# do evaluation
 		ls_pPerf <- lapply(ls_predictors, function(x){
 			pPerf <- xPredictROCR(prediction=x, GSP=GSP, GSN=GSN, verbose=FALSE)
@@ -292,7 +296,7 @@ xMLrandomforest <- function(df_predictor, GSP, GSN, nfold=3, mtry=NULL, ntree=20
     if(verbose){
         now <- Sys.time()
         message(sprintf("6. Do prediction for fullset (%s).", as.character(now)), appendLF=TRUE)
-        message(sprintf("Extract the full prediction matrix of %d rows/genes X %d columns/folds (%s), aggregated via '%s' ...", ncol(df_predictor_class), nfold, fold.aggregateBy, as.character(now)), appendLF=TRUE)
+        message(sprintf("Extract the full prediction matrix of %d rows/genes X %d columns/folds, aggregated via '%s' (%s) ...", ncol(df_predictor_class), nfold, fold.aggregateBy, as.character(now)), appendLF=TRUE)
     }
 	
 	ls_full <- lapply(1:length(ls_model), function(i){
@@ -354,7 +358,14 @@ xMLrandomforest <- function(df_predictor, GSP, GSN, nfold=3, mtry=NULL, ntree=20
 	output_df_predictor <- df_predictor[ind,]
 	df_predictor_gs <- data.frame(GS=output_gs, name=names(df_ap), output_df_predictor, stringsAsFactors=FALSE)
 	df_full_gs <- data.frame(GS=output_gs, name=names(df_ap), output_df_full, stringsAsFactors=FALSE)
-
+	
+	### pred2fold
+	pred2fold <- lapply(1:length(lsls_predictors), function(i){
+		x <- lsls_predictors[[i]][[1]]
+		colnames(x) <- c("name","prob")
+		return(x)
+	})
+	names(pred2fold) <- paste0('fold_',1:nfold)
     ####################################################################################
 
 	######################
@@ -383,6 +394,7 @@ xMLrandomforest <- function(df_predictor, GSP, GSN, nfold=3, mtry=NULL, ntree=20
     pTarget <- list(model = ls_model,
     				priority = df_priority,
     				predictor = df_predictor_gs,
+    				pred2fold = pred2fold,
     				prob2fold = df_full_gs,
     				importance2fold = df_importance,
     				roc2fold = df_ROC,

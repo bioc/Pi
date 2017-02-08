@@ -27,7 +27,7 @@
 #' bp + theme(legend.position=c(0.75,0.25))
 #' }
 
-xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), sort=TRUE, detail=TRUE, facet=FALSE, signature=TRUE)
+xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve","bar"), sort=TRUE, detail=TRUE, facet=FALSE, signature=TRUE)
 {
 
     displayBy <- match.arg(displayBy)
@@ -70,6 +70,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), sort=TRUE, deta
 	## Method factor
 	df_PRS$Method <- factor(df_PRS$Method, levels=list_names)
 	
+	if(type=='curve'){
 	## draw curves
     Recall <- ''
     Precision <- ''
@@ -88,6 +89,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), sort=TRUE, deta
 				df_PRS$Method <- factor(df_PRS$Method, levels=unique(df_PRS$Method))
 			}
 		}
+		
 		## ggplot
 		p <- ggplot(df_PRS, aes(x=1-Specificity,y=Recall))
 		
@@ -98,7 +100,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), sort=TRUE, deta
 		}
 		
 		p <- p + ylab("True Positive Rate = TP/(TP+FN)") + xlab("False Positive Rate = FP/(FP+TN)") + ylim(0,max(df_PRS$Recall)) + xlim(0,max(1-df_PRS$Specificity))
-
+		
 	}else if(displayBy=='PR'){
 		## sort by: fmax
 		fmax <- ''
@@ -142,6 +144,48 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), sort=TRUE, deta
 		
 		#p + theme(legend.position=c(0.75,0.25))
 	}
+	
+	}else if(type=='bar'){
+		
+		df <- unique(df_PRS[,c("Method","fmax","auroc","Label")])
+		
+		## draw curves
+		Recall <- ''
+		Precision <- ''
+		Specificity <- ''
+		Method <- ''
+		Label <- ''
+		auroc <- ''
+		if(displayBy=='ROC'){
+			## sort by: auroc
+			if(sort){
+				df <- df[with(df, order(-auroc)), ]
+				## define levels
+				if(detail){
+					df$Label <- factor(df$Label, levels=unique(df$Label))
+				}else{
+					df$Method <- factor(df$Method, levels=unique(df$Method))
+				}
+			}
+		
+			## ggplot
+			p <- ggplot(df, aes(x=Method,y=auroc))
+		
+			if(detail){
+				p <- p + geom_col(aes(colour=factor(Label)))
+			}else{
+				p <- p + geom_col(aes(colour=factor(Method)))
+			}
+			
+			ylim_low <- ifelse(min(df$auroc)>0.5, 0.5, min(df$auroc))
+			p <- p + ylab("AUC\n(a measure of ROC)") + ylim(ylim_low,1)
+			
+			bp <- p + theme_bw() + theme(legend.position="none",axis.title.y=element_blank(), axis.text.y=element_text(size=12,color="black"), axis.title.x=element_text(size=14,color="black")) + coord_flip()
+			
+		}
+	
+	}
+	
 	
 	if(signature){
 		caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("XGR"))

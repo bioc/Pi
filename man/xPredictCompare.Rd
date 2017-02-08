@@ -4,8 +4,9 @@
 \alias{xPredictCompare}
 \title{Function to compare prediction performance results}
 \usage{
-xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), sort = TRUE,
-detail = TRUE, facet = FALSE, signature = TRUE)
+xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), type =
+c("curve",
+"bar"), sort = TRUE, detail = TRUE, facet = FALSE, signature = TRUE)
 }
 \arguments{
 \item{list_pPerf}{a list of "pPerf" objects}

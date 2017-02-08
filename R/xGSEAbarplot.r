@@ -68,19 +68,19 @@ xGSEAbarplot <- function(eGSEA, top_num=10, displayBy=c("nes","adjp","fdr","pval
 	adjp <- nes <- pvalue <- NULL
 	name <- height <- NULL
 	if(displayBy=='adjp' | displayBy=='fdr'){
-		df <- df[with(df,order(-adjp,nes)),]
+		df <- df[with(df,order(-adjp,nes,es)),]
 		df$name <- factor(df$name, levels=df$name)
 		df$height <- -1*log10(df$adjp)
 		p <- ggplot(df, aes(x=name, y=height))
 		p <- p + ylab("Enrichment significance: -log10(FDR)")
 	}else if(displayBy=='nes'){
-		df <- df[with(df,order(nes,-pvalue)),]
+		df <- df[with(df,order(nes,-pvalue,es)),]
 		df$name <- factor(df$name, levels=df$name)
 		df$height <- df$nes
 		p <- ggplot(df, aes(x=name, y=height))
 		p <- p + ylab("Normalised enrichment score (NES)")
 	}else if(displayBy=='pvalue'){
-		df <- df[with(df,order(-pvalue,nes)),]
+		df <- df[with(df,order(-pvalue,nes,es)),]
 		df$name <- factor(df$name, levels=df$name)
 		df$height <- -1*log10(df$pvalue)
 		p <- ggplot(df, aes(x=name, y=height))
