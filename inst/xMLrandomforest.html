@@ -95,8 +95,7 @@ displayed in the screen. By default, it sets to TRUE for display</p>
 </p>
 
 <ul>
-<li><p><code>model</code>: a list of models, each results from per-fold train
-set
+<li><p><code>model</code>: a list of models, results from per-fold train set
 </p>
 </li>
 <li><p><code>priority</code>: a data frame of nGene X 6 containing gene
@@ -111,6 +110,10 @@ p-value), &quot;priority&quot; (-log10(fdr))
 </li>
 <li><p><code>predictor</code>: a data frame, which is the same as the input
 data frame but inserting an additional column 'GS' in the first column
+</p>
+</li>
+<li><p><code>pred2fold</code>: a list of data frame, results from per-fold
+test set
 </p>
 </li>
 <li><p><code>prob2fold</code>: a data frame of nGene X 2+nfold containing the

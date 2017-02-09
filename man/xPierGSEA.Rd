@@ -140,4 +140,3 @@ gp <- xGSEAdotplot(eGSEA, top=1)
 \seealso{
 \code{\link{xGSEAbarplot}}, \code{\link{xGSEAdotplot}}
 }
-

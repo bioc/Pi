@@ -123,4 +123,3 @@ mp
 \code{\link{xPierSNPs}}, \code{\link{xPierGenes}},
 \code{\link{xPierPathways}}
 }
-

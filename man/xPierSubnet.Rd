@@ -157,4 +157,3 @@ xCircos(g=subnet, entity="Gene", RData.location=RData.location)
 \seealso{
 \code{\link{xSubneterGenes}}
 }
-

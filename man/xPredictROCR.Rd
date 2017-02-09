@@ -73,4 +73,3 @@ RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 pPerf <- xPredictROCR(prediction, GSP, GSN)
 }
 }
-

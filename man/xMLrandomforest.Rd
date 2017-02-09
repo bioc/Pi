@@ -50,8 +50,7 @@ displayed in the screen. By default, it sets to TRUE for display}
 \value{
 an object of class "pTarget", a list with following components:
 \itemize{
-\item{\code{model}: a list of models, each results from per-fold train
-set}
+\item{\code{model}: a list of models, results from per-fold train set}
 \item{\code{priority}: a data frame of nGene X 6 containing gene
 priority information, where nGene is the number of genes in the input
 data frame, and the 6 columns are "GS" (either 'GSP', or 'GSN', or
@@ -62,6 +61,8 @@ the probability of being GSP), "fdr" (fdr adjusted from the aggregated
 p-value), "priority" (-log10(fdr))}
 \item{\code{predictor}: a data frame, which is the same as the input
 data frame but inserting an additional column 'GS' in the first column}
+\item{\code{pred2fold}: a list of data frame, results from per-fold
+test set}
 \item{\code{prob2fold}: a data frame of nGene X 2+nfold containing the
 probability of being GSP, where nGene is the number of genes in the
 input data frame, nfold is the number of folds for cross validataion,
@@ -129,4 +130,3 @@ RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 pTarget <- xMLrandomforest(df_prediction, GSP, GSN)
 }
 }
-

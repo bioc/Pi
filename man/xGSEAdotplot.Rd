@@ -56,4 +56,3 @@ grid.arrange(grobs=ls_gp, ncol=2)
 \seealso{
 \code{\link{xPierGSEA}}
 }
-

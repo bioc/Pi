@@ -75,4 +75,3 @@ xContour(data)
 \seealso{
 \code{\link{xContour}}
 }
-

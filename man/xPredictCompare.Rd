@@ -11,8 +11,11 @@ c("curve",
 \arguments{
 \item{list_pPerf}{a list of "pPerf" objects}
 
-\item{displayBy}{which curve will be used for comparison. It can be
-"ROC" for ROC curve (by default), "PR" for PR curve}
+\item{displayBy}{which performance will be used for comparison. It can
+be "ROC" for ROC curve (by default), "PR" for PR curve}
+
+\item{type}{the type of plot to draw. It can be "curve" for curve plot
+(by default), "bar" for bar plot}
 
 \item{sort}{logical to indicate whether to sort methods according to
 performance. By default, it sets TRUE}
@@ -55,4 +58,3 @@ bp + theme(legend.position=c(0.75,0.25))
 \seealso{
 \code{\link{xPredictROCR}}
 }
-

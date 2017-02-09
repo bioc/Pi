@@ -288,4 +288,3 @@ print(mp)
 \seealso{
 \code{\link{xPierSNPs}}
 }
-

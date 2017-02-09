@@ -3,7 +3,8 @@
 #' \code{xPredictCompare} is supposed to compare prediction performance results. It returns an object of class "ggplot".
 #'
 #' @param list_pPerf a list of "pPerf" objects
-#' @param displayBy which curve will be used for comparison. It can be "ROC" for ROC curve (by default), "PR" for PR curve
+#' @param displayBy which performance will be used for comparison. It can be "ROC" for ROC curve (by default), "PR" for PR curve
+#' @param type the type of plot to draw. It can be "curve" for curve plot (by default), "bar" for bar plot
 #' @param sort logical to indicate whether to sort methods according to performance. By default, it sets TRUE
 #' @param detail logical to indicate whether to label methods along with performance. By default, it sets TRUE
 #' @param facet logical to indicate whether to facet/wrap a 1d of panels into 2d. By default, it sets FALSE
@@ -31,6 +32,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 {
 
     displayBy <- match.arg(displayBy)
+    type <- match.arg(type)
     
    	if(any(class(list_pPerf) %in% c("gg","ggplot","pPerf"))){
 		list_pPerf <- list(list_pPerf)
@@ -149,10 +151,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 		
 		df <- unique(df_PRS[,c("Method","fmax","auroc","Label")])
 		
-		## draw curves
-		Recall <- ''
-		Precision <- ''
-		Specificity <- ''
+		## draw bar
 		Method <- ''
 		Label <- ''
 		auroc <- ''
@@ -161,31 +160,46 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 			if(sort){
 				df <- df[with(df, order(-auroc)), ]
 				## define levels
-				if(detail){
-					df$Label <- factor(df$Label, levels=unique(df$Label))
-				}else{
-					df$Method <- factor(df$Method, levels=unique(df$Method))
-				}
+				df$Method <- factor(df$Method, levels=unique(df$Method))
 			}
 		
 			## ggplot
 			p <- ggplot(df, aes(x=Method,y=auroc))
 		
 			if(detail){
-				p <- p + geom_col(aes(colour=factor(Label)))
+				p <- p + geom_col(aes(fill=factor(Label)))
 			}else{
-				p <- p + geom_col(aes(colour=factor(Method)))
+				p <- p + geom_col(aes(fill=factor(Method)))
 			}
+			p <- p + ylab("AUC\n(a measure of ROC)")
+			p <- p + geom_text(aes(label=auroc), hjust=1)
 			
-			ylim_low <- ifelse(min(df$auroc)>0.5, 0.5, min(df$auroc))
-			p <- p + ylab("AUC\n(a measure of ROC)") + ylim(ylim_low,1)
+			#ylim_low <- ifelse(min(df$auroc)>0.5, 0.5, min(df$auroc))
+			#p <- p + coord_cartesian(ylim=c(ylim_low,1))
 			
-			bp <- p + theme_bw() + theme(legend.position="none",axis.title.y=element_blank(), axis.text.y=element_text(size=12,color="black"), axis.title.x=element_text(size=14,color="black")) + coord_flip()
-			
+		}else if(displayBy=='PR'){
+			## sort by: fmax
+			if(sort){
+				df <- df[with(df, order(-fmax)), ]
+				## define levels
+				df$Method <- factor(df$Method, levels=unique(df$Method))
+			}
+		
+			## ggplot
+			p <- ggplot(df, aes(x=Method,y=fmax))
+		
+			if(detail){
+				p <- p + geom_col(aes(fill=factor(Label)))
+			}else{
+				p <- p + geom_col(aes(fill=factor(Method)))
+			}
+			p <- p + ylab("F-max\n(a measure of Precision-Recall curve)")
+			p <- p + geom_text(aes(label=fmax), hjust=1)
 		}
+		
+		p <- p + theme_bw() + theme(legend.position="none",axis.title.y=element_blank(), axis.text.y=element_text(size=12,color="black"), axis.title.x=element_text(size=14,color="black")) + coord_flip()
 	
 	}
-	
 	
 	if(signature){
 		caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("XGR"))

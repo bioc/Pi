@@ -126,4 +126,3 @@ PTmatrix
 \seealso{
 \code{\link{xPier}}
 }
-

@@ -25,7 +25,7 @@
 #' gp
 #' }
 
-xMLzoom <- function(pTarget, top=20, top.label.type=c("box","text"), top.label.size=3, top.label.query=NULL, point.shape=3, signature=TRUE, verbose=TRUE)
+xMLzoom <- function(pTarget, top=20, top.label.type=c("box","text"), top.label.size=3, top.label.query=NULL, point.shape=3, signature=TRUE)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one

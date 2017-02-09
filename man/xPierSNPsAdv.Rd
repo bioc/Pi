@@ -437,4 +437,3 @@ RData.location=RData.location)
 \seealso{
 \code{\link{xPierSNPs}}, \code{\link{xPierMatrix}}
 }
-

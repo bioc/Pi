@@ -6,7 +6,7 @@
 \usage{
 xMLzoom(pTarget, top = 20, top.label.type = c("box", "text"),
 top.label.size = 3, top.label.query = NULL, point.shape = 3,
-signature = TRUE, verbose = TRUE)
+signature = TRUE)
 }
 \arguments{
 \item{pTarget}{an object of class "pTarget"}
@@ -53,4 +53,3 @@ gp
 \seealso{
 \code{\link{xMLrandomforest}}
 }
-

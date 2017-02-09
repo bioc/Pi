@@ -87,4 +87,3 @@ RData.location=RData.location)
 \code{\link{xRDataLoader}}, \code{\link{xPredictROCR}},
 \code{\link{xMLrandomforest}}
 }
-

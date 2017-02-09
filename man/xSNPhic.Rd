@@ -180,4 +180,3 @@ xPCHiCplot(g, glayout=layout_in_circle, vertex.label.cex=0.5)
 \seealso{
 \code{\link{xRDataLoader}}
 }
-

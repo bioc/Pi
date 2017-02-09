@@ -26,7 +26,6 @@
 #' @import XGR
 #' @import ggplot2
 #' @import graphics
-#' @import e1071
 #' @importFrom randomForest randomForest tuneRF importance
 #' @import stats
 #' @importFrom ggbio autoplot
@@ -35,7 +34,6 @@
 #' @importFrom supraHex sDistance visColormap
 #' @importFrom scales sqrt_trans log_trans trans_breaks trans_format math_format
 #' @importFrom grDevices rgb cm.colors
-#' @importFrom glmnet glmnet cv.glmnet
 #' @seealso \code{\link{xPier}}
 #' @include xRWR.r
 #' @examples

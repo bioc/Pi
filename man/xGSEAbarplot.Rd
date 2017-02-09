@@ -61,4 +61,3 @@ print(bp)
 \seealso{
 \code{\link{xPierGSEA}}
 }
-

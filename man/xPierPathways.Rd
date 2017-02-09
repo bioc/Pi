@@ -220,4 +220,3 @@ row.names=FALSE)
 \seealso{
 \code{\link{xRDataLoader}}, \code{\link{xEnricher}}
 }
-
