@@ -34,7 +34,6 @@ Collate:
     'xGSsimulator.r'
     'xMLdotplot.r'
     'xMLdensity.r'
-    'xMLzoom.r'
     'xPierGSEA.r'
     'xGSEAdotplot.r'
     'xGSEAbarplot.r'
