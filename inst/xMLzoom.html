@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise machine learning results using zoom...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xMLzoom"><tr><td>xMLzoom</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to visualise machine learning results using zoom plot</h2>
+
+<h3>Description</h3>
+
+<p><code>xMLzoom</code> is supposed to visualise machine learning results using
+zoom plot. It returns an object of class &quot;ggplot&quot;.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xMLzoom(pTarget, top = 20, top.label.type = c("box", "text"),
+top.label.size = 3, top.label.query = NULL, point.shape = 3,
+signature = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>pTarget</code></td>
+<td>
+<p>an object of class &quot;pTarget&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>top</code></td>
+<td>
+<p>the number of the top targets to be labelled/highlighted</p>
+</td></tr>
+<tr valign="top"><td><code>top.label.type</code></td>
+<td>
+<p>how to label the top targets. It can be &quot;box&quot;
+drawing a box around the labels , and &quot;text&quot; for the text only</p>
+</td></tr>
+<tr valign="top"><td><code>top.label.size</code></td>
+<td>
+<p>the highlight label size</p>
+</td></tr>
+<tr valign="top"><td><code>top.label.query</code></td>
+<td>
+<p>which top genes in query will be labelled. By
+default, it sets to NULL meaning all top genes will be displayed. If
+labels in query can not be found, then none will be displayed</p>
+</td></tr>
+<tr valign="top"><td><code>point.shape</code></td>
+<td>
+<p>an integer specifying point shapes. By default, it
+is 3 for cross. For details, please refere to
+<a href="http://sape.inf.usi.ch/quick-reference/ggplot2/shape">http://sape.inf.usi.ch/quick-reference/ggplot2/shape</a></p>
+</td></tr>
+<tr valign="top"><td><code>signature</code></td>
+<td>
+<p>logical to indicate whether the signature is assigned
+to the plot caption. By default, it sets TRUE</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class &quot;ggplot&quot;
+</p>
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xMLrandomforest</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+gp &lt;- xMLzoom(pTarget)
+gp
+
+## End(Not run)
+</pre>
+
+
+</body></html>

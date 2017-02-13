@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise GSEA results using a barplot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xGSEAbarplot"><tr><td>xGSEAbarplot</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to visualise GSEA results using a barplot</h2>
+
+<h3>Description</h3>
+
+<p><code>xGSEAbarplot</code> is supposed to visualise GSEA results using a
+barplot. It returns an object of class &quot;ggplot&quot;.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xGSEAbarplot(eGSEA, top_num = 10, displayBy = c("nes", "adjp", "fdr",
+"pvalue"), FDR.cutoff = 0.05, bar.label = TRUE, bar.label.size = 3,
+wrap.width = NULL, signature = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>eGSEA</code></td>
+<td>
+<p>an object of class &quot;eGSEA&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>top_num</code></td>
+<td>
+<p>the number of the top terms (sorted according to FDR or
+adjusted p-values). If it is 'auto', only the significant terms (see
+below FDR.cutoff) will be displayed</p>
+</td></tr>
+<tr valign="top"><td><code>displayBy</code></td>
+<td>
+<p>which statistics will be used for displaying. It can
+be &quot;nes&quot; for normalised enrichment score (by default), &quot;adjp&quot; or &quot;fdr&quot;
+for adjusted p value (or FDR), &quot;pvalue&quot; for p value</p>
+</td></tr>
+<tr valign="top"><td><code>FDR.cutoff</code></td>
+<td>
+<p>FDR cutoff used to declare the significant terms. By
+default, it is set to 0.05. This option only works when setting top_num
+(see above) is 'auto'</p>
+</td></tr>
+<tr valign="top"><td><code>bar.label</code></td>
+<td>
+<p>logical to indicate whether to label each bar with
+FDR. By default, it sets to true for bar labelling</p>
+</td></tr>
+<tr valign="top"><td><code>bar.label.size</code></td>
+<td>
+<p>an integer specifying the bar labelling text
+size. By default, it sets to 3</p>
+</td></tr>
+<tr valign="top"><td><code>wrap.width</code></td>
+<td>
+<p>a positive integer specifying wrap width of name</p>
+</td></tr>
+<tr valign="top"><td><code>signature</code></td>
+<td>
+<p>logical to indicate whether the signature is assigned
+to the plot caption. By default, it sets TRUE showing which function is
+used to draw this graph</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class &quot;ggplot&quot;
+</p>
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xPierGSEA</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+bp &lt;- xGSEAbarplot(eGSEA, top_num="auto", displayBy="nes")
+#pdf(file="GSEA_barplot.pdf", height=6, width=12, compress=TRUE)
+print(bp)
+#dev.off()
+
+## End(Not run)
+</pre>
+
+
+</body></html>

@@ -87,7 +87,7 @@ it intends to calculate the affinity score of all nodes in the graph to
 the seeds. If the seeds are not given, it will pre-compute affinity
 matrix for nodes in the input graph with respect to each starting node
 (as a seed) by looping over every node in the graph. Parallel computing
-is also supported for Linux or Mac operating systems.
+is also supported.
 }
 \note{
 The input graph will treat as an unweighted graph if there is no
@@ -126,4 +126,3 @@ PTmatrix
 \seealso{
 \code{\link{xPier}}
 }
-

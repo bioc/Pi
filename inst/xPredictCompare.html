@@ -17,8 +17,9 @@ results. It returns an object of class &quot;ggplot&quot;.
 <h3>Usage</h3>
 
 <pre>
-xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), sort = TRUE,
-detail = TRUE, facet = FALSE, signature = TRUE)
+xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), type =
+c("curve",
+"bar"), sort = TRUE, detail = TRUE, facet = FALSE, signature = TRUE)
 </pre>
 
 
@@ -31,8 +32,13 @@ detail = TRUE, facet = FALSE, signature = TRUE)
 </td></tr>
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
-<p>which curve will be used for comparison. It can be
-&quot;ROC&quot; for ROC curve (by default), &quot;PR&quot; for PR curve</p>
+<p>which performance will be used for comparison. It can
+be &quot;ROC&quot; for ROC curve (by default), &quot;PR&quot; for PR curve</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>the type of plot to draw. It can be &quot;curve&quot; for curve plot
+(by default), &quot;bar&quot; for bar plot</p>
 </td></tr>
 <tr valign="top"><td><code>sort</code></td>
 <td>
@@ -60,7 +66,8 @@ function is used to draw this graph</p>
 
 <h3>Value</h3>
 
-<p>an object of class &quot;ggplot&quot;
+<p>an object of class &quot;ggplot&quot; or NULL (if all input pPerf objects are
+NULL)
 </p>
 
 

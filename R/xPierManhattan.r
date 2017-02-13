@@ -2,7 +2,7 @@
 #'
 #' \code{xPierManhattan} is supposed to visualise prioritised genes using manhattan plot. Genes with the top priority are highlighed. It returns an object of class "ggplot".
 #'
-#' @param pNode an object of class "pNode" (or "pTarget" or "aTarget")
+#' @param pNode an object of class "pNode" (or "pTarget" or "dTarget")
 #' @param color a character vector for colors to alternate chromosome colorings. If NULL, ggplot2 default colors will be used. If a single character is provided, it can be "jet" (jet colormap) or "rainbow" (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta)
 #' @param top the number of the top targets to be labelled/highlighted
 #' @param top.label.type how to label the top targets. It can be "box" drawing a box around the labels , and "text" for the text only
@@ -10,7 +10,7 @@
 #' @param top.label.col the highlight label color
 #' @param top.label.query which top genes in query will be labelled. By default, it sets to NULL meaning all top genes will be displayed. If labels in query can not be found, then all will be displayed
 #' @param label.query.only logical to indicate whether only genes in query will be displayed. By default, it sets to FALSE. It only works when labels in query are enabled/found
-#' @param y.scale how to transform the y scale. It can be "normal" for no transformation, and "sqrt" for square transformation
+#' @param y.scale how to transform the y scale. It can be "normal" for no transformation, and "sqrt" for square root transformation
 #' @param GR.Gene the genomic regions of genes. By default, it is 'UCSC_knownGene', that is, UCSC known genes (together with genomic locations) based on human genome assembly hg19. It can be 'UCSC_knownCanonical', that is, UCSC known canonical genes (together with genomic locations) based on human genome assembly hg19. Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to Gene Symbols. Then, tell "GR.Gene" with your RData file name (with or without extension), plus specify your file RData path in "RData.location"
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to false for no display
@@ -72,10 +72,10 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
         df_priority <- pNode$priority[, c("seed","weight","priority")]
     }else if(class(pNode) == "pTarget"){
     	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
-    }else if(class(pNode) == "aTarget"){
+    }else if(class(pNode) == "dTarget"){
     	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]	
     }else{
-    	stop("The function must apply to a 'pNode' or 'pTarget' or 'aTarget' object.\n")
+    	stop("The function must apply to a 'pNode' or 'pTarget' or 'dTarget' object.\n")
     }
     
 	if(verbose){
@@ -103,6 +103,7 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 	########################################
 	if(label.query.only){
 		if(!is.null(top.label.query)){
+			top.label.query <- as.vector(t(top.label.query)) # just in case converting data.frame to vector
 			ind <- match(names(gr), top.label.query)
 			if(sum(!is.na(ind)) >= 1){
 				gr <- gr[!is.na(ind)]

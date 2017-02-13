@@ -474,4 +474,3 @@ print(mp)
 \code{\link{xSparseMatrix}}, \code{\link{xSM2DF}}, \code{\link{xPier}},
 \code{\link{xPierGenes}}, \code{\link{xPierPathways}}
 }
-

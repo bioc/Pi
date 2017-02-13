@@ -5,8 +5,8 @@
 \title{Function to extract priority matrix from a list of pNode objects}
 \usage{
 xPierMatrix(list_pNode, displayBy = c("score", "rank", "pvalue"),
-combineBy = c("intersect", "union"), aggregateBy = c("none",
-"orderStatistic", "fishers", "Ztransform"), verbose = TRUE)
+combineBy = c("intersect", "union"), aggregateBy = c("none", "fishers",
+"logistic", "Ztransform", "orderStatistic"), verbose = TRUE)
 }
 \arguments{
 \item{list_pNode}{a list of "pNode" objects}
@@ -22,14 +22,44 @@ objects. It can be "intersect" for intersecting nodes (by default),
 \item{aggregateBy}{the aggregate method used. It can be either "none"
 for no aggregation, or "orderStatistic" for the method based on the
 order statistics of p-values, "fishers" for Fisher's method,
-"Ztransform" for Z-transform method}
+"Ztransform" for Z-transform method, "logistic" for the logistic
+method. Without loss of generality, the Z-transform method does well in
+problems where evidence against the combined null is spread widely
+(equal footings) or when the total evidence is weak; Fisher's method
+does best in problems where the evidence is concentrated in a
+relatively small fraction of the individual tests or when the evidence
+is at least moderately strong; the logistic method provides a
+compromise between these two. Notably, the aggregate methods 'fishers'
+and 'logistic' are preferred here}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}
 }
+\value{
+If aggregateBy is 'none' (by default), a data frame containing priority
+matrix, with each column/predictor for either priority score, or
+priorty rank or priority p-value.
+If aggregateBy is not 'none', an object of the class "dTarget", a list
+with following components:
+\itemize{
+\item{\code{priority}: a data frame of nGene X 5 containing gene
+priority (aggregated) information, where nGene is the number of genes,
+and the 5 columns are "name" (gene names), "rank" (ranks of the
+priority scores), "pvalue" (the aggregated p-value, converted from
+empirical cumulative distribution of the probability of being GSP),
+"fdr" (fdr adjusted from the aggregated p-value), "priority"
+(-log10(pvalue) but rescaled into the 0-10 range)}
+\item{\code{predictor}: a data frame containing priority matrix, with
+each column/predictor for either priority score, or priorty rank or
+priority p-value}
+\item{\code{call}: the call that produced this result}
+}
+}
 \description{
 \code{xPierMatrix} is supposed to extract priority matrix from a list
-of pNode objects
+of pNode objects. Also supported is the aggregation of priority matrix
+(similar to the meta-analysis) generating the priority results; we view
+this functionality as the discovery mode of the prioritisation.
 }
 \note{
 none
@@ -47,4 +77,3 @@ df_score <- xPierMatrix(ls_pNode)
 \seealso{
 \code{\link{xPierSNPs}}
 }
-

@@ -115,4 +115,3 @@ pNode <- xPier(seeds=data, g=g, restart=0.75)
 \code{\link{xPierSNPs}}, \code{\link{xPierGenes}},
 \code{\link{xPierPathways}}
 }
-

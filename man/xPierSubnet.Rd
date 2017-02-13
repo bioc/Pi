@@ -16,7 +16,7 @@ subnet.size = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode" (or "pTarget")}
+\item{pNode}{an object of class "pNode" (or "pTarget" or "dTarget")}
 
 \item{priority.quantite}{the quantite of the top priority genes. By
 default, 10% of top prioritised genes will be used for network
@@ -157,4 +157,3 @@ xCircos(g=subnet, entity="Gene", RData.location=RData.location)
 \seealso{
 \code{\link{xSubneterGenes}}
 }
-

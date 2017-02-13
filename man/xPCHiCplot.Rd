@@ -160,4 +160,3 @@ xPCHiCplot(g, node.info='SNP_target', vertex.label.cex=0.5)
 \seealso{
 \code{\link{xSNPhic}}
 }
-

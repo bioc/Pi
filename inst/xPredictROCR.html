@@ -34,15 +34,16 @@ xPredictROCR(prediction, GSP, GSN, rescale = TRUE, plot = c("none",
 <p>a data frame containing predictions along with
 predictive scores. It has two columns: 1st column for target, 2nd
 column for predictive scores (the higher the better). Alternatively, it
-can be an object of class &quot;pNode&quot; from which a data frame is extracted</p>
+can be an object of class &quot;pNode&quot; (or &quot;pTarget&quot; or &quot;dTarget&quot;) from
+which a data frame is extracted</p>
 </td></tr>
 <tr valign="top"><td><code>GSP</code></td>
 <td>
-<p>a vector containing Gold Standard Positive (GSP)</p>
+<p>a vector containing Gold Standard Positives (GSP)</p>
 </td></tr>
 <tr valign="top"><td><code>GSN</code></td>
 <td>
-<p>a vector containing Gold Standard Negative (GSN)</p>
+<p>a vector containing Gold Standard Negatives (GSN)</p>
 </td></tr>
 <tr valign="top"><td><code>rescale</code></td>
 <td>
@@ -102,6 +103,7 @@ for calculating other performance measures)
 
 <p>If plot is 'ROC' or 'PR', it will return a ggplot object after being
 appended with the same components as mentioned above.
+If no GSP and/or GSN is predicted, it will return NULL
 </p>
 
 

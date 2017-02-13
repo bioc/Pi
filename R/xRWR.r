@@ -1,6 +1,6 @@
 #' Function to implement Random Walk with Restart (RWR) on the input graph
 #'
-#' \code{xRWR} is supposed to implement Random Walk with Restart (RWR) on the input graph. If the seeds (i.e. a set of starting nodes) are given, it intends to calculate the affinity score of all nodes in the graph to the seeds. If the seeds are not given, it will pre-compute affinity matrix for nodes in the input graph with respect to each starting node (as a seed) by looping over every node in the graph. Parallel computing is also supported for Linux or Mac operating systems.
+#' \code{xRWR} is supposed to implement Random Walk with Restart (RWR) on the input graph. If the seeds (i.e. a set of starting nodes) are given, it intends to calculate the affinity score of all nodes in the graph to the seeds. If the seeds are not given, it will pre-compute affinity matrix for nodes in the input graph with respect to each starting node (as a seed) by looping over every node in the graph. Parallel computing is also supported.
 #'
 #' @param g an object of class "igraph" or "graphNEL"
 #' @param normalise the way to normalise the adjacency matrix of the input graph. It can be 'laplacian' for laplacian normalisation, 'row' for row-wise normalisation, 'column' for column-wise normalisation, or 'none'
@@ -26,7 +26,6 @@
 #' @import XGR
 #' @import ggplot2
 #' @import graphics
-#' @import e1071
 #' @importFrom randomForest randomForest tuneRF importance
 #' @import stats
 #' @importFrom ggbio autoplot
@@ -35,7 +34,6 @@
 #' @importFrom supraHex sDistance visColormap
 #' @importFrom scales sqrt_trans log_trans trans_breaks trans_format math_format
 #' @importFrom grDevices rgb cm.colors
-#' @importFrom glmnet glmnet cv.glmnet
 #' @seealso \code{\link{xPier}}
 #' @include xRWR.r
 #' @examples

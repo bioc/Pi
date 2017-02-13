@@ -63,7 +63,7 @@ cdf.function = c("empirical", "exponential"), scoring.scheme = c("max",
 network.customised = NULL, seeds.inclusive = TRUE,
 normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
 normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
+multicores = NULL, verbose = TRUE, verbose.details = FALSE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
@@ -305,6 +305,12 @@ This option only works when parallel computation is enabled</p>
 <td>
 <p>logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+<tr valign="top"><td><code>verbose.details</code></td>
+<td>
+<p>logical to indicate whether the detailed
+messages from being-called functions will be displayed in the screen.
+By default, it sets to FALSE enabling messages</p>
 </td></tr>
 <tr valign="top"><td><code>RData.location</code></td>
 <td>

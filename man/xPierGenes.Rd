@@ -168,4 +168,3 @@ row.names=FALSE)
 \code{\link{xRDataLoader}}, \code{\link{xPierSNPs}},
 \code{\link{xPier}}, \code{\link{xPierPathways}}
 }
-
