@@ -145,8 +145,10 @@ xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed"
 				minoverlap <- 1L # 1b overlaps
 				subject <- nodes_gr
 				query <- data_gr
-				q2r <- as.matrix(suppressWarnings(GenomicRanges::findOverlaps(query=query, subject=subject, maxgap=maxgap, minoverlap=minoverlap, type="any", select="all", ignore.strand=TRUE)))
+				#q2r <- suppressWarnings(GenomicRanges::findOverlaps(query=query, subject=subject, maxgap=maxgap, minoverlap=minoverlap, type="any", select="all", ignore.strand=TRUE))
+				#res_df <- data.frame(SNP=names(data_gr)[q2r@queryHits], nodes=names(nodes_gr)[q2r@subjectHits], stringsAsFactors=FALSE)
 				
+				q2r <- as.matrix(as.data.frame(GenomicRanges::findOverlaps(query=query, subject=subject, maxgap=maxgap, minoverlap=minoverlap, type="any", select="all", ignore.strand=TRUE)))
 				res_df <- data.frame(SNP=names(data_gr)[q2r[,1]], nodes=names(nodes_gr)[q2r[,2]], stringsAsFactors=FALSE)
 				
 				ind_from <- match(res_df$nodes, df_edges[,'from'])

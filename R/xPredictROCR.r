@@ -2,7 +2,7 @@
 #'
 #' \code{xPredictROCR} is supposed to assess the prediction performance via Receiver Operating Characteristic (ROC) and Precision-Recall (PR) analysis. It requires three inputs: 1) Gold Standard Positive (GSP) targets; 2) Gold Standard Negative (GSN) targets; 3) prediction containing predicted targets and predictive scores.
 #'
-#' @param prediction a data frame containing predictions along with predictive scores. It has two columns: 1st column for target, 2nd column for predictive scores (the higher the better). Alternatively, it can be an object of class "pNode" (or "pTarget" or "dTarget") from which a data frame is extracted
+#' @param prediction a data frame containing predictions along with predictive scores. It has two columns: 1st column for target, 2nd column for predictive scores (the higher the better). Alternatively, it can be an object of class "pNode" (or "sTarget" or "dTarget") from which a data frame is extracted
 #' @param GSP a vector containing Gold Standard Positives (GSP)
 #' @param GSN a vector containing Gold Standard Negatives (GSN)
 #' @param rescale logical to indicate whether to linearly rescale predictive scores for GSP/GSN targets to the range [0,1]. By default, it sets to TRUE
@@ -45,7 +45,7 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 
     if (class(prediction) == "pNode" ){
         prediction <- prediction$priority[,c("name","priority")]
-    }else if(class(prediction) == "pTarget"){
+    }else if(class(prediction) == "sTarget"){
     	prediction <- prediction$priority[, c("name","priority")]
     }else if(class(prediction) == "dTarget"){
     	prediction <- prediction$priority[, c("name","priority")]
@@ -53,6 +53,9 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 
     res_ls <- split(x=as.numeric(prediction[,2]), f=prediction[,1])
     pred <- unlist(lapply(res_ls, base::max))
+    ####
+    pred <- pred[!is.na(pred)]
+    ####
     if(verbose){
         now <- Sys.time()
         message(sprintf("There are %d targets in predictions (%s).", length(pred), as.character(now)), appendLF=TRUE)
@@ -101,7 +104,10 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 	}
 	
 	## ROCR
-	pred_obj <- ROCR::prediction(predictions=pred_label$pred, labels=pred_label$label)
+	if(length(suppressWarnings(tryCatch(pred_obj <- ROCR::prediction(predictions=pred_label$pred, labels=pred_label$label), error=function(e) e, warning=function(w) w)))==2){
+		return(NULL)
+	}
+	#pred_obj <- ROCR::prediction(predictions=pred_label$pred, labels=pred_label$label)
 	
 	## auc: Area under the ROC curve
 	res <- ROCR::performance(pred_obj, measure="auc")
@@ -130,6 +136,7 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 	
 	df_PRS <- data.frame(Precision=prec, Recall=rec, Specificity=1-fpr)
     
+    Recall <- Precision <- Specificity <- NULL
     if(plot=='none'){
     	pPerf <- list(
     		PRS=df_PRS,
@@ -140,14 +147,11 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
     		Pred_obj=pred_obj,
     		Call = match.call()
     	)
-    	
     	class(pPerf) <- "pPerf"
     	
     	invisible(pPerf)
     	
     }else if(plot=='PR'){
-    	Recall <- ''
-    	Precision <- ''
 		p <- ggplot(df_PRS, aes(x=Recall,y=Precision)) 
 		p <- p + geom_line() + theme_bw() + ylab("Precision = TP/(TP+FP)") + xlab("Recall = TP/(TP+FN)") + ylim(0,max(df_PRS$Precision)) + xlim(0,max(df_PRS$Recall)) 
 		
@@ -180,8 +184,6 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 		invisible(p)
 		
     }else if(plot=='ROC'){
-    	Recall <- ''
-    	Specificity <- ''
 		p <- ggplot(df_PRS, aes(x=1-Specificity,y=Recall)) 
 		p <- p + geom_line() + theme_bw() + ylab("True Positive Rate = TP/(TP+FN)") + xlab("False Positive Rate = FP/(FP+TN)") + ylim(0,max(df_PRS$Recall)) + xlim(0,max(1-df_PRS$Specificity))
 		

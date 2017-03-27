@@ -4,13 +4,20 @@
 \alias{xSNP2eGenes}
 \title{Function to define eQTL genes given a list of SNPs or a customised eQTL mapping data}
 \usage{
-xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
-"JKscience_TS2A_CD14", "JKscience_TS2A_LPS2", "JKscience_TS2A_LPS24",
-"JKscience_TS2A_IFN", "JKscience_TS2B", "JKscience_TS2B_CD14",
-"JKscience_TS2B_LPS2", "JKscience_TS2B_LPS24", "JKscience_TS2B_IFN",
-"JKscience_TS3A", "JKng_bcell", "JKng_bcell_cis", "JKng_bcell_trans",
-"JKng_mono", "JKng_mono_cis", "JKng_mono_trans", "JKnc_neutro",
-"JKnc_neutro_cis", "JKnc_neutro_trans", "JK_nk",
+xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_CD14",
+"JKscience_LPS2",
+"JKscience_LPS24", "JKscience_IFN", "JKscience_TS2A",
+"JKscience_TS2A_CD14",
+"JKscience_TS2A_LPS2", "JKscience_TS2A_LPS24", "JKscience_TS2A_IFN",
+"JKscience_TS2B", "JKscience_TS2B_CD14", "JKscience_TS2B_LPS2",
+"JKscience_TS2B_LPS24", "JKscience_TS2B_IFN", "JKscience_TS3A",
+"JKng_bcell",
+"JKng_bcell_cis", "JKng_bcell_trans", "JKng_mono", "JKng_mono_cis",
+"JKng_mono_trans", "JKpg_CD4", "JKpg_CD4_cis", "JKpg_CD4_trans",
+"JKpg_CD8",
+"JKpg_CD8_cis", "JKpg_CD8_trans", "JKnc_neutro", "JKnc_neutro_cis",
+"JKnc_neutro_trans", "WESTRAng_blood", "WESTRAng_blood_cis",
+"WESTRAng_blood_trans", "JK_nk", "JK_nk_cis", "JK_nk_trans",
 "GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
 "GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
@@ -98,6 +105,14 @@ state induced by 24-hour LPS (based on 432 individuals).}
 \item{\code{JKscience_TS2B_IFN}: cis-eQTLs only in the activating state
 induced by 24-hour interferon-gamma (based on 432 individuals).}
 \item{\code{JKscience_TS3A}: trans-eQTLs in either state.}
+\item{\code{JKscience_CD14}: cis and trans-eQTLs in the resting/CD14+
+state (based on 228 individuals).}
+\item{\code{JKscience_LPS2}: cis and trans-eQTLs in the activating
+state induced by 2-hour LPS (based on 228 individuals).}
+\item{\code{JKscience_LPS24}: cis and trans-eQTLs in the activating
+state induced by 24-hour LPS (based on 228 individuals).}
+\item{\code{JKscience_IFN}: cis and trans-eQTLs in the activating state
+induced by 24-hour interferon-gamma (based on 228 individuals).}
 }
 2. eQTLs in B cells. Sourced from Nature Genetics 2012, 44(5):502-510
 \itemize{
@@ -120,7 +135,9 @@ induced by 24-hour interferon-gamma (based on 432 individuals).}
 }
 5. eQTLs in NK cells. Unpublished
 \itemize{
-\item{\code{JK_nk}: cis-eQTLs.}
+\item{\code{JK_nk}: cis- and trans-eQTLs.}
+\item{\code{JK_nk_cis}: cis-eQTLs only.}
+\item{\code{JK_nk_trans}: trans-eQTLs only.}
 }
 6. Tissue-specific eQTLs from GTEx (version 4; incuding 13 tissues).
 Sourced from Science 2015, 348(6235):648-60
@@ -145,6 +162,24 @@ Skeletal'.}
 \item{\code{GTEx_V4_Stomach}: cis-eQTLs in tissue 'Stomach'.}
 \item{\code{GTEx_V4_Thyroid}: cis-eQTLs in tissue 'Thyroid'.}
 \item{\code{GTEx_V4_Whole_Blood}: cis-eQTLs in tissue 'Whole Blood'.}
+}
+7. eQTLs in CD4 T cells. Sourced from PLoS Genetics 2017
+\itemize{
+\item{\code{JKpg_CD4}: cis- and trans-eQTLs.}
+\item{\code{JKpg_CD4_cis}: cis-eQTLs only.}
+\item{\code{JKpg_CD4_trans}: trans-eQTLs only.}
+}
+8. eQTLs in CD8 T cells. Sourced from PLoS Genetics 2017
+\itemize{
+\item{\code{JKpg_CD8}: cis- and trans-eQTLs.}
+\item{\code{JKpg_CD8_cis}: cis-eQTLs only.}
+\item{\code{JKpg_CD8_trans}: trans-eQTLs only.}
+}
+9. eQTLs in blood. Sourced from Nature Genetics 2013, 45(10):1238-1243
+\itemize{
+\item{\code{WESTRAng_blood}: cis- and trans-eQTLs.}
+\item{\code{WESTRAng_blood_cis}: cis-eQTLs only.}
+\item{\code{WESTRAng_blood_trans}: trans-eQTLs only.}
 }
 }
 \examples{

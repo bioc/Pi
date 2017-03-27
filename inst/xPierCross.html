@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to extract priority matrix from a list of dTarget...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xPierCross"><tr><td>xPierCross</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to extract priority matrix from a list of dTarget objects</h2>
+
+<h3>Description</h3>
+
+<p><code>xPierCross</code> is supposed to extract priority matrix from a list of
+dTarget objects. Also supported is the aggregation of priority matrix
+(similar to the meta-analysis) generating the priority results; we view
+this functionality as the cross mode of the prioritisation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xPierCross(list_xTarget, displayBy = c("priority", "rank", "pvalue",
+"fdr"),
+combineBy = c("intersect", "union"), aggregateBy = c("none", "fishers",
+"logistic", "Ztransform", "orderStatistic"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>list_xTarget</code></td>
+<td>
+<p>a list of &quot;dTarget&quot;/&quot;sTarget&quot; objects or a
+&quot;dTarget&quot;/&quot;sTarget&quot; object</p>
+</td></tr>
+<tr valign="top"><td><code>displayBy</code></td>
+<td>
+<p>which priority will be extracted. It can be &quot;priority&quot;
+for priority score (by default), &quot;rank&quot; for priority rank, &quot;pvalue&quot; for
+priority p-value, &quot;fdr&quot; for priority fdr</p>
+</td></tr>
+<tr valign="top"><td><code>combineBy</code></td>
+<td>
+<p>how to resolve nodes/targets from a list of
+&quot;dTarget&quot;/&quot;sTarget&quot; objects. It can be &quot;intersect&quot; for intersecting
+nodes (by default), &quot;union&quot; for unionising nodes</p>
+</td></tr>
+<tr valign="top"><td><code>aggregateBy</code></td>
+<td>
+<p>the aggregate method used. It can be either &quot;none&quot;
+for no aggregation, or &quot;orderStatistic&quot; for the method based on the
+order statistics of p-values, &quot;fishers&quot; for Fisher's method,
+&quot;Ztransform&quot; for Z-transform method, &quot;logistic&quot; for the logistic
+method. Without loss of generality, the Z-transform method does well in
+problems where evidence against the combined null is spread widely
+(equal footings) or when the total evidence is weak; Fisher's method
+does best in problems where the evidence is concentrated in a
+relatively small fraction of the individual tests or when the evidence
+is at least moderately strong; the logistic method provides a
+compromise between these two. Notably, the aggregate methods 'fishers'
+and 'logistic' are preferred here</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+<tr valign="top"><td><code>RData.location</code></td>
+<td>
+<p>the characters to tell the location of built-in
+RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>If aggregateBy is 'none' (by default), a data frame containing priority
+matrix, with each column/disease for either priority score, or priorty
+rank or priority p-value.
+If aggregateBy is not 'none', an object of the class &quot;cTarget&quot;, a list
+with following components:
+</p>
+
+<ul>
+<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
+priority (aggregated) information, where nGene is the number of genes,
+and the 6 columns are &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the
+priority scores), &quot;pvalue&quot; (the aggregated p-value, converted from
+empirical cumulative distribution of the probability of being GSP),
+&quot;fdr&quot; (fdr adjusted from the aggregated p-value), &quot;priority&quot;
+(-log10(pvalue) but rescaled into the 5-star ratings), &quot;description&quot;
+(gene description)
+</p>
+</li>
+<li><p><code>disease</code>: a data frame containing disease matrix, with each
+column/disease for either priority score, or priorty rank or priority
+p-value
+</p>
+</li></ul>
+
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xPierMatrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+df_score &lt;- xPierCross(ls_xTarget)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

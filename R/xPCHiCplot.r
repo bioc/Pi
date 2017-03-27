@@ -23,7 +23,7 @@
 #' @param edge.color the color of the directed edge. The default value is 'grey'.
 #' @param ... additional graphic parameters. See \url{http://igraph.org/r/doc/plot.common.html} for the complete list.
 #' @return an igraph object
-#' @note none
+#' @note
 #' \itemize{
 #'  \item{\code{edge arrow}: interactions are represented as a direct graph (bait-prey)}
 #'  \item{\code{edge thickness}: the thickness in an edge is proportional to the interaction strength}

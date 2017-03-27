@@ -21,6 +21,7 @@ analysis (GSEA). It returns an object of class &quot;eGSEA&quot;.
 xPierGSEA(pNode, priority.top = NULL, ontology = c("GOBP", "GOMF",
 "GOCC",
 "PS", "PS2", "SF", "Pfam", "DO", "HPPA", "HPMI", "HPCM", "HPMA", "MP",
+"EF",
 "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP",
 "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT",
 "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF",
@@ -39,7 +40,7 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 <table summary="R argblock">
 <tr valign="top"><td><code>pNode</code></td>
 <td>
-<p>an object of class &quot;pNode&quot; (or &quot;pTarget&quot; or &quot;dTarget&quot;)</p>
+<p>an object of class &quot;pNode&quot; (or &quot;sTarget&quot; or &quot;dTarget&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>priority.top</code></td>
 <td>
@@ -53,16 +54,23 @@ Gene Ontology Biological Process, &quot;GOMF&quot; for Gene Ontology Molecular
 Function, &quot;GOCC&quot; for Gene Ontology Cellular Component, &quot;PS&quot; for
 phylostratific age information, &quot;PS2&quot; for the collapsed PS version
 (inferred ancestors being collapsed into one with the known taxonomy
-information), &quot;SF&quot; for domain superfamily assignments, &quot;DO&quot; for Disease
-Ontology, &quot;HPPA&quot; for Human Phenotype Phenotypic Abnormality, &quot;HPMI&quot; for
-Human Phenotype Mode of Inheritance, &quot;HPCM&quot; for Human Phenotype
-Clinical Modifier, &quot;HPMA&quot; for Human Phenotype Mortality Aging, &quot;MP&quot; for
-Mammalian Phenotype, and Drug-Gene Interaction database (DGIdb) for
-drugable categories, and the molecular signatures database (Msigdb,
-including &quot;MsigdbH&quot;, &quot;MsigdbC1&quot;, &quot;MsigdbC2CGP&quot;, &quot;MsigdbC2CPall&quot;,
-&quot;MsigdbC2CP&quot;, &quot;MsigdbC2KEGG&quot;, &quot;MsigdbC2REACTOME&quot;, &quot;MsigdbC2BIOCARTA&quot;,
-&quot;MsigdbC3TFT&quot;, &quot;MsigdbC3MIR&quot;, &quot;MsigdbC4CGN&quot;, &quot;MsigdbC4CM&quot;,
-&quot;MsigdbC5BP&quot;, &quot;MsigdbC5MF&quot;, &quot;MsigdbC5CC&quot;, &quot;MsigdbC6&quot;, &quot;MsigdbC7&quot;)</p>
+information), &quot;SF&quot; for SCOP domain superfamilies, &quot;Pfam&quot; for Pfam
+domain families, &quot;DO&quot; for Disease Ontology, &quot;HPPA&quot; for Human Phenotype
+Phenotypic Abnormality, &quot;HPMI&quot; for Human Phenotype Mode of Inheritance,
+&quot;HPCM&quot; for Human Phenotype Clinical Modifier, &quot;HPMA&quot; for Human
+Phenotype Mortality Aging, &quot;MP&quot; for Mammalian Phenotype, &quot;EF&quot; for
+Experimental Factor Ontology (used to annotate GWAS Catalog genes),
+Drug-Gene Interaction database (&quot;DGIdb&quot;) for drugable categories,
+tissue-specific eQTL-containing genes from GTEx (&quot;GTExV4&quot; and
+&quot;GTExV6&quot;), crowd extracted expression of differential signatures from
+CREEDS (&quot;CreedsDisease&quot;, &quot;CreedsDiseaseUP&quot;, &quot;CreedsDiseaseDN&quot;,
+&quot;CreedsDrug&quot;, &quot;CreedsDrugUP&quot;, &quot;CreedsDrugDN&quot;, &quot;CreedsGene&quot;,
+&quot;CreedsGeneUP&quot; and &quot;CreedsGeneDN&quot;), and the molecular signatures
+database (Msigdb, including &quot;MsigdbH&quot;, &quot;MsigdbC1&quot;, &quot;MsigdbC2CGP&quot;,
+&quot;MsigdbC2CPall&quot;, &quot;MsigdbC2CP&quot;, &quot;MsigdbC2KEGG&quot;, &quot;MsigdbC2REACTOME&quot;,
+&quot;MsigdbC2BIOCARTA&quot;, &quot;MsigdbC3TFT&quot;, &quot;MsigdbC3MIR&quot;, &quot;MsigdbC4CGN&quot;,
+&quot;MsigdbC4CM&quot;, &quot;MsigdbC5BP&quot;, &quot;MsigdbC5MF&quot;, &quot;MsigdbC5CC&quot;, &quot;MsigdbC6&quot;,
+&quot;MsigdbC7&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>customised.genesets</code></td>
 <td>
@@ -142,13 +150,18 @@ info (i.e. the named vector with names for gene symbols and elements
 for priority rank). Always, gene sets are identified by &quot;setID&quot;
 </p>
 </li>
-<li><p><code>leading</code>: a list of gene sets, each storing full info on
-gene set enrichment analysis result (i.e. a data frame of nGene x 5,
-where nGene is the number of genes, and the 5 columns are &quot;GeneID&quot;,
-&quot;Rank&quot; for priority rank, &quot;Score&quot; for priority score, &quot;RES&quot; for running
+<li><p><code>full</code>: a list of gene sets, each storing full info on gene
+set enrichment analysis result (i.e. a data frame of nGene x 5, where
+nGene is the number of genes, and the 5 columns are &quot;GeneID&quot;, &quot;Rank&quot;
+for priority rank, &quot;Score&quot; for priority score, &quot;RES&quot; for running
 enrichment score, and &quot;Hits&quot; for gene set hits info with 1 for gene
 hit, 2 for leading gene hit, 3 for the point defining leading genes, 0
 for no hit). Always, gene sets are identified by &quot;setID&quot;
+</p>
+</li>
+<li><p><code>cross</code>: a matrix of nTerm X nTerm, with an on-diagnal cell
+for the leading genes observed in an individaul term, and off-diagnal
+cell for the overlapped leading genes shared between two terms
 </p>
 </li></ul>
 

@@ -240,7 +240,7 @@ xPierSNPsConsensus <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.
 		rank_median <- rank_mat_between
 		rank_MAD <- rep(0,length(rank_mat_between))
 	}else{
-		rank_median <- apply(rank_mat_between, 1, median)
+		rank_median <- apply(rank_mat_between, 1, stats::median)
 		rank_MAD <- apply(rank_mat_between, 1, stats::mad)
 	}
 	consensus_rank <- rank(rank_median, ties.method="min")

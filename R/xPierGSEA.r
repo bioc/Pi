@@ -2,9 +2,9 @@
 #'
 #' \code{xPierGSEA} is supposed to prioritise pathways given prioritised genes and the ontology in query. It is done via gene set enrichment analysis (GSEA). It returns an object of class "eGSEA". 
 #
-#' @param pNode an object of class "pNode" (or "pTarget" or "dTarget")
+#' @param pNode an object of class "pNode" (or "sTarget" or "dTarget")
 #' @param priority.top the number of the top targets used for GSEA. By default, it is NULL meaning all targets are used
-#' @param ontology the ontology supported currently. It can be "GOBP" for Gene Ontology Biological Process, "GOMF" for Gene Ontology Molecular Function, "GOCC" for Gene Ontology Cellular Component, "PS" for phylostratific age information, "PS2" for the collapsed PS version (inferred ancestors being collapsed into one with the known taxonomy information), "SF" for domain superfamily assignments, "DO" for Disease Ontology, "HPPA" for Human Phenotype Phenotypic Abnormality, "HPMI" for Human Phenotype Mode of Inheritance, "HPCM" for Human Phenotype Clinical Modifier, "HPMA" for Human Phenotype Mortality Aging, "MP" for Mammalian Phenotype, and Drug-Gene Interaction database (DGIdb) for drugable categories, and the molecular signatures database (Msigdb, including "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7")
+#' @param ontology the ontology supported currently. It can be "GOBP" for Gene Ontology Biological Process, "GOMF" for Gene Ontology Molecular Function, "GOCC" for Gene Ontology Cellular Component, "PS" for phylostratific age information, "PS2" for the collapsed PS version (inferred ancestors being collapsed into one with the known taxonomy information), "SF" for SCOP domain superfamilies, "Pfam" for Pfam domain families, "DO" for Disease Ontology, "HPPA" for Human Phenotype Phenotypic Abnormality, "HPMI" for Human Phenotype Mode of Inheritance, "HPCM" for Human Phenotype Clinical Modifier, "HPMA" for Human Phenotype Mortality Aging, "MP" for Mammalian Phenotype, "EF" for Experimental Factor Ontology (used to annotate GWAS Catalog genes), Drug-Gene Interaction database ("DGIdb") for drugable categories, tissue-specific eQTL-containing genes from GTEx ("GTExV4" and "GTExV6"), crowd extracted expression of differential signatures from CREEDS ("CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP" and "CreedsGeneDN"), and the molecular signatures database (Msigdb, including "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7")
 #' @param customised.genesets a list each containing gene symbols. By default, it is NULL. If the list provided, it will overtake the previous parameter "ontology"
 #' @param size.range the minimum and maximum size of members of each term in consideration. By default, it sets to a minimum of 10 but no more than 500
 #' @param path.mode the mode of paths induced by vertices/nodes with input annotation data. It can be "all_paths" for all possible paths to the root, "shortest_paths" for only one path to the root (for each node in query), "all_shortest_paths" for all shortest paths to the root (i.e. for each node, find all shortest paths with the equal lengths)
@@ -18,7 +18,8 @@
 #' \itemize{
 #'  \item{\code{df_summary}: a data frame of nTerm x 9 containing gene set enrichment analysis result, where nTerm is the number of terms/genesets, and the 9 columns are "setID" (i.e. "Term ID"), "name" (i.e. "Term Name"), "nAnno" (i.e. number in members annotated by a term), "nLead" (i.e. number in members as leading genes), "es" (i.e. enrichment score), "nes" (i.e. normalised enrichment score; enrichment score but after being normalised by gene set size), "pvalue" (i.e. nominal p value), "adjp" (i.e. adjusted p value; p value but after being adjusted for multiple comparisons), "distance" (i.e. term distance or metadata)}
 #'  \item{\code{leading}: a list of gene sets, each storing leading gene info (i.e. the named vector with names for gene symbols and elements for priority rank). Always, gene sets are identified by "setID"}
-#'  \item{\code{leading}: a list of gene sets, each storing full info on gene set enrichment analysis result (i.e. a data frame of nGene x 5, where nGene is the number of genes, and the 5 columns are "GeneID", "Rank" for priority rank, "Score" for priority score, "RES" for running enrichment score, and "Hits" for gene set hits info with 1 for gene hit, 2 for leading gene hit, 3 for the point defining leading genes, 0 for no hit). Always, gene sets are identified by "setID"}
+#'  \item{\code{full}: a list of gene sets, each storing full info on gene set enrichment analysis result (i.e. a data frame of nGene x 5, where nGene is the number of genes, and the 5 columns are "GeneID", "Rank" for priority rank, "Score" for priority score, "RES" for running enrichment score, and "Hits" for gene set hits info with 1 for gene hit, 2 for leading gene hit, 3 for the point defining leading genes, 0 for no hit). Always, gene sets are identified by "setID"}
+#'  \item{\code{cross}: a matrix of nTerm X nTerm, with an on-diagnal cell for the leading genes observed in an individaul term, and off-diagnal cell for the overlapped leading genes shared between two terms}
 #' }
 #' @note none
 #' @export
@@ -49,7 +50,7 @@
 #' gp <- xGSEAdotplot(eGSEA, top=1)
 #' }
 
-xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC","PS","PS2","SF","Pfam","DO","HPPA","HPMI","HPCM","HPMA","MP", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6", "CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP", "CreedsGeneDN"), customised.genesets=NULL, size.range=c(10,500), path.mode=c("all_paths","shortest_paths","all_shortest_paths"), weight=1, nperm=2000, fast=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC","PS","PS2","SF","Pfam","DO","HPPA","HPMI","HPCM","HPMA","MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6", "CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP", "CreedsGeneDN"), customised.genesets=NULL, size.range=c(10,500), path.mode=c("all_paths","shortest_paths","all_shortest_paths"), weight=1, nperm=2000, fast=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
     startT <- Sys.time()
     message(paste(c("Start at ",as.character(startT)), collapse=""), appendLF=TRUE)
@@ -64,10 +65,10 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
     
     if(class(pNode) == "pNode"){
         df_priority <- pNode$priority[, c("seed","weight","priority","rank")]
-    }else if(class(pNode) == "pTarget" | class(pNode) == "dTarget"){
+    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
     	df_priority <- pNode$priority[, c("pvalue","fdr","priority","rank")]
     }else{
-    	stop("The function must apply to a 'pNode' or 'pTarget' or 'dTarget' object.\n")
+    	stop("The function must apply to a 'pNode' or 'sTarget' or 'dTarget' object.\n")
     }
     
     ###############
@@ -144,7 +145,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 		#########
 		## get ontology information
 		## check the eligibility for the ontology
-		all.ontologies <- c("GOBP","GOMF","GOCC","DO","HPPA","HPMI","HPCM","HPMA","MP")
+		all.ontologies <- c("GOBP","GOMF","GOCC","DO","HPPA","HPMI","HPCM","HPMA","MP","EF")
 		flag_ontology <- ontology %in% all.ontologies
     	
     	if(flag_ontology){
@@ -347,9 +348,26 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 	summary$adjp <- signif(summary$adjp, digits=3)
 	summary$adjp <- ifelse(summary$adjp<0.01 & summary$adjp!=0, as.numeric(format(summary$adjp,scientific=TRUE)), summary$adjp)
 	
+    ################################
+    cross <- matrix(0, nrow=length(leadingGenes), ncol=length(leadingGenes))
+    if(length(leadingGenes)>=2){
+		for(i in seq(1,length(leadingGenes)-1)){
+			x1 <- names(leadingGenes[[i]])
+			for(j in seq(i+1,length(leadingGenes))){
+				x2 <- names(leadingGenes[[j]])
+				cross[i,j] <- length(intersect(x1, x2))
+				cross[j,i] <- length(intersect(x1, x2))
+			}
+		}
+		colnames(cross) <- rownames(cross) <- names(leadingGenes)
+		diag(cross) <- sapply(leadingGenes, length)
+    }
+    ####################################################################################
+	
     eGSEA <- list(df_summary = summary,
     			  leading = leadingGenes,
     			  full = ls_df_leading,
+    			  cross = cross,
     			  Call = match.call()
                  )
     class(eGSEA) <- "eGSEA"

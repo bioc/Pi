@@ -2,7 +2,7 @@
 #'
 #' \code{xPierSubnet} is supposed to identify maximum-scoring gene subnetwork from a graph with the node information on priority scores, both are part of an object of class "pNode". It returns an object of class "igraph". 
 #'
-#' @param pNode an object of class "pNode" (or "pTarget" or "dTarget")
+#' @param pNode an object of class "pNode" (or "sTarget" or "dTarget")
 #' @param priority.quantite the quantite of the top priority genes. By default, 10% of top prioritised genes will be used for network analysis. If NULL or NA, all prioritised genes will be used
 #' @param network the built-in network. If NA, the network used for prioritisation will be used, which is part of the object of class "pNode". Otherwise, choose the other network of interest. Currently two sources of network information are supported: the STRING database (version 10) and the Pathways Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addtion to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
 #' @param network.customised an object of class "igraph". By default, it is NULL. It is designed to allow the user analysing their customised network data that are not listed in the above argument 'network'. This customisation (if provided) has the high priority over built-in network
@@ -86,14 +86,14 @@ xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NA,"STRING_highe
 		y <- (x - min(x,na.rm=TRUE)) / (max(x,na.rm=TRUE) - min(x,na.rm=TRUE))
 		pval <- 10^(-100*y)
 		
-    }else if(class(pNode) == "pTarget" | class(pNode) == "dTarget"){
+    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
     	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
     	
     	network <- network[1]
 		if(!is.na(network)){
 			network <- match.arg(network)
 		}else{
-			stop("The network must be provided given a 'pTarget' or 'dTarget' object.\n")
+			stop("The network must be provided given a 'sTarget' or 'dTarget' object.\n")
 		}
 		
 		priority <- df_priority$priority
@@ -103,7 +103,7 @@ xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NA,"STRING_highe
 		pval <- 10^(-x)
 		
     }else{
-    	stop("The function must apply to a 'pNode' or 'pTarget' or 'dTarget' object.\n")
+    	stop("The function must apply to a 'pNode' or 'sTarget' or 'dTarget' object.\n")
     }
 
     
@@ -116,7 +116,7 @@ xPierSubnet <- function(pNode, priority.quantite=0.1, network=c(NA,"STRING_highe
 	## priority quantite
 	priority.quantite <- as.numeric(priority.quantite)
 	if(length(priority.quantite>0 & priority.quantite<1) & !is.na(priority.quantite)){
-		cf <- quantile(pval, priority.quantite, na.rm=TRUE)
+		cf <- stats::quantile(pval, priority.quantite, na.rm=TRUE)
 		ind <- which(pval<cf)
 		pval <- pval[ind]
 		

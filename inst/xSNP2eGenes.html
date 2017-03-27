@@ -19,13 +19,20 @@ eQTL-reported signficance level.
 <h3>Usage</h3>
 
 <pre>
-xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_TS2A",
-"JKscience_TS2A_CD14", "JKscience_TS2A_LPS2", "JKscience_TS2A_LPS24",
-"JKscience_TS2A_IFN", "JKscience_TS2B", "JKscience_TS2B_CD14",
-"JKscience_TS2B_LPS2", "JKscience_TS2B_LPS24", "JKscience_TS2B_IFN",
-"JKscience_TS3A", "JKng_bcell", "JKng_bcell_cis", "JKng_bcell_trans",
-"JKng_mono", "JKng_mono_cis", "JKng_mono_trans", "JKnc_neutro",
-"JKnc_neutro_cis", "JKnc_neutro_trans", "JK_nk",
+xSNP2eGenes(data, include.eQTL = c(NA, "JKscience_CD14",
+"JKscience_LPS2",
+"JKscience_LPS24", "JKscience_IFN", "JKscience_TS2A",
+"JKscience_TS2A_CD14",
+"JKscience_TS2A_LPS2", "JKscience_TS2A_LPS24", "JKscience_TS2A_IFN",
+"JKscience_TS2B", "JKscience_TS2B_CD14", "JKscience_TS2B_LPS2",
+"JKscience_TS2B_LPS24", "JKscience_TS2B_IFN", "JKscience_TS3A",
+"JKng_bcell",
+"JKng_bcell_cis", "JKng_bcell_trans", "JKng_mono", "JKng_mono_cis",
+"JKng_mono_trans", "JKpg_CD4", "JKpg_CD4_cis", "JKpg_CD4_trans",
+"JKpg_CD8",
+"JKpg_CD8_cis", "JKpg_CD8_trans", "JKnc_neutro", "JKnc_neutro_cis",
+"JKnc_neutro_trans", "WESTRAng_blood", "WESTRAng_blood_cis",
+"WESTRAng_blood_trans", "JK_nk", "JK_nk_cis", "JK_nk_trans",
 "GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
 "GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
@@ -164,6 +171,22 @@ induced by 24-hour interferon-gamma (based on 432 individuals).
 </li>
 <li><p><code>JKscience_TS3A</code>: trans-eQTLs in either state.
 </p>
+</li>
+<li><p><code>JKscience_CD14</code>: cis and trans-eQTLs in the resting/CD14+
+state (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_LPS2</code>: cis and trans-eQTLs in the activating
+state induced by 2-hour LPS (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_LPS24</code>: cis and trans-eQTLs in the activating
+state induced by 24-hour LPS (based on 228 individuals).
+</p>
+</li>
+<li><p><code>JKscience_IFN</code>: cis and trans-eQTLs in the activating state
+induced by 24-hour interferon-gamma (based on 228 individuals).
+</p>
 </li></ul>
 
 <p>2. eQTLs in B cells. Sourced from Nature Genetics 2012, 44(5):502-510
@@ -213,7 +236,13 @@ induced by 24-hour interferon-gamma (based on 432 individuals).
 </p>
 
 <ul>
-<li><p><code>JK_nk</code>: cis-eQTLs.
+<li><p><code>JK_nk</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>JK_nk_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>JK_nk_trans</code>: trans-eQTLs only.
 </p>
 </li></ul>
 
@@ -266,6 +295,48 @@ Skeletal'.
 </p>
 </li>
 <li><p><code>GTEx_V4_Whole_Blood</code>: cis-eQTLs in tissue 'Whole Blood'.
+</p>
+</li></ul>
+
+<p>7. eQTLs in CD4 T cells. Sourced from PLoS Genetics 2017
+</p>
+
+<ul>
+<li><p><code>JKpg_CD4</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>JKpg_CD4_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>JKpg_CD4_trans</code>: trans-eQTLs only.
+</p>
+</li></ul>
+
+<p>8. eQTLs in CD8 T cells. Sourced from PLoS Genetics 2017
+</p>
+
+<ul>
+<li><p><code>JKpg_CD8</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>JKpg_CD8_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>JKpg_CD8_trans</code>: trans-eQTLs only.
+</p>
+</li></ul>
+
+<p>9. eQTLs in blood. Sourced from Nature Genetics 2013, 45(10):1238-1243
+</p>
+
+<ul>
+<li><p><code>WESTRAng_blood</code>: cis- and trans-eQTLs.
+</p>
+</li>
+<li><p><code>WESTRAng_blood_cis</code>: cis-eQTLs only.
+</p>
+</li>
+<li><p><code>WESTRAng_blood_trans</code>: trans-eQTLs only.
 </p>
 </li></ul>
 

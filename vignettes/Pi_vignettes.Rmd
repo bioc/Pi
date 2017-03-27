@@ -138,18 +138,25 @@ colnames(df_pop) <- c('Project', 'Population', 'Code')
 knitr::kable(df_pop[,c(3,2,1)], caption="", row.names=FALSE)
 ```
 
-## xPierMatrix
+## xPierAnno
+*[`xPierAnno`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierAnno.html)*: prioritises seed genes only from a list of pNode objects using annotation data. To do so, it first extracts seed genes from a list of pNode objects and then scores seed genes using annotation data (or something similar), followed by `xPierGenes`. 
+
+## xPierMatrix and xPierEvidence
 *[`xPierMatrix`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierMatrix.html)*: extracts priority matrix from a list of `pNode` objects, in which rows are genes and columns for the predictors (corresponding to the `pNode` objects). Also highlighted is to generate priority results in the discovery mode, that is, (similar to meta-analysis) aggregation of priority matrix.
+
+*[`xPierEvidence`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierEvidence.html)*: extracts evidence from a list of `pNode` objects, in terms of seed genes under genetic influence.
 
 ## xPierManhattan and xPierTrack
 *[`xPierManhattan`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierManhattan.html)*: visualises prioritised genes using manhattan plot, in which priority for genes is displayed on the Y-axis along with genomic locations on the X-axis. Also highlighted are genes with the top priority.
 
-*[`xPierTrack`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierTrack.html)*: visualises prioritised genes using track plot, in which priority for the gene in query is displayed on the data track and nearby genes on the annotation track. Genomic locations on the X-axis are indicated on the X-axis, and the gene in query is highlighted.
+*[`xPierTrack`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierTrack.html)*: visualises a prioritised gene using track plot, in which priority for the gene in query is displayed on the data track and nearby genes on the annotation track. Genomic locations on the X-axis are indicated on the X-axis, and the gene in query is highlighted.
+
+*[`xPierTrackAdv`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierTrackAdv.html)*: visualises a list of prioritised genes using advanced track plot.
 
 ## xPierPathways and xPierGSEA
 *[`xPierPathways`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierPathways.html)*: prioritises pathways based on enrichment analysis of genes with the top priority (eg top 100 genes) using a compendium of pathways. It returns an object of class `eTerm`. A highly prioritised pathway has its member genes with high gene-level priority scores, that is, having evidence of direct modulation by disease-associated lead (or LD) SNPs, and/or having evidence of indirect modulation at the network level.
 
-*[`xPierGSEA`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierGSEA.html)*: prioritises pathways based on gene set enrichment analysis (GSEA) of genes based on their priority using a compendium of pathways. It returns an object of class `eGSEA`. A highly prioritised pathway has its member genes with a tendency of having high gene-level priority scores.
+*[`xPierGSEA`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierGSEA.html)*: prioritises pathways based on gene set enrichment analysis (GSEA) of prioritised genes using a compendium of pathways. It returns an object of class `eGSEA`. A highly prioritised pathway has its member genes with a tendency of having high gene-level priority scores.
 
 In addition to pathways, analysis can be extended to other ontologies, as listed below:
 
@@ -231,6 +238,8 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 - *[`xGSEAdotplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSEAdotplot.html)*: visualises GSEA results using dot plot.
 
 - *[`xGSEAbarplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSEAbarplot.html)*: visualises GSEA results using bar plot.
+
+- *[`xGSEAconciser`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSEAconciser.html)*: makes GSEA results conciser by removing redundant terms.
 
 
 # Showcases

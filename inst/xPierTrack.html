@@ -1,19 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise prioritised genes using track plot</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise a prioritised gene using track plot</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
 <table width="100%" summary="page for xPierTrack"><tr><td>xPierTrack</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to visualise prioritised genes using track plot</h2>
+<h2>Function to visualise a prioritised gene using track plot</h2>
 
 <h3>Description</h3>
 
-<p><code>xPierTrack</code> is supposed to visualise prioritised genes using
+<p><code>xPierTrack</code> is supposed to visualise a prioritised gene using
 track plot. Priority for the gene in query is displayed on the data
 track and nearby genes on the annotation track. Genomic locations on
 the X-axis are indicated on the X-axis, and the gene in query is
-highlighted.
+highlighted. If SNPs are also provided, SNP annotation track will be
+also displayed at the bottom.
 </p>
 
 
@@ -22,8 +23,11 @@ highlighted.
 <pre>
 xPierTrack(pNode, priority.top = NULL, target.query = NULL,
 window = 1e+06, nearby = NULL, query.highlight = TRUE,
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+track.ideogram = TRUE, track.genomeaxis = TRUE,
+name.datatrack = "Priority index", name.annotrack = "Genes",
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), SNPs = NULL,
+GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
 </pre>
 
 
@@ -32,7 +36,7 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 <table summary="R argblock">
 <tr valign="top"><td><code>pNode</code></td>
 <td>
-<p>an object of class &quot;pNode&quot; (or &quot;pTarget&quot; or &quot;dTarget&quot;)</p>
+<p>an object of class &quot;pNode&quot; (or &quot;sTarget&quot; or &quot;dTarget&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>priority.top</code></td>
 <td>
@@ -60,6 +64,26 @@ overwrite the parameter 'window'</p>
 <p>logical to indicate whether the gene in query
 will be highlighted</p>
 </td></tr>
+<tr valign="top"><td><code>track.ideogram</code></td>
+<td>
+<p>logical to indicate whether ideogram track is
+shown. By default, it is TRUE</p>
+</td></tr>
+<tr valign="top"><td><code>track.genomeaxis</code></td>
+<td>
+<p>logical to indicate whether genome axis track
+is shown. By default, it is TRUE</p>
+</td></tr>
+<tr valign="top"><td><code>name.datatrack</code></td>
+<td>
+<p>the name for the data track. By default, it is
+&quot;Priority index&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>name.annotrack</code></td>
+<td>
+<p>the name for the annotation track. By default, it
+is &quot;Genes&quot;. If NULL, the title for annotation track will be hided</p>
+</td></tr>
 <tr valign="top"><td><code>GR.Gene</code></td>
 <td>
 <p>the genomic regions of genes. By default, it is
@@ -74,6 +98,28 @@ Symbols. Then, tell &quot;GR.Gene&quot; with your RData file name (with or
 without extension), plus specify your file RData path in
 &quot;RData.location&quot;</p>
 </td></tr>
+<tr valign="top"><td><code>SNPs</code></td>
+<td>
+<p>a input vector containing SNPs. SNPs should be provided as
+dbSNP ID (ie starting with rs). Alternatively, they can be in the
+format of 'chrN:xxx', where N is either 1-22 or X, xxx is genomic
+positional number; for example, 'chr16:28525386'. By default, it is NLL
+meaning the SNP annotation track will be not displayed</p>
+</td></tr>
+<tr valign="top"><td><code>GR.SNP</code></td>
+<td>
+<p>the genomic regions of SNPs. By default, it is
+'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS
+SNPs and their LD SNPs (hg19). It can be 'dbSNP_Common', that is,
+Common SNPs from dbSNP (version 146) plus GWAS SNPs and their LD SNPs
+(hg19). Alternatively, the user can specify the customised input. To do
+so, first save your RData file (containing an GR object) into your
+local computer, and make sure the GR object content names refer to
+dbSNP IDs. Then, tell &quot;GR.SNP&quot; with your RData file name (with or
+without extension), plus specify your file RData path in
+&quot;RData.location&quot;. Note: you can also load your customised GR object
+directly</p>
+</td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
 <p>logical to indicate whether the messages will be
@@ -84,12 +130,23 @@ displayed in the screen. By default, it sets to false for no display</p>
 <p>the characters to tell the location of built-in
 RData files. See <code>xRDataLoader</code> for details</p>
 </td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional graphic parameters. For example, the parameter
+&quot;add&quot; allows the plot added to an existing plotting canvas without
+re-initialising. See
+<a href="http://www.rdocumentation.org/packages/Gviz/topics/plotTracks">http://www.rdocumentation.org/packages/Gviz/topics/plotTracks</a> for
+the complete list.</p>
+</td></tr>
 </table>
 
 
 <h3>Value</h3>
 
-<p>an object of class &quot;ggplot&quot;, appended by an GR object called 'gr'
+<p>a list of GenomeGraph tracks, each one augmented by the computed image
+map coordinates in the 'imageMap' slot, along with the additional
+'ImageMap' object 'titles' containing information about the title
+panels.
 </p>
 
 

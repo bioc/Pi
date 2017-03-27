@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise evidence for prioritised genes in a...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xVisEvidence"><tr><td>xVisEvidence</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to visualise evidence for prioritised genes in a gene network</h2>
+
+<h3>Description</h3>
+
+<p><code>xVisEvidence</code> is supposed to visualise evidence for prioritised
+genes in a gene network. It returns an object of class &quot;igraph&quot;.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xVisEvidence(xTarget, g = NA, nodes = NULL, node.info = c("smart",
+"none"), neighbor.order = 1, neighbor.seed = TRUE, neighbor.top = NULL,
+colormap = "ggplot2", legend.position = "topleft", legend.horiz =
+FALSE,
+verbose = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>xTarget</code></td>
+<td>
+<p>an object of class &quot;dTarget&quot;, &quot;sTarget&quot; or &quot;eTarget&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>g</code></td>
+<td>
+<p>an object of class &quot;igraph&quot;. If NA, the 'metag' will be used,
+which is part of the input object &quot;xTarget&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>nodes</code></td>
+<td>
+<p>which node genes are in query. If NULL, the top gene will
+be queried</p>
+</td></tr>
+<tr valign="top"><td><code>node.info</code></td>
+<td>
+<p>tells the additional information used to label nodes.
+It can be one of &quot;none&quot; (only gene labeling), &quot;smart&quot; for (by default)
+using three pieces of information (if any): genes, 5-star ratings, and
+associated ranks (marked by an @ icon)</p>
+</td></tr>
+<tr valign="top"><td><code>neighbor.order</code></td>
+<td>
+<p>an integer giving the order of the neighborhood.
+By default, it is 1-order neighborhood</p>
+</td></tr>
+<tr valign="top"><td><code>neighbor.seed</code></td>
+<td>
+<p>logical to indicate whether neighbors are seeds
+only. By default, it sets to true</p>
+</td></tr>
+<tr valign="top"><td><code>neighbor.top</code></td>
+<td>
+<p>the top number of the neighbors with the highest
+priority. By default, it sets to NULL to disable this parameter</p>
+</td></tr>
+<tr valign="top"><td><code>colormap</code></td>
+<td>
+<p>short name for the colormap. It can be one of &quot;jet&quot;
+(jet colormap), &quot;bwr&quot; (blue-white-red colormap), &quot;gbr&quot; (green-black-red
+colormap), &quot;wyr&quot; (white-yellow-red colormap), &quot;br&quot; (black-red
+colormap), &quot;yr&quot; (yellow-red colormap), &quot;wb&quot; (white-black colormap),
+&quot;rainbow&quot; (rainbow colormap, that is,
+red-yellow-green-cyan-blue-magenta), and &quot;ggplot2&quot; (emulating ggplot2
+default color palette). Alternatively, any hyphen-separated HTML color
+names, e.g. &quot;lightyellow-orange&quot; (by default), &quot;blue-black-yellow&quot;,
+&quot;royalblue-white-sandybrown&quot;, &quot;darkgreen-white-darkviolet&quot;. A list of
+standard color names can be found in
+<a href="http://html-color-codes.info/color-names">http://html-color-codes.info/color-names</a></p>
+</td></tr>
+<tr valign="top"><td><code>legend.position</code></td>
+<td>
+<p>the legend position. If NA, the legend will be
+hiden</p>
+</td></tr>
+<tr valign="top"><td><code>legend.horiz</code></td>
+<td>
+<p>logical specifying the legend horizon. If TRUE, set
+the legend horizontally rather than vertically</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional graphic parameters. See
+<a href="http://igraph.org/r/doc/plot.common.html">http://igraph.org/r/doc/plot.common.html</a> for the complete list.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a subgraph, an object of class &quot;igraph&quot;.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xPierMatrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+## TNFRSF1A
+xVisEvidence(xTarget, nodes="TNFRSF1A", neighbor.order=1,
+neighbor.seed=TRUE, neighbor.top=NULL, vertex.label.color="black",
+vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=4,
+legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
+## UBA52
+xVisEvidence(xTarget, nodes="UBA52", neighbor.order=1,
+neighbor.seed=TRUE, neighbor.top=20, vertex.label.color="black",
+vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=4,
+legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

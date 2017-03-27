@@ -4,13 +4,13 @@
 \alias{xMLdotplot}
 \title{Function to visualise machine learning results using dot plot}
 \usage{
-xMLdotplot(pTarget, displayBy = c("importance2fold", "roc2fold",
+xMLdotplot(sTarget, displayBy = c("importance2fold", "roc2fold",
 "fmax2fold",
 "importance_accurancy", "importance_gini", "ROC", "Fmax"), signature =
 TRUE)
 }
 \arguments{
-\item{pTarget}{an object of class "pTarget"}
+\item{sTarget}{an object of class "sTarget"}
 
 \item{displayBy}{which statistics will be used for displaying. It can
 be either statistics across folds ("importance2fold" for predictor
@@ -41,7 +41,7 @@ library(Pi)
 }
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 \dontrun{
-gp <- xMLdotplot(pTarget, displayBy="importance_accurancy")
+gp <- xMLdotplot(sTarget, displayBy="importance_accurancy")
 gp
 }
 }

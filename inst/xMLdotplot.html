@@ -17,7 +17,7 @@ using dot plot. It returns an object of class &quot;ggplot&quot;.
 <h3>Usage</h3>
 
 <pre>
-xMLdotplot(pTarget, displayBy = c("importance2fold", "roc2fold",
+xMLdotplot(sTarget, displayBy = c("importance2fold", "roc2fold",
 "fmax2fold",
 "importance_accurancy", "importance_gini", "ROC", "Fmax"), signature =
 TRUE)
@@ -27,9 +27,9 @@ TRUE)
 <h3>Arguments</h3>
 
 <table summary="R argblock">
-<tr valign="top"><td><code>pTarget</code></td>
+<tr valign="top"><td><code>sTarget</code></td>
 <td>
-<p>an object of class &quot;pTarget&quot;</p>
+<p>an object of class &quot;sTarget&quot;</p>
 </td></tr>
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
@@ -78,7 +78,7 @@ library(Pi)
 ## End(Not run)
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## Not run: 
-gp &lt;- xMLdotplot(pTarget, displayBy="importance_accurancy")
+gp &lt;- xMLdotplot(sTarget, displayBy="importance_accurancy")
 gp
 
 ## End(Not run)

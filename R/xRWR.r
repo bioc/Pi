@@ -21,13 +21,18 @@
 #' @importFrom Matrix Diagonal rowSums colSums Matrix
 #' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame
 #' @importFrom GenomeInfoDb seqlevels
+#' @importFrom Gviz IdeogramTrack GenomeAxisTrack AnnotationTrack DataTrack plotTracks
+#' @importFrom lattice xyplot contourplot levelplot
+#' @importFrom plot3D persp3D scatter3D text3D
 #' @import igraph
 #' @import dnet
 #' @import XGR
 #' @import ggplot2
 #' @import graphics
 #' @importFrom randomForest randomForest tuneRF importance
-#' @import stats
+#' @importFrom glmnet cv.glmnet predict.glmnet
+#' @importFrom caret createFolds createMultiFolds featurePlot trainControl twoClassSummary train getModelInfo varImp
+#' @importFrom stats p.adjust ecdf mad approx pexp coef median predict quantile t.test
 #' @importFrom ggbio autoplot
 #' @importFrom ggrepel geom_text_repel geom_label_repel
 #' @importFrom ROCR prediction performance plot

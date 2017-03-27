@@ -17,8 +17,8 @@ using density plot. It returns an object of class &quot;ggplot&quot;.
 <h3>Usage</h3>
 
 <pre>
-xMLdensity(pTarget, displayBy = c("All", "GS", "GSN", "GSP",
-"Putative"),
+xMLdensity(sTarget, displayBy = c("All", "GS", "GSN", "GSP",
+"Predictive"),
 x.scale = c("sqrt", "normal"), signature = TRUE)
 </pre>
 
@@ -26,15 +26,15 @@ x.scale = c("sqrt", "normal"), signature = TRUE)
 <h3>Arguments</h3>
 
 <table summary="R argblock">
-<tr valign="top"><td><code>pTarget</code></td>
+<tr valign="top"><td><code>sTarget</code></td>
 <td>
-<p>an object of class &quot;pTarget&quot;</p>
+<p>an object of class &quot;sTarget&quot;</p>
 </td></tr>
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
 <p>which targets will be used for displaying. It can be
 one of &quot;GS&quot; for gold standard targets, &quot;GSN&quot; for gold standard
-negatives, &quot;GSP&quot; for gold standard positives, &quot;Putative&quot; for putative
+negatives, &quot;GSP&quot; for gold standard positives, &quot;Predictive&quot; for putative
 targets (non-GS), &quot;All&quot; for all targets (by default)</p>
 </td></tr>
 <tr valign="top"><td><code>x.scale</code></td>
@@ -79,7 +79,7 @@ library(Pi)
 ## End(Not run)
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## Not run: 
-gp &lt;- xMLdensity(pTarget, displayBy="All")
+gp &lt;- xMLdensity(sTarget, displayBy="All")
 gp
 
 ## End(Not run)

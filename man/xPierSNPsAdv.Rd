@@ -5,19 +5,26 @@
 \title{Function to prepare genetic predictors given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)}
 \usage{
 xPierSNPsAdv(data, include.LD = NA, LD.customised = NULL, LD.r2 = 0.8,
-significance.threshold = 5e-05, score.cap = 10, distance.max = 1000,
-decay.kernel = c("constant", "slow", "linear", "rapid"),
+significance.threshold = 5e-05, score.cap = 10, distance.max = 2000,
+decay.kernel = c("slow", "constant", "linear", "rapid"),
 decay.exponent = 2, GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"),
 GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), include.eQTL =
 c(NA,
+"JKscience_CD14", "JKscience_LPS2", "JKscience_LPS24", "JKscience_IFN",
 "JKscience_TS2A", "JKscience_TS2A_CD14", "JKscience_TS2A_LPS2",
 "JKscience_TS2A_LPS24", "JKscience_TS2A_IFN", "JKscience_TS2B",
 "JKscience_TS2B_CD14", "JKscience_TS2B_LPS2", "JKscience_TS2B_LPS24",
 "JKscience_TS2B_IFN", "JKscience_TS3A", "JKng_bcell", "JKng_bcell_cis",
 "JKng_bcell_trans", "JKng_mono", "JKng_mono_cis", "JKng_mono_trans",
-"JKnc_neutro", "JKnc_neutro_cis", "JKnc_neutro_trans", "JK_nk",
-"GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
-"GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
+"JKpg_CD4", "JKpg_CD4_cis", "JKpg_CD4_trans", "JKpg_CD8",
+"JKpg_CD8_cis",
+"JKpg_CD8_trans", "JKnc_neutro", "JKnc_neutro_cis",
+"JKnc_neutro_trans",
+"WESTRAng_blood", "WESTRAng_blood_cis", "WESTRAng_blood_trans",
+"JK_nk",
+"JK_nk_cis", "JK_nk_trans", "GTEx_V4_Adipose_Subcutaneous",
+"GTEx_V4_Artery_Aorta", "GTEx_V4_Artery_Tibial",
+"GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
 "GTEx_V4_Lung", "GTEx_V4_Muscle_Skeletal", "GTEx_V4_Nerve_Tibial",
 "GTEx_V4_Skin_Sun_Exposed_Lower_leg", "GTEx_V4_Stomach",
@@ -44,7 +51,7 @@ cdf.function = c("empirical", "exponential"), scoring.scheme = c("max",
 "PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
 "PCommonsDN_PhosphoSite", "PCommonsDN_CTD"), weighted = FALSE,
 network.customised = NULL, seeds.inclusive = TRUE,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
+normalise = c("laplacian", "row", "column", "none"), restart = 0.7,
 normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
 multicores = NULL, verbose = TRUE, verbose.details = FALSE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
@@ -259,14 +266,13 @@ and the 4 columns are "SNP" (dbSNP), "Score" (the SNP score), "Pval"
 \item{\code{Gene2SNP}: a data frame of nPair X 3 containing Gene-SNP
 pair info, where nPair is the number of Gene-SNP pairs, and the 3
 columns are "Gene" (seed genes), "SNP" (dbSNP), "Score" (an SNP's
-genetic influential score on a seed gene), "Pval" (the SNP p-value)}
+genetic influential score on a seed gene)}
 \item{\code{nGenes}: if not NULL, it is a data frame containing
 nGene-SNP pair info}
 \item{\code{eGenes}: if not NULL, it is a data frame containing
 eGene-SNP pair info per context}
 \item{\code{cGenes}: if not NULL, it is a data frame containing
 cGene-SNP pair info per context}
-\item{\code{call}: the call that produced this result}
 }
 }
 \description{
@@ -308,6 +314,14 @@ state induced by 24-hour LPS (based on 432 individuals).}
 \item{\code{JKscience_TS2B_IFN}: cis-eQTLs only in the activating state
 induced by 24-hour interferon-gamma (based on 432 individuals).}
 \item{\code{JKscience_TS3A}: trans-eQTLs in either state.}
+\item{\code{JKscience_CD14}: cis and trans-eQTLs in the resting/CD14+
+state (based on 228 individuals).}
+\item{\code{JKscience_LPS2}: cis and trans-eQTLs in the activating
+state induced by 2-hour LPS (based on 228 individuals).}
+\item{\code{JKscience_LPS24}: cis and trans-eQTLs in the activating
+state induced by 24-hour LPS (based on 228 individuals).}
+\item{\code{JKscience_IFN}: cis and trans-eQTLs in the activating state
+induced by 24-hour interferon-gamma (based on 228 individuals).}
 }
 2. eQTLs in B cells. Sourced from Nature Genetics 2012, 44(5):502-510
 \itemize{
@@ -330,7 +344,9 @@ induced by 24-hour interferon-gamma (based on 432 individuals).}
 }
 5. eQTLs in NK cells. Unpublished
 \itemize{
-\item{\code{JK_nk}: cis-eQTLs.}
+\item{\code{JK_nk}: cis- and trans-eQTLs.}
+\item{\code{JK_nk_cis}: cis-eQTLs only.}
+\item{\code{JK_nk_trans}: trans-eQTLs only.}
 }
 6. Tissue-specific eQTLs from GTEx (version 4; incuding 13 tissues).
 Sourced from Science 2015, 348(6235):648-60
@@ -355,6 +371,24 @@ Skeletal'.}
 \item{\code{GTEx_V4_Stomach}: cis-eQTLs in tissue 'Stomach'.}
 \item{\code{GTEx_V4_Thyroid}: cis-eQTLs in tissue 'Thyroid'.}
 \item{\code{GTEx_V4_Whole_Blood}: cis-eQTLs in tissue 'Whole Blood'.}
+}
+7. eQTLs in CD4 T cells. Sourced from PLoS Genetics 2017
+\itemize{
+\item{\code{JKpg_CD4}: cis- and trans-eQTLs.}
+\item{\code{JKpg_CD4_cis}: cis-eQTLs only.}
+\item{\code{JKpg_CD4_trans}: trans-eQTLs only.}
+}
+8. eQTLs in CD8 T cells. Sourced from PLoS Genetics 2017
+\itemize{
+\item{\code{JKpg_CD8}: cis- and trans-eQTLs.}
+\item{\code{JKpg_CD8_cis}: cis-eQTLs only.}
+\item{\code{JKpg_CD8_trans}: trans-eQTLs only.}
+}
+9. eQTLs in blood. Sourced from Nature Genetics 2013, 45(10):1238-1243
+\itemize{
+\item{\code{WESTRAng_blood}: cis- and trans-eQTLs.}
+\item{\code{WESTRAng_blood_cis}: cis-eQTLs only.}
+\item{\code{WESTRAng_blood_trans}: trans-eQTLs only.}
 }
 Pre-built HiC datasets are described below according to the data
 sources.\cr

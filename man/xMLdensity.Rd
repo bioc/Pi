@@ -4,16 +4,16 @@
 \alias{xMLdensity}
 \title{Function to visualise machine learning results using density plot}
 \usage{
-xMLdensity(pTarget, displayBy = c("All", "GS", "GSN", "GSP",
-"Putative"),
+xMLdensity(sTarget, displayBy = c("All", "GS", "GSN", "GSP",
+"Predictive"),
 x.scale = c("sqrt", "normal"), signature = TRUE)
 }
 \arguments{
-\item{pTarget}{an object of class "pTarget"}
+\item{sTarget}{an object of class "sTarget"}
 
 \item{displayBy}{which targets will be used for displaying. It can be
 one of "GS" for gold standard targets, "GSN" for gold standard
-negatives, "GSP" for gold standard positives, "Putative" for putative
+negatives, "GSP" for gold standard positives, "Predictive" for putative
 targets (non-GS), "All" for all targets (by default)}
 
 \item{x.scale}{how to transform the x scale. It can be "normal" for no
@@ -40,7 +40,7 @@ library(Pi)
 }
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 \dontrun{
-gp <- xMLdensity(pTarget, displayBy="All")
+gp <- xMLdensity(sTarget, displayBy="All")
 gp
 }
 }

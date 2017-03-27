@@ -44,7 +44,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 			return(NULL)
 		}
 	}else{
-		stop("The function must apply to an 'list' object, or an 'pPerf'/'ggplot' object.\n")
+		stop("The function must apply to a 'list' object, or a 'pPerf'/'ggplot' object.\n")
 	}
     
 	## Combine into a data frame called 'df_PRS'
@@ -73,88 +73,81 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 	df_PRS$Method <- factor(df_PRS$Method, levels=list_names)
 	
 	if(type=='curve'){
-	## draw curves
-    Recall <- ''
-    Precision <- ''
-    Specificity <- ''
-    Method <- ''
-    Label <- ''
-    auroc <- ''
-	if(displayBy=='ROC'){
-		## sort by: auroc
-		if(sort){
-			df_PRS <- df_PRS[with(df_PRS, order(-auroc)), ]
-			## define levels
-			if(detail){
-				df_PRS$Label <- factor(df_PRS$Label, levels=unique(df_PRS$Label))
-			}else{
-				df_PRS$Method <- factor(df_PRS$Method, levels=unique(df_PRS$Method))
+		## draw curves
+		Recall <- Precision <- Specificity <- Method <- Label <- auroc <- NULL
+		if(displayBy=='ROC'){
+			## sort by: auroc
+			if(sort){
+				df_PRS <- df_PRS[with(df_PRS, order(-auroc)), ]
+				## define levels
+				if(detail){
+					df_PRS$Label <- factor(df_PRS$Label, levels=unique(df_PRS$Label))
+				}else{
+					df_PRS$Method <- factor(df_PRS$Method, levels=unique(df_PRS$Method))
+				}
 			}
-		}
 		
-		## ggplot
-		p <- ggplot(df_PRS, aes(x=1-Specificity,y=Recall))
+			## ggplot
+			p <- ggplot(df_PRS, aes(x=1-Specificity,y=Recall))
 		
-		if(detail){
-			p <- p + geom_line(aes(colour=factor(Label)))
-		}else{
-			p <- p + geom_line(aes(colour=factor(Method)))
-		}
-		
-		p <- p + ylab("True Positive Rate = TP/(TP+FN)") + xlab("False Positive Rate = FP/(FP+TN)") + ylim(0,max(df_PRS$Recall)) + xlim(0,max(1-df_PRS$Specificity))
-		
-	}else if(displayBy=='PR'){
-		## sort by: fmax
-		fmax <- ''
-		if(sort){
-			df_PRS <- df_PRS[with(df_PRS, order(-fmax)), ]
-			## define levels
 			if(detail){
-				df_PRS$Label <- factor(df_PRS$Label, levels=unique(df_PRS$Label))
+				p <- p + geom_line(aes(colour=factor(Label)))
 			}else{
-				df_PRS$Method <- factor(df_PRS$Method, levels=unique(df_PRS$Method))
+				p <- p + geom_line(aes(colour=factor(Method)))
 			}
-		}
-		## ggplot
-		p <- ggplot(df_PRS, aes(x=Recall,y=Precision)) 
+		
+			p <- p + ylab("True Positive Rate = TP/(TP+FN)") + xlab("False Positive Rate = FP/(FP+TN)") + ylim(0,max(df_PRS$Recall)) + xlim(0,max(1-df_PRS$Specificity))
+		
+		}else if(displayBy=='PR'){
+			## sort by: fmax
+			fmax <- ''
+			if(sort){
+				df_PRS <- df_PRS[with(df_PRS, order(-fmax)), ]
+				## define levels
+				if(detail){
+					df_PRS$Label <- factor(df_PRS$Label, levels=unique(df_PRS$Label))
+				}else{
+					df_PRS$Method <- factor(df_PRS$Method, levels=unique(df_PRS$Method))
+				}
+			}
+			## ggplot
+			p <- ggplot(df_PRS, aes(x=Recall,y=Precision)) 
 
-		if(detail){
-			p <- p + geom_line(aes(colour=factor(Label)))
-		}else{
-			p <- p + geom_line(aes(colour=factor(Method)))
-		}
+			if(detail){
+				p <- p + geom_line(aes(colour=factor(Label)))
+			}else{
+				p <- p + geom_line(aes(colour=factor(Method)))
+			}
 
-		p <- p + ylab("Precision = TP/(TP+FP)") + xlab("Recall = TP/(TP+FN)") + ylim(0,max(df_PRS$Precision)) + xlim(0,max(df_PRS$Recall))
+			p <- p + ylab("Precision = TP/(TP+FP)") + xlab("Recall = TP/(TP+FN)") + ylim(0,max(df_PRS$Precision)) + xlim(0,max(df_PRS$Recall))
 		
-	}
-	
-	p <- p + theme_bw() + theme(axis.title.y=element_text(size=12,color="black"), axis.title.x=element_text(size=12,color="black"))
-	
-	if(facet){
-		if(detail){
-			p <- p + facet_wrap(~Label)
-		}else{
-			p <- p + facet_wrap(~Method)
 		}
+	
+		p <- p + theme_bw() + theme(axis.title.y=element_text(size=12,color="black"), axis.title.x=element_text(size=12,color="black"))
+	
+		if(facet){
+			if(detail){
+				p <- p + facet_wrap(~Label)
+			}else{
+				p <- p + facet_wrap(~Method)
+			}
 		
-		## strip
-		p <- p + theme(strip.background=element_rect(fill="transparent",color="transparent"), strip.text=element_text(face="italic"))
+			## strip
+			p <- p + theme(strip.background=element_rect(fill="transparent",color="transparent"), strip.text=element_text(face="italic"))
 		
-		p <- p + theme(legend.position="none", legend.title=element_blank())
-	}else{
-		p <- p + theme(legend.title=element_blank(), legend.key=element_rect(colour="transparent"))
+			p <- p + theme(legend.position="none", legend.title=element_blank())
+		}else{
+			p <- p + theme(legend.title=element_blank(), legend.key=element_rect(colour="transparent"))
 		
-		#p + theme(legend.position=c(0.75,0.25))
-	}
+			#p + theme(legend.position=c(0.75,0.25))
+		}
 	
 	}else if(type=='bar'){
 		
 		df <- unique(df_PRS[,c("Method","fmax","auroc","Label")])
 		
 		## draw bar
-		Method <- ''
-		Label <- ''
-		auroc <- ''
+		Method <- Label <- auroc <- NULL
 		if(displayBy=='ROC'){
 			## sort by: auroc
 			if(sort){

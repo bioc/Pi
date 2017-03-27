@@ -14,22 +14,30 @@ supervised manner via machine learning algorithm random forest. It
 requires three inputs: 1) Gold Standard Positive (GSP) targets; 2) Gold
 Standard Negative (GSN) targets; 3) a predictor matrix containing genes
 in rows and predictors in columns, with their predictive scores inside
-it. It returns an object of class 'pTarget'.
+it. It returns an object of class 'sTarget'.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-xMLrandomforest(df_predictor, GSP, GSN, nfold = 3, mtry = NULL,
-ntree = 2000, fold.aggregateBy = c("Ztransform", "logistic", "fishers",
-"orderStatistic"), verbose = TRUE, ...)
+xMLrandomforest(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
+nfold = 3, nrepeat = 10, seed = 825, mtry = NULL, ntree = 1000,
+fold.aggregateBy = c("logistic", "Ztransform", "fishers",
+"orderStatistic"),
+verbose = TRUE, RData.location =
+"http://galahad.well.ox.ac.uk/bigdata",
+...)
 </pre>
 
 
 <h3>Arguments</h3>
 
 <table summary="R argblock">
+<tr valign="top"><td><code>list_pNode</code></td>
+<td>
+<p>a list of &quot;pNode&quot; objects or a &quot;pNode&quot; object</p>
+</td></tr>
 <tr valign="top"><td><code>df_predictor</code></td>
 <td>
 <p>a data frame containing genes (in rows) and
@@ -47,7 +55,20 @@ data frame must has gene symbols as row names</p>
 <tr valign="top"><td><code>nfold</code></td>
 <td>
 <p>an integer specifying the number of folds for cross
-validataion</p>
+validataion. Per fold creates balanced splits of the data preserving
+the overall distribution for each class (GSP and GSN), therefore
+generating balanced cross-vallidation train sets and testing sets. By
+default, it is 3 meaning 3-fold cross validation</p>
+</td></tr>
+<tr valign="top"><td><code>nrepeat</code></td>
+<td>
+<p>an integer specifying the number of repeats for cross
+validataion. By default, it is 10 indicating the cross-validation
+repeated 10 times</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>an integer specifying the seed</p>
 </td></tr>
 <tr valign="top"><td><code>mtry</code></td>
 <td>
@@ -81,9 +102,14 @@ provides a compromise between these two. Notably, the aggregate methods
 <p>logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to TRUE for display</p>
 </td></tr>
+<tr valign="top"><td><code>RData.location</code></td>
+<td>
+<p>the characters to tell the location of built-in
+RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
-<p>additional graphic parameters. Please refer to
+<p>additional parameters. Please refer to
 'randomForest::randomForest' for the complete list.</p>
 </td></tr>
 </table>
@@ -91,21 +117,22 @@ displayed in the screen. By default, it sets to TRUE for display</p>
 
 <h3>Value</h3>
 
-<p>an object of class &quot;pTarget&quot;, a list with following components:
+<p>an object of class &quot;sTarget&quot;, a list with following components:
 </p>
 
 <ul>
 <li><p><code>model</code>: a list of models, results from per-fold train set
 </p>
 </li>
-<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
+<li><p><code>priority</code>: a data frame of nGene X 7 containing gene
 priority information, where nGene is the number of genes in the input
-data frame, and the 6 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
+data frame, and the 7 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
 'Putative'), &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the priority
 scores), &quot;pvalue&quot; (the cross-fold aggregated p-value of being GSP,
 per-fold p-value converted from empirical cumulative distribution of
 the probability of being GSP), &quot;fdr&quot; (fdr adjusted from the aggregated
-p-value), &quot;priority&quot; (-log10(fdr))
+p-value), &quot;priority&quot; (-log10(pvalue) but rescaled into the 5-star
+ratings), and &quot;description&quot; (gene description)
 </p>
 </li>
 <li><p><code>predictor</code>: a data frame, which is the same as the input
@@ -166,12 +193,13 @@ important if each predictor is taken out)
 </p>
 </li>
 <li><p><code>performance</code>: a data frame of 1+nPredictor X 2 containing
-the supervised/predictor performance info predictor importance info,
+the supervised/predictor performance info predictor performance info,
 where nPredictor is the number of predictors, two columns are &quot;ROC&quot;
 (AUC values) and &quot;Fmax&quot; (F-max values)
 </p>
 </li>
-<li><p><code>call</code>: the call that produced this result
+<li><p><code>evidence</code>: an object of the class &quot;eTarget&quot;, a list with
+following components &quot;evidence&quot; and &quot;metag&quot;
 </p>
 </li></ul>
 
@@ -193,7 +221,7 @@ library(Pi)
 ## End(Not run)
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## Not run: 
-pTarget &lt;- xMLrandomforest(df_prediction, GSP, GSN)
+sTarget &lt;- xMLrandomforest(df_prediction, GSP, GSN)
 
 ## End(Not run)
 </pre>

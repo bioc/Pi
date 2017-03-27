@@ -4,11 +4,17 @@
 \alias{xMLrandomforest}
 \title{Function to integrate predictor matrix in a supervised manner via machine learning algorithm random forest.}
 \usage{
-xMLrandomforest(df_predictor, GSP, GSN, nfold = 3, mtry = NULL,
-ntree = 2000, fold.aggregateBy = c("Ztransform", "logistic", "fishers",
-"orderStatistic"), verbose = TRUE, ...)
+xMLrandomforest(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
+nfold = 3, nrepeat = 10, seed = 825, mtry = NULL, ntree = 1000,
+fold.aggregateBy = c("logistic", "Ztransform", "fishers",
+"orderStatistic"),
+verbose = TRUE, RData.location =
+"http://galahad.well.ox.ac.uk/bigdata",
+...)
 }
 \arguments{
+\item{list_pNode}{a list of "pNode" objects or a "pNode" object}
+
 \item{df_predictor}{a data frame containing genes (in rows) and
 predictors (in columns), with their predictive scores inside it. This
 data frame must has gene symbols as row names}
@@ -18,7 +24,16 @@ data frame must has gene symbols as row names}
 \item{GSN}{a vector containing Gold Standard Negative (GSN)}
 
 \item{nfold}{an integer specifying the number of folds for cross
-validataion}
+validataion. Per fold creates balanced splits of the data preserving
+the overall distribution for each class (GSP and GSN), therefore
+generating balanced cross-vallidation train sets and testing sets. By
+default, it is 3 meaning 3-fold cross validation}
+
+\item{nrepeat}{an integer specifying the number of repeats for cross
+validataion. By default, it is 10 indicating the cross-validation
+repeated 10 times}
+
+\item{seed}{an integer specifying the seed}
 
 \item{mtry}{an integer specifying the number of predictors randomly
 sampled as candidates at each split. If NULL, it will be tuned by
@@ -44,21 +59,25 @@ provides a compromise between these two. Notably, the aggregate methods
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to TRUE for display}
 
-\item{...}{additional graphic parameters. Please refer to
+\item{RData.location}{the characters to tell the location of built-in
+RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{...}{additional parameters. Please refer to
 'randomForest::randomForest' for the complete list.}
 }
 \value{
-an object of class "pTarget", a list with following components:
+an object of class "sTarget", a list with following components:
 \itemize{
 \item{\code{model}: a list of models, results from per-fold train set}
-\item{\code{priority}: a data frame of nGene X 6 containing gene
+\item{\code{priority}: a data frame of nGene X 7 containing gene
 priority information, where nGene is the number of genes in the input
-data frame, and the 6 columns are "GS" (either 'GSP', or 'GSN', or
+data frame, and the 7 columns are "GS" (either 'GSP', or 'GSN', or
 'Putative'), "name" (gene names), "rank" (ranks of the priority
 scores), "pvalue" (the cross-fold aggregated p-value of being GSP,
 per-fold p-value converted from empirical cumulative distribution of
 the probability of being GSP), "fdr" (fdr adjusted from the aggregated
-p-value), "priority" (-log10(fdr))}
+p-value), "priority" (-log10(pvalue) but rescaled into the 5-star
+ratings), and "description" (gene description)}
 \item{\code{predictor}: a data frame, which is the same as the input
 data frame but inserting an additional column 'GS' in the first column}
 \item{\code{pred2fold}: a list of data frame, results from per-fold
@@ -103,10 +122,11 @@ informative predictors), while "MeanDecreaseGini" measures how pure the
 nodes are at the end of the tree (a high score means the predictor was
 important if each predictor is taken out)}
 \item{\code{performance}: a data frame of 1+nPredictor X 2 containing
-the supervised/predictor performance info predictor importance info,
+the supervised/predictor performance info predictor performance info,
 where nPredictor is the number of predictors, two columns are "ROC"
 (AUC values) and "Fmax" (F-max values)}
-\item{\code{call}: the call that produced this result}
+\item{\code{evidence}: an object of the class "eTarget", a list with
+following components "evidence" and "metag"}
 }
 }
 \description{
@@ -115,7 +135,7 @@ supervised manner via machine learning algorithm random forest. It
 requires three inputs: 1) Gold Standard Positive (GSP) targets; 2) Gold
 Standard Negative (GSN) targets; 3) a predictor matrix containing genes
 in rows and predictors in columns, with their predictive scores inside
-it. It returns an object of class 'pTarget'.
+it. It returns an object of class 'sTarget'.
 }
 \note{
 none
@@ -127,6 +147,6 @@ library(Pi)
 }
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 \dontrun{
-pTarget <- xMLrandomforest(df_prediction, GSP, GSN)
+sTarget <- xMLrandomforest(df_prediction, GSP, GSN)
 }
 }

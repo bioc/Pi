@@ -2,7 +2,7 @@
 #'
 #' \code{xMLzoom} is supposed to visualise machine learning results using zoom plot. It returns an object of class "ggplot".
 #'
-#' @param pTarget an object of class "pTarget"
+#' @param sTarget an object of class "sTarget"
 #' @param top the number of the top targets to be labelled/highlighted
 #' @param top.label.type how to label the top targets. It can be "box" drawing a box around the labels , and "text" for the text only
 #' @param top.label.size the highlight label size
@@ -21,24 +21,24 @@
 #' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' \dontrun{
-#' gp <- xMLzoom(pTarget)
+#' gp <- xMLzoom(sTarget)
 #' gp
 #' }
 
-xMLzoom <- function(pTarget, top=20, top.label.type=c("box","text"), top.label.size=3, top.label.query=NULL, point.shape=3, signature=TRUE)
+xMLzoom <- function(sTarget, top=20, top.label.type=c("box","text"), top.label.size=3, top.label.query=NULL, point.shape=3, signature=TRUE)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     top.label.type <- match.arg(top.label.type)
 
-    if(class(pTarget) != "pTarget"){
-    	stop("The function must apply to a 'pTarget' object.\n")
+    if(class(sTarget) != "sTarget"){
+    	stop("The function must apply to a 'sTarget' object.\n")
     }
 
-	priority <- pTarget$priority
+	priority <- sTarget$priority
 	df <- data.frame(Symbol=rownames(priority), GS=priority$GS, Score=priority$priority, stringsAsFactors=FALSE)
     
-    df$GS <- factor(df$GS, levels=c("GSN","GSP","Putative"))
+    df$GS <- factor(df$GS, levels=c("GSN","GSP","Predictive"))
     color <- xColormap("ggplot2")(3)
     
 	df_highlight <- df[1:top, ]

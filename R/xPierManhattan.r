@@ -2,7 +2,7 @@
 #'
 #' \code{xPierManhattan} is supposed to visualise prioritised genes using manhattan plot. Genes with the top priority are highlighed. It returns an object of class "ggplot".
 #'
-#' @param pNode an object of class "pNode" (or "pTarget" or "dTarget")
+#' @param pNode an object of class "pNode" (or "sTarget" or "dTarget")
 #' @param color a character vector for colors to alternate chromosome colorings. If NULL, ggplot2 default colors will be used. If a single character is provided, it can be "jet" (jet colormap) or "rainbow" (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta)
 #' @param top the number of the top targets to be labelled/highlighted
 #' @param top.label.type how to label the top targets. It can be "box" drawing a box around the labels , and "text" for the text only
@@ -27,6 +27,7 @@
 #' }
 #'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -35,7 +36,6 @@
 #' gr <- ImmunoBase$AS$variants
 #' AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 #'
-#' \dontrun{
 #' # b) perform priority analysis
 #' pNode <- xPierSNPs(data=AS, include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location)
 #'
@@ -70,12 +70,12 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 
     if(class(pNode) == "pNode"){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
-    }else if(class(pNode) == "pTarget"){
+    }else if(class(pNode) == "sTarget"){
     	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
     }else if(class(pNode) == "dTarget"){
     	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]	
     }else{
-    	stop("The function must apply to a 'pNode' or 'pTarget' or 'dTarget' object.\n")
+    	stop("The function must apply to a 'pNode' or 'sTarget' or 'dTarget' object.\n")
     }
     
 	if(verbose){
@@ -130,10 +130,10 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 		}
 	}
 	
+	priority <- seqnames <- priority <- NULL
 	###############################
 	## calling ggbio::autoplot
-	#suppressMessages(ggp <- ggbio::autoplot(object=gr, aes(y=priority,color=seqnames,alpha=priority), coord="genome", geom='point', space.skip=0.01))
-	suppressMessages(ggp <- ggbio::autoplot(object=gr, eval(parse(text="aes(y=priority,color=seqnames,alpha=priority)")), coord="genome", geom='point', space.skip=0.01))
+	suppressMessages(ggp <- ggbio::autoplot(object=gr, aes(y=priority,color=seqnames,alpha=priority), coord="genome", geom='point', space.skip=0.01))
 	
 	## extract ggplot
 	bp <- ggp@ggplot
@@ -201,14 +201,13 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 			}
 		}
 		###########
-				
+		
+		midpoint <- priority <- Symbol <- NULL
 		if(!is.null(df_highlight)){
 			if(top.label.type=="text"){
-				#bp <- bp + ggrepel::geom_text_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
-				bp <- bp + ggrepel::geom_text_repel(data=df_highlight, eval(parse(text="aes(x=midpoint,y=priority,label=Symbol)")), size=top.label.size, color=top.label.col, fontface='bold', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
+				bp <- bp + ggrepel::geom_text_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
 			}else if(top.label.type=="box"){
-				#bp <- bp + ggrepel::geom_label_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold', box.padding=unit(0.35,"lines"), point.padding=unit(0.35,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
-				bp <- bp + ggrepel::geom_label_repel(data=df_highlight, eval(parse(text="aes(x=midpoint,y=priority,label=Symbol)")), size=top.label.size, color=top.label.col, fontface='bold', box.padding=unit(0.2,"lines"), point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
+				bp <- bp + ggrepel::geom_label_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold', box.padding=unit(0.2,"lines"), point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
 			}
 		}
 	}

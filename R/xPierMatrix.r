@@ -1,23 +1,28 @@
-#' Function to extract priority matrix from a list of pNode objects
+#' Function to extract priority or evidence matrix from a list of pNode objects
 #'
-#' \code{xPierMatrix} is supposed to extract priority matrix from a list of pNode objects. Also supported is the aggregation of priority matrix (similar to the meta-analysis) generating the priority results; we view this functionality as the discovery mode of the prioritisation.
+#' \code{xPierMatrix} is supposed to extract priority or evidence matrix from a list of pNode objects. Also supported is the aggregation of priority matrix (similar to the meta-analysis) generating the priority results; we view this functionality as the discovery mode of the prioritisation.
 #'
-#' @param list_pNode a list of "pNode" objects
-#' @param displayBy which priority will be extracted. It can be "score" for priority score (by default), "rank" for priority rank, "pvalue" for priority p-value
+#' @param list_pNode a list of "pNode" objects or a "pNode" object
+#' @param displayBy which priority will be extracted. It can be "score" for priority score (by default), "rank" for priority rank, "weight" for seed weight, "pvalue" for priority p-value, "evidence" for the evidence (seed info)
 #' @param combineBy how to resolve nodes/targets from a list of "pNode" objects. It can be "intersect" for intersecting nodes (by default), "union" for unionising nodes
 #' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
+#' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
 #' @return
-#' If aggregateBy is 'none' (by default), a data frame containing priority matrix, with each column/predictor for either priority score, or priorty rank or priority p-value.
-#' If aggregateBy is not 'none', an object of the class "dTarget", a list with following components:
+#' If displayBy is 'evidence', an object of the class "eTarget", a list with following components:
 #' \itemize{
-#'  \item{\code{priority}: a data frame of nGene X 5 containing gene priority (aggregated) information, where nGene is the number of genes, and the 5 columns are "name" (gene names), "rank" (ranks of the priority scores), "pvalue" (the aggregated p-value, converted from empirical cumulative distribution of the probability of being GSP), "fdr" (fdr adjusted from the aggregated p-value), "priority" (-log10(pvalue) but rescaled into the 0-10 range)}
-#'  \item{\code{predictor}: a data frame containing priority matrix, with each column/predictor for either priority score, or priorty rank or priority p-value}
-#'  \item{\code{call}: the call that produced this result}
+#'  \item{\code{evidence}: a data frame of nGene X 6 containing gene evidence information, where nGene is the number of genes, and the 7 columns are seed info including "Overall" for the number of different types of seeds, followed by details on individual type of seeds (that is, "OMIM", "Phenotype", "Function", "nearbyGenes", "eQTL", "HiC")}
+#'  \item{\code{metag}: an "igraph" object}
+#' }
+#' Otherwise (if displayBy is not 'evidence'), if aggregateBy is 'none' (by default), a data frame containing priority matrix, with each column/predictor for either priority score, or priorty rank or priority p-value. If aggregateBy is not 'none', an object of the class "dTarget", a list with following components:
+#' \itemize{
+#'  \item{\code{priority}: a data frame of nGene X 6 containing gene priority (aggregated) information, where nGene is the number of genes, and the 6 columns are "name" (gene names), "rank" (ranks of the priority scores), "pvalue" (the aggregated p-value, converted from empirical cumulative distribution of the probability of being GSP), "fdr" (fdr adjusted from the aggregated p-value), "priority" (-log10(pvalue) but rescaled into the 5-star ratings), "description" (gene description) and seed info including "Overall" for the number of different types of seeds, followed by details on individual type of seeds (that is, "OMIM", "Phenotype", "Function", "nearbyGenes", "eQTL", "HiC")}
+#'  \item{\code{predictor}: a data frame containing predictor matrix, with each column/predictor for either priority score, or priorty rank or priority p-value}
+#'  \item{\code{metag}: an "igraph" object}
 #' }
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierSNPs}}
+#' @seealso \code{\link{xPierSNPsAdv}}
 #' @include xPierMatrix.r
 #' @examples
 #' \dontrun{
@@ -26,10 +31,14 @@
 #' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' \dontrun{
+#' # get predictor matrix for targets
 #' df_score <- xPierMatrix(ls_pNode)
+#' # get evidence for targets
+#' eTarget <- xPierMatrix(ls_pNode, displayBy="evidence")
+#' # get target priority in a discovery mode
+#' dTarget <- xPierMatrix(ls_pNode, displayBy="pvalue", aggregateBy="fishers")
 #' }
-
-xPierMatrix <- function(list_pNode, displayBy=c("score","rank","pvalue"), combineBy=c('intersect','union'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE)
+xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
     displayBy <- match.arg(displayBy)
@@ -45,7 +54,14 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","pvalue"), combin
 			return(NULL)
 		}
 	}else{
-		stop("The function must apply to an 'list' object or an 'pNode' object.\n")
+		stop("The function must apply to 'list' of 'pNode' objects or a 'pNode' object.\n")
+	}
+	
+	## check list_names
+	list_names <- names(list_pNode)
+	if(is.null(list_names)){
+		list_names <- paste('Predictor', 1:length(list_pNode), sep=' ')
+		names(list_pNode) <- list_names
 	}
 	
 	## get nodes involved
@@ -59,29 +75,60 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","pvalue"), combin
 	}
 	nodes <- sort(nodes)
 	
-	## Combine into a data frame called 'df_predictor'
-	list_names <- names(list_pNode)
-	if(is.null(list_names)){
-		list_names <- paste('Predictor', 1:length(list_pNode), sep=' ')
+	if(displayBy=='evidence' | (displayBy=='pvalue' & aggregateBy!="none")){
+		############
+		## seed info
+		predictor_names <- names(list_pNode)
+		predictor_names <- gsub('^Annotation_', '', predictor_names)
+		predictor_names <- gsub('_.*', '', predictor_names)
+		ls_df <- lapply(1:length(list_pNode), function(i){
+			pNode <- list_pNode[[i]]
+			genes <- rownames(pNode$priority)[pNode$priority$seed==1]
+			df <- data.frame(Gene=genes, Predictor=rep(predictor_names[i], length(genes)), stringsAsFactors=FALSE)
+		})
+		df <- do.call(rbind, ls_df)
+		mat_evidence <- as.matrix(xSparseMatrix(df, rows=nodes, columns=NULL, verbose=FALSE))
+		###
+		# sorted by the number of seed gene types, followed by the total number of seed genes
+        mat_evidence <- mat_evidence[order(mat_evidence[,1],apply(mat_evidence,1,sum),decreasing=TRUE),]
+		###
+		
+		############
+		## get edges involved
+		ls_edges <- lapply(list_pNode, function(x){
+			relations <- igraph::get.data.frame(x$g, what="edges")
+		})
+		edges <- unique(do.call(rbind, ls_edges))
+		## get metag
+		metag <- igraph::graph.data.frame(d=edges, directed=FALSE, vertices=nodes)
+		##############
+		
 	}
-	ls_priority <- lapply(list_pNode, function(pNode){
-		p <- pNode$priority
-		ind <- match(nodes, rownames(p))
-		#ind <- ind[!is.na(ind)]
-		if(displayBy=='score' | displayBy=='pvalue'){
-			res <- p[ind, c("priority")]
-		}else if(displayBy=='rank'){
-			res <- p[ind, c("rank")]
-		}
-	})
-	df_predictor <- do.call(cbind, ls_priority)
-	rownames(df_predictor) <- nodes
 	
-	## replace NA with worst value
-	if(displayBy=='score' | displayBy=='pvalue'){
-		df_predictor[is.na(df_predictor)] <- 0
-	}else if(displayBy=='rank'){
-		df_predictor[is.na(df_predictor)] <- length(nodes)
+	if(displayBy!='evidence'){
+		## Combine into a data frame called 'df_predictor'
+		ls_priority <- lapply(list_pNode, function(pNode){
+			p <- pNode$priority
+			ind <- match(nodes, rownames(p))
+			#ind <- ind[!is.na(ind)]
+			if(displayBy=='score' | displayBy=='pvalue'){
+				res <- p[ind, c("priority")]
+			}else if(displayBy=='rank'){
+				res <- p[ind, c("rank")]
+			}else if(displayBy=='weight'){
+				res <- p[ind, c("weight")]
+			}
+		})
+		df_predictor <- do.call(cbind, ls_priority)
+		rownames(df_predictor) <- nodes
+	
+		## replace NA with worst value
+		if(displayBy=='score' | displayBy=='weight' | displayBy=='pvalue'){
+			df_predictor[is.na(df_predictor)] <- 0
+		}else if(displayBy=='rank'){
+			df_predictor[is.na(df_predictor)] <- length(nodes)
+		}
+
 	}
 	
 	## only when displayBy=='pvalue'
@@ -110,36 +157,64 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","pvalue"), combin
 			## adjp
 			df_adjp <- stats::p.adjust(df_ap, method="BH")
 			######
-			## priority: first log10-transformed ap and then being rescaled into the [0,10] range
+			## priority: first log10-transformed ap and then being rescaled into the [0,5] range
 			priority <- -log10(df_ap)
-			priority <- 10 * (priority - min(priority))/(max(priority) - min(priority))
+			priority <- 5 * (priority - min(priority))/(max(priority) - min(priority))
 			
 			## df_priority
 			df_priority <- data.frame(name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, priority=priority, stringsAsFactors=FALSE)
+			### add description
+			df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, RData.location=RData.location)$description
+			###
 			
 			## df_predictor
 			ind <- match(names(df_ap), rownames(df_predictor))
 			df_predictor <- df_predictor[ind,]
 			
-			dTarget <- list(priority = df_priority,
-							predictor = df_predictor, 
-							Call     = match.call()
+			## reorder mat_evidence
+			ind_row <- match(df_priority$name, rownames(mat_evidence))
+			ind_col <- match(unique(predictor_names), colnames(mat_evidence))
+			mat_evidence <- mat_evidence[ind_row, ind_col]
+			overall <- apply(mat_evidence!=0, 1, sum)
+			
+			## return dTarget
+			dTarget <- list(priority  = cbind(df_priority,Overall=overall, mat_evidence),
+							predictor = df_predictor,
+							metag	  = metag
 						 )
 			class(dTarget) <- "dTarget"
 			
 			df_predictor <- dTarget
 		}
 		
+	}else if(displayBy=='evidence'){
+		## reorder mat_evidence
+		ind_col <- match(unique(predictor_names), colnames(mat_evidence))
+		mat_evidence <- mat_evidence[, ind_col]
+		overall <- apply(mat_evidence!=0, 1, sum)
+
+		## return eTarget
+		eTarget <- list(evidence  = cbind(Overall=overall, mat_evidence),
+						metag	  = metag
+						)
+		class(eTarget) <- "eTarget"
+		df_predictor <- eTarget
+		
 	}
 	
 	if(verbose){
 		
-		if(displayBy=="pvalue" & aggregateBy!="none"){
-			message(sprintf("A total of %d genes are prioritised, combined by '%s' and aggregated by '%s' from %d predictors", nrow(df_predictor$priority), combineBy, aggregateBy, length(list_pNode)), appendLF=TRUE)
+		if(displayBy=="evidence"){
+			message(sprintf("A matrix of %d genes x %d evidence are generated", nrow(mat_evidence), ncol(mat_evidence)), appendLF=TRUE)
+			
 		}else{
-			message(sprintf("A matrix of %d genes x %d predictors are generated, displayed by '%s' and combined by '%s'", nrow(df_predictor), ncol(df_predictor), displayBy, combineBy), appendLF=TRUE)
+			if(displayBy=="pvalue" & aggregateBy!="none"){
+				message(sprintf("A total of %d genes are prioritised, combined by '%s' and aggregated by '%s' from %d predictors", nrow(df_predictor$priority), combineBy, aggregateBy, length(list_pNode)), appendLF=TRUE)
+			}else{
+				message(sprintf("A matrix of %d genes x %d predictors are generated, displayed by '%s' and combined by '%s'", nrow(df_predictor), ncol(df_predictor), displayBy, combineBy), appendLF=TRUE)
+			}
+
 		}
-		
 	}
 	
 	

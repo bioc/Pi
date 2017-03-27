@@ -2,8 +2,8 @@
 #'
 #' \code{xMLdensity} is supposed to visualise machine learning results using density plot. It returns an object of class "ggplot".
 #'
-#' @param pTarget an object of class "pTarget"
-#' @param displayBy which targets will be used for displaying. It can be one of "GS" for gold standard targets, "GSN" for gold standard negatives, "GSP" for gold standard positives, "Putative" for putative targets (non-GS), "All" for all targets (by default)
+#' @param sTarget an object of class "sTarget"
+#' @param displayBy which targets will be used for displaying. It can be one of "GS" for gold standard targets, "GSN" for gold standard negatives, "GSP" for gold standard positives, "Predictive" for putative targets (non-GS), "All" for all targets (by default)
 #' @param x.scale how to transform the x scale. It can be "normal" for no transformation, and "sqrt" for square root transformation (by default)
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
 #' @return an object of class "ggplot"
@@ -18,28 +18,28 @@
 #' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' \dontrun{
-#' gp <- xMLdensity(pTarget, displayBy="All")
+#' gp <- xMLdensity(sTarget, displayBy="All")
 #' gp
 #' }
 
-xMLdensity <- function(pTarget, displayBy=c("All","GS","GSN","GSP","Putative"), x.scale=c("sqrt","normal"), signature=TRUE) 
+xMLdensity <- function(sTarget, displayBy=c("All","GS","GSN","GSP","Predictive"), x.scale=c("sqrt","normal"), signature=TRUE) 
 {
     
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     displayBy <- match.arg(displayBy)
     x.scale <- match.arg(x.scale)
     
-    if(class(pTarget) != "pTarget"){
-    	stop("The function must apply to a 'pTarget' object.\n")
+    if(class(sTarget) != "sTarget"){
+    	stop("The function must apply to a 'sTarget' object.\n")
     }
 
-	priority <- pTarget$priority
+	priority <- sTarget$priority
 	df <- data.frame(GS=priority$GS, Score=priority$priority, stringsAsFactors=FALSE)
     
-    df$GS <- factor(df$GS, levels=c("GSN","GSP","Putative"))
+    df$GS <- factor(df$GS, levels=c("GSN","GSP","Predictive"))
     color <- xColormap("ggplot2")(3)
     if(displayBy == "GS"){
-    	df <- df[df$GS!='Putative',]
+    	df <- df[df$GS!='Predictive',]
     	color <- color[1:2]
     }else if(displayBy=='GSN'){
     	df <- df[df$GS=='GSN',]
@@ -47,8 +47,8 @@ xMLdensity <- function(pTarget, displayBy=c("All","GS","GSN","GSP","Putative"), 
     }else if(displayBy=='GSP'){
     	df <- df[df$GS=='GSP',]
     	color <- color[2]
-    }else if(displayBy=='Putative'){
-    	df <- df[df$GS=='Putative',]
+    }else if(displayBy=='Predictive'){
+    	df <- df[df$GS=='Predictive',]
     	color <- color[3]
     }
     

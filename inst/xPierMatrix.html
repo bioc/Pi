@@ -1,27 +1,31 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to extract priority matrix from a list of pNode...</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to extract priority or evidence matrix from a list...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
 <table width="100%" summary="page for xPierMatrix"><tr><td>xPierMatrix</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to extract priority matrix from a list of pNode objects</h2>
+<h2>Function to extract priority or evidence matrix from a list of pNode objects</h2>
 
 <h3>Description</h3>
 
-<p><code>xPierMatrix</code> is supposed to extract priority matrix from a list
-of pNode objects. Also supported is the aggregation of priority matrix
-(similar to the meta-analysis) generating the priority results; we view
-this functionality as the discovery mode of the prioritisation.
+<p><code>xPierMatrix</code> is supposed to extract priority or evidence matrix
+from a list of pNode objects. Also supported is the aggregation of
+priority matrix (similar to the meta-analysis) generating the priority
+results; we view this functionality as the discovery mode of the
+prioritisation.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-xPierMatrix(list_pNode, displayBy = c("score", "rank", "pvalue"),
-combineBy = c("intersect", "union"), aggregateBy = c("none", "fishers",
-"logistic", "Ztransform", "orderStatistic"), verbose = TRUE)
+xPierMatrix(list_pNode, displayBy = c("score", "rank", "weight",
+"pvalue",
+"evidence"), combineBy = c("union", "intersect"), aggregateBy =
+c("none",
+"fishers", "logistic", "Ztransform", "orderStatistic"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -30,13 +34,14 @@ combineBy = c("intersect", "union"), aggregateBy = c("none", "fishers",
 <table summary="R argblock">
 <tr valign="top"><td><code>list_pNode</code></td>
 <td>
-<p>a list of &quot;pNode&quot; objects</p>
+<p>a list of &quot;pNode&quot; objects or a &quot;pNode&quot; object</p>
 </td></tr>
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
 <p>which priority will be extracted. It can be &quot;score&quot;
-for priority score (by default), &quot;rank&quot; for priority rank, &quot;pvalue&quot; for
-priority p-value</p>
+for priority score (by default), &quot;rank&quot; for priority rank, &quot;weight&quot; for
+seed weight, &quot;pvalue&quot; for priority p-value, &quot;evidence&quot; for the evidence
+(seed info)</p>
 </td></tr>
 <tr valign="top"><td><code>combineBy</code></td>
 <td>
@@ -64,34 +69,59 @@ and 'logistic' are preferred here</p>
 <p>logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display</p>
 </td></tr>
+<tr valign="top"><td><code>RData.location</code></td>
+<td>
+<p>the characters to tell the location of built-in
+RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
 </table>
 
 
 <h3>Value</h3>
 
-<p>If aggregateBy is 'none' (by default), a data frame containing priority
-matrix, with each column/predictor for either priority score, or
-priorty rank or priority p-value.
-If aggregateBy is not 'none', an object of the class &quot;dTarget&quot;, a list
+<p>If displayBy is 'evidence', an object of the class &quot;eTarget&quot;, a list
 with following components:
 </p>
 
 <ul>
-<li><p><code>priority</code>: a data frame of nGene X 5 containing gene
+<li><p><code>evidence</code>: a data frame of nGene X 6 containing gene
+evidence information, where nGene is the number of genes, and the 7
+columns are seed info including &quot;Overall&quot; for the number of different
+types of seeds, followed by details on individual type of seeds (that
+is, &quot;OMIM&quot;, &quot;Phenotype&quot;, &quot;Function&quot;, &quot;nearbyGenes&quot;, &quot;eQTL&quot;, &quot;HiC&quot;)
+</p>
+</li>
+<li><p><code>metag</code>: an &quot;igraph&quot; object
+</p>
+</li></ul>
+
+<p>Otherwise (if displayBy is not 'evidence'), if aggregateBy is 'none'
+(by default), a data frame containing priority matrix, with each
+column/predictor for either priority score, or priorty rank or priority
+p-value. If aggregateBy is not 'none', an object of the class
+&quot;dTarget&quot;, a list with following components:
+</p>
+
+<ul>
+<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
 priority (aggregated) information, where nGene is the number of genes,
-and the 5 columns are &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the
+and the 6 columns are &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the
 priority scores), &quot;pvalue&quot; (the aggregated p-value, converted from
 empirical cumulative distribution of the probability of being GSP),
 &quot;fdr&quot; (fdr adjusted from the aggregated p-value), &quot;priority&quot;
-(-log10(pvalue) but rescaled into the 0-10 range)
+(-log10(pvalue) but rescaled into the 5-star ratings), &quot;description&quot;
+(gene description) and seed info including &quot;Overall&quot; for the number of
+different types of seeds, followed by details on individual type of
+seeds (that is, &quot;OMIM&quot;, &quot;Phenotype&quot;, &quot;Function&quot;, &quot;nearbyGenes&quot;, &quot;eQTL&quot;,
+&quot;HiC&quot;)
 </p>
 </li>
-<li><p><code>predictor</code>: a data frame containing priority matrix, with
+<li><p><code>predictor</code>: a data frame containing predictor matrix, with
 each column/predictor for either priority score, or priorty rank or
 priority p-value
 </p>
 </li>
-<li><p><code>call</code>: the call that produced this result
+<li><p><code>metag</code>: an &quot;igraph&quot; object
 </p>
 </li></ul>
 
@@ -105,7 +135,7 @@ priority p-value
 
 <h3>See Also</h3>
 
-<p><code>xPierSNPs</code>
+<p><code>xPierSNPsAdv</code>
 </p>
 
 
@@ -119,7 +149,13 @@ library(Pi)
 ## End(Not run)
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## Not run: 
+# get predictor matrix for targets
 df_score &lt;- xPierMatrix(ls_pNode)
+# get evidence for targets
+eTarget &lt;- xPierMatrix(ls_pNode, displayBy="evidence")
+# get target priority in a discovery mode
+dTarget &lt;- xPierMatrix(ls_pNode, displayBy="pvalue",
+aggregateBy="fishers")
 
 ## End(Not run)
 </pre>

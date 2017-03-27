@@ -13,8 +13,9 @@ xPierGenes(data, network = c("STRING_highest", "STRING_high",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
 "PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
 seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
-"none"), restart = 0.75, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
+"none"), restart = 0.7, normalise.affinity.matrix = c("none",
+"quantile"),
+parallel = TRUE, multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -123,7 +124,6 @@ for non-network seed genes), "seed" (1 for seeds, 0 for non-seeds),
 rescaled to the range [0,1]), "rank" (ranks of the priority scores),
 "description" (node description)}
 \item{\code{g}: an input "igraph" object}
-\item{\code{call}: the call that produced this result}
 }
 }
 \description{

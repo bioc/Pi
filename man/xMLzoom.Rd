@@ -4,12 +4,12 @@
 \alias{xMLzoom}
 \title{Function to visualise machine learning results using zoom plot}
 \usage{
-xMLzoom(pTarget, top = 20, top.label.type = c("box", "text"),
+xMLzoom(sTarget, top = 20, top.label.type = c("box", "text"),
 top.label.size = 3, top.label.query = NULL, point.shape = 3,
 signature = TRUE)
 }
 \arguments{
-\item{pTarget}{an object of class "pTarget"}
+\item{sTarget}{an object of class "sTarget"}
 
 \item{top}{the number of the top targets to be labelled/highlighted}
 
@@ -46,7 +46,7 @@ library(Pi)
 }
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 \dontrun{
-gp <- xMLzoom(pTarget)
+gp <- xMLzoom(sTarget)
 gp
 }
 }

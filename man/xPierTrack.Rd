@@ -2,15 +2,18 @@
 % Please edit documentation in R/xPierTrack.r
 \name{xPierTrack}
 \alias{xPierTrack}
-\title{Function to visualise prioritised genes using track plot}
+\title{Function to visualise a prioritised gene using track plot}
 \usage{
 xPierTrack(pNode, priority.top = NULL, target.query = NULL,
 window = 1e+06, nearby = NULL, query.highlight = TRUE,
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+track.ideogram = TRUE, track.genomeaxis = TRUE,
+name.datatrack = "Priority index", name.annotrack = "Genes",
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), SNPs = NULL,
+GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
 }
 \arguments{
-\item{pNode}{an object of class "pNode" (or "pTarget" or "dTarget")}
+\item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
 
 \item{priority.top}{the number of the top targets used for track plot.
 By default, it is NULL meaning all targets are used}
@@ -28,6 +31,18 @@ overwrite the parameter 'window'}
 \item{query.highlight}{logical to indicate whether the gene in query
 will be highlighted}
 
+\item{track.ideogram}{logical to indicate whether ideogram track is
+shown. By default, it is TRUE}
+
+\item{track.genomeaxis}{logical to indicate whether genome axis track
+is shown. By default, it is TRUE}
+
+\item{name.datatrack}{the name for the data track. By default, it is
+"Priority index"}
+
+\item{name.annotrack}{the name for the annotation track. By default, it
+is "Genes". If NULL, the title for annotation track will be hided}
+
 \item{GR.Gene}{the genomic regions of genes. By default, it is
 'UCSC_knownGene', that is, UCSC known genes (together with genomic
 locations) based on human genome assembly hg19. It can be
@@ -40,21 +55,49 @@ Symbols. Then, tell "GR.Gene" with your RData file name (with or
 without extension), plus specify your file RData path in
 "RData.location"}
 
+\item{SNPs}{a input vector containing SNPs. SNPs should be provided as
+dbSNP ID (ie starting with rs). Alternatively, they can be in the
+format of 'chrN:xxx', where N is either 1-22 or X, xxx is genomic
+positional number; for example, 'chr16:28525386'. By default, it is NLL
+meaning the SNP annotation track will be not displayed}
+
+\item{GR.SNP}{the genomic regions of SNPs. By default, it is
+'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS
+SNPs and their LD SNPs (hg19). It can be 'dbSNP_Common', that is,
+Common SNPs from dbSNP (version 146) plus GWAS SNPs and their LD SNPs
+(hg19). Alternatively, the user can specify the customised input. To do
+so, first save your RData file (containing an GR object) into your
+local computer, and make sure the GR object content names refer to
+dbSNP IDs. Then, tell "GR.SNP" with your RData file name (with or
+without extension), plus specify your file RData path in
+"RData.location". Note: you can also load your customised GR object
+directly}
+
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to false for no display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{...}{additional graphic parameters. For example, the parameter
+"add" allows the plot added to an existing plotting canvas without
+re-initialising. See
+\url{http://www.rdocumentation.org/packages/Gviz/topics/plotTracks} for
+the complete list.}
 }
 \value{
-an object of class "ggplot", appended by an GR object called 'gr'
+a list of GenomeGraph tracks, each one augmented by the computed image
+map coordinates in the 'imageMap' slot, along with the additional
+'ImageMap' object 'titles' containing information about the title
+panels.
 }
 \description{
-\code{xPierTrack} is supposed to visualise prioritised genes using
+\code{xPierTrack} is supposed to visualise a prioritised gene using
 track plot. Priority for the gene in query is displayed on the data
 track and nearby genes on the annotation track. Genomic locations on
 the X-axis are indicated on the X-axis, and the gene in query is
-highlighted.
+highlighted. If SNPs are also provided, SNP annotation track will be
+also displayed at the bottom.
 }
 \note{
 none

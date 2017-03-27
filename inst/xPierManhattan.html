@@ -33,7 +33,7 @@ verbose = TRUE, RData.location =
 <table summary="R argblock">
 <tr valign="top"><td><code>pNode</code></td>
 <td>
-<p>an object of class &quot;pNode&quot; (or &quot;pTarget&quot; or &quot;dTarget&quot;)</p>
+<p>an object of class &quot;pNode&quot; (or &quot;sTarget&quot; or &quot;dTarget&quot;)</p>
 </td></tr>
 <tr valign="top"><td><code>color</code></td>
 <td>
@@ -138,6 +138,7 @@ library(Pi)
 ## End(Not run)
 
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file &lt;- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -147,7 +148,6 @@ RData.location=RData.location)
 gr &lt;- ImmunoBase$AS$variants
 AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
-## Not run: 
 # b) perform priority analysis
 pNode &lt;- xPierSNPs(data=AS, include.eQTL="JKng_mono",
 include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,

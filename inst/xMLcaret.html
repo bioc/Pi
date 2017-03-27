@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to integrate predictor matrix in a supervised manner...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xMLcaret"><tr><td>xMLcaret</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to integrate predictor matrix in a supervised manner via machine learning algorithms using caret.</h2>
+
+<h3>Description</h3>
+
+<p><code>xMLcaret</code> is supposed to integrate predictor matrix in a
+supervised manner via machine learning algorithms using caret. The
+caret package streamlines model building and performance evaluation. It
+requires three inputs: 1) Gold Standard Positive (GSP) targets; 2) Gold
+Standard Negative (GSN) targets; 3) a predictor matrix containing genes
+in rows and predictors in columns, with their predictive scores inside
+it. It returns an object of class 'sTarget'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xMLcaret(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
+method = c("gbm", "svmRadial", "rda", "knn", "pls", "nnet", "rf",
+"myrf",
+"cforest", "glmnet", "glm", "bayesglm", "LogitBoost", "xgbLinear",
+"xgbTree"),
+nfold = 3, nrepeat = 10, seed = 825, aggregateBy = c("none",
+"logistic", "Ztransform", "fishers", "orderStatistic"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>list_pNode</code></td>
+<td>
+<p>a list of &quot;pNode&quot; objects or a &quot;pNode&quot; object</p>
+</td></tr>
+<tr valign="top"><td><code>df_predictor</code></td>
+<td>
+<p>a data frame containing genes (in rows) and
+predictors (in columns), with their predictive scores inside it. This
+data frame must has gene symbols as row names</p>
+</td></tr>
+<tr valign="top"><td><code>GSP</code></td>
+<td>
+<p>a vector containing Gold Standard Positive (GSP)</p>
+</td></tr>
+<tr valign="top"><td><code>GSN</code></td>
+<td>
+<p>a vector containing Gold Standard Negative (GSN)</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>machine learning method. It can be one of &quot;gbm&quot; for
+Gradient Boosting Machine (GBM), &quot;svmRadial&quot; for Support Vector
+Machines with Radial Basis Function Kernel (SVM), &quot;rda&quot; for Regularized
+Discriminant Analysis (RDA), &quot;knn&quot; for k-nearest neighbor (KNN), &quot;pls&quot;
+for Partial Least Squares (PLS), &quot;nnet&quot; for Neural Network (NNET), &quot;rf&quot;
+for Random Forest (RF), &quot;myrf&quot; for customised Random Forest (RF),
+&quot;cforest&quot; for Conditional Inference Random Forest, &quot;glmnet&quot; for glmnet,
+&quot;glm&quot; for Generalized Linear Model (GLM), &quot;bayesglm&quot; for Bayesian
+Generalized Linear Model (BGLM), &quot;LogitBoost&quot; for Boosted Logistic
+Regression (BLR), &quot;xgbLinear&quot; for eXtreme Gradient Boosting as linear
+booster (XGBL), &quot;xgbTree&quot; for eXtreme Gradient Boosting as tree booster
+(XGBT)</p>
+</td></tr>
+<tr valign="top"><td><code>nfold</code></td>
+<td>
+<p>an integer specifying the number of folds for cross
+validataion. Per fold creates balanced splits of the data preserving
+the overall distribution for each class (GSP and GSN), therefore
+generating balanced cross-vallidation train sets and testing sets. By
+default, it is 3 meaning 3-fold cross validation</p>
+</td></tr>
+<tr valign="top"><td><code>nrepeat</code></td>
+<td>
+<p>an integer specifying the number of repeats for cross
+validataion. By default, it is 10 indicating the cross-validation
+repeated 10 times</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>an integer specifying the seed</p>
+</td></tr>
+<tr valign="top"><td><code>aggregateBy</code></td>
+<td>
+<p>the aggregate method used to aggregate results from
+repeated cross validataion. It can be either &quot;none&quot; for no aggregration
+(meaning the best model based on all data used for cross validation is
+used), or &quot;orderStatistic&quot; for the method based on the order statistics
+of p-values, or &quot;fishers&quot; for Fisher's method, &quot;Ztransform&quot; for
+Z-transform method, &quot;logistic&quot; for the logistic method. Without loss of
+generality, the Z-transform method does well in problems where evidence
+against the combined null is spread widely (equal footings) or when the
+total evidence is weak; Fisher's method does best in problems where the
+evidence is concentrated in a relatively small fraction of the
+individual tests or when the evidence is at least moderately strong;
+the logistic method provides a compromise between these two. Notably,
+the aggregate methods 'Ztransform' and 'logistic' are preferred here</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to TRUE for display</p>
+</td></tr>
+<tr valign="top"><td><code>RData.location</code></td>
+<td>
+<p>the characters to tell the location of built-in
+RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class &quot;sTarget&quot;, a list with following components:
+</p>
+
+<ul>
+<li><p><code>model</code>: an object of class &quot;train&quot; as a best model
+</p>
+</li>
+<li><p><code>ls_model</code>: a list of best models from repeated
+cross-validation
+</p>
+</li>
+<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
+priority information, where nGene is the number of genes in the input
+data frame, and the 6 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
+'Putative'), &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the priority
+scores), &quot;priority&quot; (5-star priority score), and &quot;description&quot; (gene
+description)
+</p>
+</li>
+<li><p><code>predictor</code>: a data frame, which is the same as the input
+data frame but inserting two additional columns ('GS' in the first
+column, 'name' in the second column)
+</p>
+</li>
+<li><p><code>performance</code>: a data frame of 1+nPredictor X 2 containing
+the supervised/predictor performance info, where nPredictor is the
+number of predictors, two columns are &quot;ROC&quot; (AUC values) and &quot;Fmax&quot;
+(F-max values)
+</p>
+</li>
+<li><p><code>performance_cv</code>: a data frame of nfold*nrepeat X 2
+containing the repeated cross-validation performance, where two columns
+are &quot;ROC&quot; (AUC values) and &quot;Fmax&quot; (F-max values)
+</p>
+</li>
+<li><p><code>importance</code>: a data frame of nPredictor X 1 containing the
+predictor importance info
+</p>
+</li>
+<li><p><code>gp</code>: a ggplot object for the ROC curve
+</p>
+</li>
+<li><p><code>gp_cv</code>: a ggplot object for the ROC curves from repeated
+cross-validation
+</p>
+</li>
+<li><p><code>evidence</code>: an object of the class &quot;eTarget&quot;, a list with
+following components &quot;evidence&quot; and &quot;metag&quot;
+</p>
+</li></ul>
+
+
+
+<h3>Note</h3>
+
+<p>It will depend on whether a package &quot;caret&quot; and its suggested packages
+have been installed. It can be installed via:
+<code>source("http://bioconductor.org/biocLite.R");
+biocLite(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"),
+siteRepos=c("http://cran.r-project.org")))</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+sTarget &lt;- xMLcaret(df_prediction, GSP, GSN, method="myrf")
+
+## End(Not run)
+</pre>
+
+
+</body></html>

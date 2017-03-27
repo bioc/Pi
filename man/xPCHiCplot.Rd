@@ -109,7 +109,6 @@ an igraph object
 using different network layouts.
 }
 \note{
-none
 \itemize{
 \item{\code{edge arrow}: interactions are represented as a direct graph
 (bait-prey)}
