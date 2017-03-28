@@ -367,8 +367,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
     eGSEA <- list(df_summary = summary,
     			  leading = leadingGenes,
     			  full = ls_df_leading,
-    			  cross = cross,
-    			  Call = match.call()
+    			  cross = cross
                  )
     class(eGSEA) <- "eGSEA"
     

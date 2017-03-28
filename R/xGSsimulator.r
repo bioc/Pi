@@ -12,10 +12,9 @@
 #' @return
 #' a list with following components:
 #' \itemize{
-#'  \item{\code{GSP}: a vector containing GSP after considering the population space}
 #'  \item{\code{GSN}: a vector containing simulated GSN}
+#'  \item{\code{GSP}: a vector containing GSP after considering the population space}
 #'  \item{\code{g}: an "igraph" object}
-#'  \item{\code{call}: the call that produced this result}
 #' }
 #' @note If multiple graphs are provided, they will be unionised for use.
 #' @export
@@ -28,7 +27,7 @@
 #' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' \dontrun{
-#' GS <- xGSsimulator(GSP, population, network=c("STRING_medium","PCommonsUN_medium"), RData.location=RData.location)
+#' sGS <- xGSsimulator(GSP, population, network=c("STRING_medium","PCommonsUN_medium"), RData.location=RData.location)
 #' }
 
 xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING_low","STRING_high","STRING_highest","PCommonsUN_high","PCommonsUN_medium")[c(1,6)], network.customised=NULL, neighbor.order=1, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
@@ -153,11 +152,11 @@ xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING
 		message(sprintf("Amongst %d genes from populations, %d genes (out of %d input genes) in GSP, %d genes as %d-order GSP neighbors, %d genes in GSN", length(population), length(res_GSP), length(GSP), length(res_neigh_excluded), neighbor.order, length(GSN)), appendLF=TRUE)
 	}
     
-    GS <- list(GSP = res_GSP,
-               GSN = GSN,
-               g = ig,
-               Call = match.call()
+    sGS <- list(
+    			GSN = GSN,
+    			GSP = res_GSP,
+               	g = ig
               )
        
-    invisible(GS)
+    invisible(sGS)
 }

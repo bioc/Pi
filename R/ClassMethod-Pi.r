@@ -225,6 +225,7 @@ print.sTarget <- function(x, ...) {
 	cat("......\n")
 	cat("$evidence:\n")
 	print(x$evidence)
+	cat("......\n")
 }
 
 ######################################################################
@@ -272,5 +273,136 @@ print.cTarget <- function(x, ...) {
 	cat("......\n")
 }
 
+######################################################################
+# sGS
+######################################################################
+#' @title Definition for S3 class \code{sGS}
+#' @description \code{sGS} mush have following components: GSN, GSP, g.
+#' @param GSN a vector
+#' @param GSP a vector
+#' @param g an 'igraph' object
+#' @return an object of S3 class \code{sGS}
+#' @keywords S3 classes
+#' @export
+#' @examples
+#' \dontrun{
+#' # Load the library
+#' library(Pi)
+#' }
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
+#' sGS(GSN, GSP, g)
+#' }
+sGS <- function(GSN, GSP, g){
+	## integrity checks
+	if(class(GSN)!='vector' | class(g)!='igraph'){
+		stop("The S3 class 'sGS' object failed to pass integrity checks!\n")
+	}
+	value <- list(GSN=GSN, GSP=GSP, g=g)
+	class(value) <- "sGS"
+	return(value)
+}
+#' @param x an object of class \code{sGS}
+#' @param ... other parameters
+#' @rdname sGS
+#' @export
+print.sGS <- function(x, ...) {
+	cat(sprintf("An object of S3 class '%s', with %d components including:", class(x), length(names(x))), "\n", sep="")
+	cat(sprintf("  $GSN: a vector (%d in total)", length(x$GSN)), "\n", sep="")
+	cat(sprintf("  $GSP: a vector (%d in total)", length(x$GSP)), "\n", sep="")
+	cat(sprintf("  $g: an igraph object with %d nodes and %d edges", vcount(x$g), ecount(x$g)), "\n", sep="")
+	cat("\n--------------------------------------------------\n")
+}
 
+######################################################################
+# pPerf
+######################################################################
+#' @title Definition for S3 class \code{pPerf}
+#' @description \code{pPerf} mush have following components: PRS, AUROC, Fmax, ROC_perf, PR_perf, Pred_obj.
+#' @param PRS a data frame
+#' @param AUROC a scalar
+#' @param Fmax a scalar
+#' @param ROC_perf a ROCR 'performance' object for ROC curve
+#' @param PR_perf a ROCR 'performance' object for PR curve
+#' @param Pred_obj a ROCR 'prediction' object for other performance measures
+#' @return an object of S3 class \code{pPerf}
+#' @keywords S3 classes
+#' @export
+#' @examples
+#' \dontrun{
+#' # Load the library
+#' library(Pi)
+#' }
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
+#' pPerf(PRS, AUROC, Fmax, ROC_perf, PR_perf, Pred_obj)
+#' }
+pPerf <- function(PRS, AUROC, Fmax, ROC_perf, PR_perf, Pred_obj){
+	## integrity checks
+	if(class(PRS)!='data.frame' | class(ROC_perf)!='performance' | class(Pred_obj)!='prediction'){
+		stop("The S3 class 'pPerf' object failed to pass integrity checks!\n")
+	}
+	value <- list(PRS=PRS, AUROC=AUROC, Fmax=Fmax, ROC_perf=ROC_perf, PR_perf=PR_perf, Pred_obj=Pred_obj)
+	class(value) <- "pPerf"
+	return(value)
+}
+#' @param x an object of class \code{pPerf}
+#' @param ... other parameters
+#' @rdname pPerf
+#' @export
+print.pPerf <- function(x, ...) {
+	cat(sprintf("An object of S3 class '%s', with %d components including:", class(x), length(names(x))), "\n", sep="")
+	cat(sprintf("  $PRS: a data frame of %d rows X %d columns", dim(x$PRS)[1],dim(x$PRS)[2]), "\n", sep="")
+	cat(sprintf("  $AUROC: %.3f", x$AUROC), "\n", sep="")
+	cat(sprintf("  $Fmax: %.3f", x$Fmax), "\n", sep="")
+	cat(sprintf("  $ROC_perf: an object of S3 class '%s'", class(x$ROC_perf)), "\n", sep="")
+	cat(sprintf("  $PR_perf: an object of S3 class '%s'", class(x$PR_perf)), "\n", sep="")
+	cat(sprintf("  $Pred_obj: an object of S3 class '%s'", class(x$Pred_obj)), "\n", sep="")
+	cat("\n--------------------------------------------------\n")
+}
 
+######################################################################
+# eGSEA
+######################################################################
+#' @title Definition for S3 class \code{eGSEA}
+#' @description \code{eGSEA} mush have following components: df_summary, leading, full, cross.
+#' @param df_summary a data frame
+#' @param leading a list
+#' @param full a list
+#' @param cross a matrix
+#' @return an object of S3 class \code{eGSEA}
+#' @keywords S3 classes
+#' @export
+#' @examples
+#' \dontrun{
+#' # Load the library
+#' library(Pi)
+#' }
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
+#' eGSEA(df_summary, leading, full, cross)
+#' }
+eGSEA <- function(df_summary, leading, full, cross){
+	## integrity checks
+	if(class(df_summary)!='data.frame'){
+		stop("The S3 class 'eGSEA' object failed to pass integrity checks!\n")
+	}
+	value <- list(df_summary=df_summary, leading=leading, full=full, cross=cross)
+	class(value) <- "eGSEA"
+	return(value)
+}
+#' @param x an object of class \code{eGSEA}
+#' @param ... other parameters
+#' @rdname eGSEA
+#' @export
+print.eGSEA <- function(x, ...) {
+	cat(sprintf("An object of S3 class '%s', with %d components including:", class(x), length(names(x))), "\n", sep="")
+	cat(sprintf("  $df_summary: a data frame of %d rows X %d columns", dim(x$df_summary)[1],dim(x$df_summary)[2]), "\n", sep="")
+	cat(sprintf("  $leading: a list (%d in total)", length(x$leading)), "\n", sep="")
+	cat(sprintf("  $full: a list (%d in total)", length(x$full)), "\n", sep="")
+	cat(sprintf("  $cross: a matrix of %d X %d", dim(x$cross)[1], dim(x$cross)[2]), "\n", sep="")
+	cat("\n--------------------------------------------------\n")
+	cat("$df_summary:\n")
+	print(x$df_summary[1:2,], row.names=FALSE)
+	cat("......\n")
+}

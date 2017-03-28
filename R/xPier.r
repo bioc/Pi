@@ -157,8 +157,7 @@ xPier <- function(seeds, g, seeds.inclusive=TRUE, normalise=c("laplacian","row",
     ####################################################################################
 
     pNode <- list(g=ig,
-                  priority = df,
-                  Call     = match.call()
+                  priority = df
                  )
     class(pNode) <- "pNode"   
     

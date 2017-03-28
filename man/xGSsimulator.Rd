@@ -55,11 +55,10 @@ RData files. See \code{\link{xRDataLoader}} for details}
 \value{
 a list with following components:
 \itemize{
+\item{\code{GSN}: a vector containing simulated GSN}
 \item{\code{GSP}: a vector containing GSP after considering the
 population space}
-\item{\code{GSN}: a vector containing simulated GSN}
 \item{\code{g}: an "igraph" object}
-\item{\code{call}: the call that produced this result}
 }
 }
 \description{
@@ -78,7 +77,7 @@ library(Pi)
 }
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 \dontrun{
-GS <- xGSsimulator(GSP, population,
+sGS <- xGSsimulator(GSP, population,
 network=c("STRING_medium","PCommonsUN_medium"),
 RData.location=RData.location)
 }

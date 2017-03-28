@@ -45,7 +45,6 @@ and 'Specificity')}
 \item{\code{PR_perf}: a ROCR performance-class object for PR curve}
 \item{\code{Pred_obj}: a ROCR prediction-class object (potentially used
 for calculating other performance measures)}
-\item{\code{call}: the call that produced this result}
 }
 If plot is 'ROC' or 'PR', it will return a ggplot object after being
 appended with the same components as mentioned above.

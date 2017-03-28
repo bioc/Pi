@@ -94,17 +94,14 @@ RData files. See <code>xRDataLoader</code> for details</p>
 </p>
 
 <ul>
+<li><p><code>GSN</code>: a vector containing simulated GSN
+</p>
+</li>
 <li><p><code>GSP</code>: a vector containing GSP after considering the
 population space
 </p>
 </li>
-<li><p><code>GSN</code>: a vector containing simulated GSN
-</p>
-</li>
 <li><p><code>g</code>: an &quot;igraph&quot; object
-</p>
-</li>
-<li><p><code>call</code>: the call that produced this result
 </p>
 </li></ul>
 
@@ -133,7 +130,7 @@ library(Pi)
 ## End(Not run)
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## Not run: 
-GS &lt;- xGSsimulator(GSP, population,
+sGS &lt;- xGSsimulator(GSP, population,
 network=c("STRING_medium","PCommonsUN_medium"),
 RData.location=RData.location)
 
