@@ -1,4 +1,4 @@
-#' Function to extract priority matrix from a list of dTarget objects
+#' Function to extract priority matrix from a list of dTarget/sTarget objects
 #'
 #' \code{xPierCross} is supposed to extract priority matrix from a list of dTarget objects. Also supported is the aggregation of priority matrix (similar to the meta-analysis) generating the priority results; we view this functionality as the cross mode of the prioritisation.
 #'

@@ -1,15 +1,15 @@
 citEntry(entry="Article",
     author = "Hai Fang, ULTRA-DD Consortium, Julian C Knight",
-    title = "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene, Pathway and Network Level",
-    journal = "R package version 1.1.5",
+    title = "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene and Pathway Level",
+    journal = "R package version 1.3.3",
     volume = "",
     issue = "",
-    year = "2016", 
+    year = "2017", 
     pages = "",
     url = "http://pi314.r-forge.r-project.org",
     doi = "",
     textVersion = paste(
                 "Fang, H., ULTRA-DD Consortium, Knight, J.C.",
-                "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene, Pathway and Network Level.",
+                "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene and Pathway Level.",
                 "http://pi314.r-forge.r-project.org")
 )

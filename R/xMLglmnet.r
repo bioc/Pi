@@ -18,7 +18,7 @@
 #' an object of class "pTarget", a list with following components:
 #' \itemize{
 #'  \item{\code{model}: an object of class "cv.glmnet" as a best model}
-#'  \item{\code{priority}: a data frame of nGene X 5 containing gene priority information, where nGene is the number of genes in the input data frame, and the 5 columns are "GS" (either 'GSP', or 'GSN', or 'Putative'), "name" (gene names), "rank" (ranks of the priority scores), "priority" (priority score; rescaled into the 5-star ratings), and "description" (gene description)}
+#'  \item{\code{priority}: a data frame of nGene X 5 containing gene priority information, where nGene is the number of genes in the input data frame, and the 5 columns are "GS" (either 'GSP', or 'GSN', or 'NEW'), "name" (gene names), "rank" (ranks of the priority scores), "priority" (priority score; rescaled into the 5-star ratings), and "description" (gene description)}
 #'  \item{\code{predictor}: a data frame, which is the same as the input data frame but inserting an additional column 'GS' in the first column}
 #'  \item{\code{cvm2alpha}: a data frame of nAlpha X 2 containing mean cross-validated error, where nAlpha is the number of alpha and the two columns are "min" (lambda.min) and "1se" (lambda.1se)}
 #'  \item{\code{nonzero2alpha}: a data frame of nAlpha X 2 containing the number of non-zero coefficients, where nAlpha is the number of alpha and the two columns are "min" (lambda.min) and "1se" (lambda.1se)}
@@ -181,7 +181,7 @@ xMLglmnet <- function(df_predictor, GSP, GSN, family=c("binomial","gaussian"), t
 	#########################################
 	## output
 	### df_priority
-	output_gs <- rep('Putative', length(vec_priority))
+	output_gs <- rep('NEW', length(vec_priority))
 	names(output_gs) <- names(vec_priority)
 	ind <- match(names(vec_priority), names(gs_targets))
 	output_gs[!is.na(ind)] <- gs_targets[ind[!is.na(ind)]]

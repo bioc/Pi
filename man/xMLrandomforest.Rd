@@ -72,10 +72,10 @@ an object of class "sTarget", a list with following components:
 \item{\code{priority}: a data frame of nGene X 7 containing gene
 priority information, where nGene is the number of genes in the input
 data frame, and the 7 columns are "GS" (either 'GSP', or 'GSN', or
-'Putative'), "name" (gene names), "rank" (ranks of the priority
-scores), "pvalue" (the cross-fold aggregated p-value of being GSP,
-per-fold p-value converted from empirical cumulative distribution of
-the probability of being GSP), "fdr" (fdr adjusted from the aggregated
+'NEW'), "name" (gene names), "rank" (ranks of the priority scores),
+"pvalue" (the cross-fold aggregated p-value of being GSP, per-fold
+p-value converted from empirical cumulative distribution of the
+probability of being GSP), "fdr" (fdr adjusted from the aggregated
 p-value), "priority" (-log10(pvalue) but rescaled into the 5-star
 ratings), and "description" (gene description)}
 \item{\code{predictor}: a data frame, which is the same as the input
@@ -85,9 +85,9 @@ test set}
 \item{\code{prob2fold}: a data frame of nGene X 2+nfold containing the
 probability of being GSP, where nGene is the number of genes in the
 input data frame, nfold is the number of folds for cross validataion,
-and the first two columns are "GS" (either 'GSP', or 'GSN', or
-'Putative'), "name" (gene names), and the rest columns storing the
-per-fold probability of being GSP}
+and the first two columns are "GS" (either 'GSP', or 'GSN', or 'NEW'),
+"name" (gene names), and the rest columns storing the per-fold
+probability of being GSP}
 \item{\code{importance2fold}: a data frame of nPredictor X 4+nfold
 containing the predictor importance info per fold, where nPredictor is
 the number of predictors, nfold is the number of folds for cross

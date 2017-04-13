@@ -57,9 +57,9 @@ an object of class "pTarget", a list with following components:
 \item{\code{priority}: a data frame of nGene X 5 containing gene
 priority information, where nGene is the number of genes in the input
 data frame, and the 5 columns are "GS" (either 'GSP', or 'GSN', or
-'Putative'), "name" (gene names), "rank" (ranks of the priority
-scores), "priority" (priority score; rescaled into the 5-star ratings),
-and "description" (gene description)}
+'NEW'), "name" (gene names), "rank" (ranks of the priority scores),
+"priority" (priority score; rescaled into the 5-star ratings), and
+"description" (gene description)}
 \item{\code{predictor}: a data frame, which is the same as the input
 data frame but inserting an additional column 'GS' in the first column}
 \item{\code{cvm2alpha}: a data frame of nAlpha X 2 containing mean

@@ -177,7 +177,6 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 		p$ROC_perf <- perf_roc
 		p$PR_perf <- perf_pr
 		p$Pred_obj <- pred_obj
-		p$Call <- match.call()
 		
 		invisible(p)
 		
@@ -202,7 +201,6 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 		p$ROC_perf <- perf_roc
 		p$PR_perf <- perf_pr
 		p$Pred_obj <- pred_obj
-		p$Call <- match.call()
 		
 		invisible(p)
 	}

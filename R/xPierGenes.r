@@ -3,7 +3,7 @@
 #' \code{xPierGenes} is supposed to prioritise genes given an input graph and a list of seed nodes. It implements Random Walk with Restart (RWR) and calculates the affinity score of all nodes in the graph to the seeds. The priority score is the affinity score. Parallel computing is also supported for Linux-like or Windows operating systems. It returns an object of class "pNode". 
 #'
 #' @param data a named input vector containing a list of seed nodes (ie gene symbols). For this named vector, the element names are seed/node names (e.g. gene symbols), the element (non-zero) values used to weight the relative importance of seeds. Alternatively, it can be a matrix or data frame with two columns: 1st column for seed/node names, 2nd column for the weight values
-#' @param network the built-in network. Currently two sources of network information are supported: the STRING database (version 10) and the Pathways Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addtion to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
+#' @param network the built-in network. Currently two sources of network information are supported: the STRING database (version 10) and the Pathway Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addition to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
 #' @param weighted logical to indicate whether edge weights should be considered. By default, it sets to false. If true, it only works for the network from the STRING database 
 #' @param network.customised an object of class "igraph". By default, it is NULL. It is designed to allow the user analysing their customised network data that are not listed in the above argument 'network'. This customisation (if provided) has the high priority over built-in network. If the user provides the "igraph" object with the "weight" edge attribute, RWR will assume to walk on the weighted network
 #' @param seeds.inclusive logical to indicate whether non-network seed genes are included for prioritisation. If TRUE (by default), these genes will be added to the netowrk
@@ -87,82 +87,7 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
 			message(sprintf("Load the network %s (%s) ...", network, as.character(now)), appendLF=TRUE)
 		}
 		
-		if(length(grep('STRING',network,perl=TRUE)) > 0){
-			g <- xRDataLoader(RData.customised='org.Hs.string', RData.location=RData.location, verbose=verbose)
-			
-			## restrict to those edges with given confidence
-			flag <- unlist(strsplit(network,"_"))[2]
-			if(flag=='highest'){
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=900])"))
-			}else if(flag=='high'){
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=700])"))
-			}else if(flag=='medium'){
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=400])"))
-			}else if(flag=='low'){
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=150])"))
-			}
-			
-			########################
-			# because of the way storing the network from the STRING database
-			## extract relations (by symbol)
-			V(g)$name <- V(g)$symbol
-			if(weighted){
-				relations <- igraph::get.data.frame(g, what="edges")[, c(1,2,10)]
-				colnames(relations) <- c("from","to","weight")
-			}else{
-				relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
-				colnames(relations) <- c("from","to")
-			}
-			## do removal for node extraction (without 'name'; othewise failed to do so using the function 'igraph::get.data.frame')
-			g <- igraph::delete_vertex_attr(g, "name")
-			g <- igraph::delete_vertex_attr(g, "seqid")
-			g <- igraph::delete_vertex_attr(g, "geneid")
-			nodes <- igraph::get.data.frame(g, what="vertices")
-			### remove the duplicated
-			nodes <- nodes[!duplicated(nodes), ]			
-			########################
-			
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
-			
-        }else if(length(grep('PCommonsUN',network,perl=TRUE)) > 0){
-			g <- xRDataLoader(RData.customised='org.Hs.PCommons_UN', RData.location=RData.location, verbose=verbose)
-			
-			flag <- unlist(strsplit(network,"_"))[2]
-			if(flag=='high'){
-				# restrict to those edges with physical interactions and with score>=102
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[in_complex_with>=102 | interacts_with>=102])"))
-			}else if(flag=='medium'){
-				# restrict to those edges with physical interactions and with score>=101
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[in_complex_with>=101 | interacts_with>=101])"))
-			}
-			
-			relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
-			colnames(relations) <- c("from","to")
-			nodes <- igraph::get.data.frame(g, what="vertices")[, c(3,4)]
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
-			
-        }else if(length(grep('PCommonsDN',network,perl=TRUE)) > 0){
-			flag <- unlist(strsplit(network,"_"))[2]
-			if(flag=='high'){
-				g <- xRDataLoader(RData.customised='org.Hs.PCommons_DN', RData.location=RData.location, verbose=verbose)
-				# restrict to those edges with high confidence score>=102
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[catalysis_precedes>=102 | controls_expression_of>=102 | controls_phosphorylation_of>=102 | controls_state_change_of>=102 | controls_transport_of>=102])"))
-			}else if(flag=='medium'){
-				g <- xRDataLoader(RData.customised='org.Hs.PCommons_DN', RData.location=RData.location, verbose=verbose)
-				# restrict to those edges with median confidence score>=101
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[catalysis_precedes>=101 | controls_expression_of>=101 | controls_phosphorylation_of>=101 | controls_state_change_of>=101 | controls_transport_of>=101])"))
-			}else{
-				g <- xRDataLoader(RData.customised='org.Hs.PCommons_DN.source', RData.location=RData.location, verbose=verbose)
-				g <- g[[ flag ]]
-				# restrict to those edges with high confidence score>=101
-				eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[catalysis_precedes>=101 | controls_expression_of>=101 | controls_phosphorylation_of>=101 | controls_state_change_of>=101 | controls_transport_of>=101])"))
-			}
-			
-			relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
-			colnames(relations) <- c("from","to")
-			nodes <- igraph::get.data.frame(g, what="vertices")[, c(3,4)]
-			g <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)
-        }
+		g <- XGR::xDefineNet(network=network, weighted=weighted, verbose=FALSE, RData.location=RData.location)
 	
 	}
     ######################################################################################
@@ -174,14 +99,14 @@ xPierGenes <- function(data, network=c("STRING_highest","STRING_high","STRING_me
     #########################################################
     ## append "description" to both pNode$g  pNode$priority
     if (class(pNode) == "pNode" ){
-		if(is.null(vertex_attr(pNode$g, "description"))){
-			V(pNode$g)$description <- V(pNode$g)$name
+		if(is.null(igraph::vertex_attr(pNode$g, "description"))){
+			### add description
+			V(pNode$g)$description <- XGR::xSymbol2GeneID(V(pNode$g)$name, details=TRUE, verbose=verbose, RData.location=RData.location)$description
+			###
 		}else{
 			ind <- which(is.na(V(pNode$g)$description))
 			if(length(ind)>0){
-				org.Hs.eg <- xRDataLoader(RData='org.Hs.eg', RData.location=RData.location)
-				flag <- match(V(pNode$g)$name, org.Hs.eg$gene_info$Symbol)
-				V(pNode$g)$description[ind] <- org.Hs.eg$gene_info$description[flag[ind]]
+				V(pNode$g)$description[ind] <- XGR::xSymbol2GeneID(V(pNode$g)$name[ind], details=TRUE, verbose=verbose, RData.location=RData.location)$description
 			}
 		}
 		df_nodes <- igraph::get.data.frame(pNode$g, what="vertices")[,c("name","description")]

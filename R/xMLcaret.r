@@ -850,7 +850,7 @@ xMLcaret <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, method=c("gbm
 	#########################################
 	## output
 	### df_priority
-	output_gs <- rep('Predictive', length(vec_priority))
+	output_gs <- rep('NEW', length(vec_priority))
 	names(output_gs) <- names(vec_priority)
 	ind <- match(names(vec_priority), names(gs_targets))
 	output_gs[!is.na(ind)] <- gs_targets[ind[!is.na(ind)]]

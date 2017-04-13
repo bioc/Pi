@@ -2,7 +2,7 @@
 % Please edit documentation in R/xPierCross.r
 \name{xPierCross}
 \alias{xPierCross}
-\title{Function to extract priority matrix from a list of dTarget objects}
+\title{Function to extract priority matrix from a list of dTarget/sTarget objects}
 \usage{
 xPierCross(list_xTarget, displayBy = c("priority", "rank", "pvalue",
 "fdr"),

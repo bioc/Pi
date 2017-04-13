@@ -27,7 +27,7 @@
 #' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 #' \dontrun{
-#' sGS <- xGSsimulator(GSP, population, network=c("STRING_medium","PCommonsUN_medium"), RData.location=RData.location)
+#' sGS <- xGSsimulator(GSP, population=NULL, network=c("STRING_medium","PCommonsUN_medium"), RData.location=RData.location)
 #' }
 
 xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING_low","STRING_high","STRING_highest","PCommonsUN_high","PCommonsUN_medium")[c(1,6)], network.customised=NULL, neighbor.order=1, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
@@ -51,15 +51,6 @@ xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING
 		network <- default.network[!is.na(ind)]
 	
 		if(length(network) > 0){
-			###########################	
-			# built-in network
-			###########################
-			if(length(grep('STRING',network,perl=TRUE)) > 0){
-				STRING <- xRDataLoader(RData.customised='org.Hs.string', verbose=verbose, RData.location=RData.location)
-			}
-			if(length(grep('PCommonsUN',network,perl=TRUE)) > 0){
-				PC <- xRDataLoader(RData.customised='org.Hs.PCommons_UN', verbose=verbose, RData.location=RData.location)
-			}
 			
 			ig_list <- lapply(network, function(x){
 				if(verbose){
@@ -67,50 +58,13 @@ xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING
 					message(sprintf("Load the network %s (%s) ...", x, as.character(now)), appendLF=TRUE)
 				}
 				
-				if(length(grep('STRING',x,perl=TRUE)) > 0){
-					g <- STRING
-			
-					## restrict to those edges with given confidence
-					flag <- unlist(strsplit(x,"_"))[2]
-					if(flag=='highest'){
-						eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=900])"))
-					}else if(flag=='high'){
-						eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=700])"))
-					}else if(flag=='medium'){
-						eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=400])"))
-					}else if(flag=='low'){
-						eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[combined_score>=150])"))
-					}
-			
-					########################
-					# because of the way storing the network from the STRING database
-					## extract relations (by symbol)
-					V(g)$name <- V(g)$symbol
-					relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
-					relations <- unique(relations)
-					colnames(relations) <- c("from","to")
-					########################
-			
-					g <- igraph::graph.data.frame(d=relations, directed=FALSE)
-			
-				}else if(length(grep('PCommonsUN',x,perl=TRUE)) > 0){
-					g <- PC
-			
-					flag <- unlist(strsplit(x,"_"))[2]
-					if(flag=='high'){
-						# restrict to those edges with physical interactions and with score>=102
-						eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[in_complex_with>=102 | interacts_with>=102])"))
-					}else if(flag=='medium'){
-						# restrict to those edges with physical interactions and with score>=101
-						eval(parse(text="g <- igraph::subgraph.edges(g, eids=E(g)[in_complex_with>=101 | interacts_with>=101])"))
-					}
-			
-					relations <- igraph::get.data.frame(g, what="edges")[, c(1,2)]
-					relations <- unique(relations)
-					colnames(relations) <- c("from","to")
-					g <- igraph::graph.data.frame(d=relations, directed=FALSE)
-			
+				g <- XGR::xDefineNet(network=x, weighted=FALSE, verbose=FALSE, RData.location=RData.location)
+				
+				### delete description
+				if(!is.null(igraph::vertex_attr(g, "description"))){
+					g <- igraph::delete_vertex_attr(g, "description")
 				}
+				###
 				
 				return(g)	
 			})
@@ -157,6 +111,7 @@ xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING
     			GSP = res_GSP,
                	g = ig
               )
-       
+    class(sGS) <- 'sGS'
+    
     invisible(sGS)
 }

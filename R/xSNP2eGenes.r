@@ -220,5 +220,17 @@ xSNP2eGenes <- function(data, include.eQTL=c(NA,"JKscience_CD14","JKscience_LPS2
 		}
 	}
 	
+	####################################
+	# only keep those genes with GeneID
+	####################################
+	if(!is.null(df_eGenes)){
+		ind <- XGR::xSymbol2GeneID(df_eGenes$Gene, details=FALSE, verbose=verbose, RData.location=RData.location)
+		df_eGenes <- df_eGenes[!is.na(ind), ]
+		if(nrow(df_eGenes)==0){
+			df_eGenes <- NULL
+		}
+	}
+	####################################
+	
     invisible(df_eGenes)
 }

@@ -57,10 +57,14 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
     }
 	
 	
-	if(!is.na(g)){
-		g <- match.arg(g)
+	if(class(g) == "igraph"){
+		g <- g
 	}else{
-		g <- xTarget$metag
+		if(class(xTarget) == "dTarget" | class(xTarget) == "eTarget"){
+			g <- xTarget$metag
+		}else if(class(xTarget) == "sTarget"){
+			g <- xTarget$evidence$metag
+		}
 	}
 	if(class(g)!='igraph'){
 		stop("The input 'g' must be provided!\n")

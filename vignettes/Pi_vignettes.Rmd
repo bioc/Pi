@@ -146,6 +146,8 @@ knitr::kable(df_pop[,c(3,2,1)], caption="", row.names=FALSE)
 
 *[`xPierEvidence`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierEvidence.html)*: extracts evidence from a list of `pNode` objects, in terms of seed genes under genetic influence.
 
+*[`xVisEvidence`](http://rawgit.com/hfang-bristol/Pi/master/inst/xVisEvidence.html)*: visualises evidence for prioritised genes in a gene network.
+
 ## xPierManhattan and xPierTrack
 *[`xPierManhattan`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierManhattan.html)*: visualises prioritised genes using manhattan plot, in which priority for genes is displayed on the Y-axis along with genomic locations on the X-axis. Also highlighted are genes with the top priority.
 
@@ -202,26 +204,35 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 
 ## Evaluation functions
 
-- *[`xPredictROCR`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPredictROCR.html)*: assess the prediction/prioritisation performance via Receiver Operating Characteristic (ROC) and Precision-Recall (PR) analysis.
+- *[`xPredictROCR`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPredictROCR.html)*: assesses the prediction/prioritisation performance via Receiver Operating Characteristic (ROC) and Precision-Recall (PR) analysis.
 
 - *[`xPredictCompare`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPredictCompare.html)*: compares the prediction/prioritisation performance.
 
 - *[`xGSsimulator`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSsimulator.html)*: simulates the gold standard negatives (GSN) from gold standard positives (GSP) considering the gene interaction evidence.
 
+- *[`xPierROCR`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierROCR.html)*: assesses the dTarget performance via ROC and PR analysis.
+
+- *[`xMLfeatureplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLfeatureplot.html)*: visualises/assesses features used for machine learning.
+
 ## Integral functions
 
 - *[`xMLrandomforest`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLrandomforest.html)*: integrates predictor matrix via machine learning algorithm random forest and returns an object of class `pTarget`.
 
+- *[`xMLcaret`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLcaret.html)*: integrates predictor matrix in a supervised manner via machine learning algorithms using caret and returns an object of class `pTarget`.
+
+- *[`xMLparameters`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLparameters.html)*: visualises cross-validation performance against tuning parameters.
+
 - *[`xMLdotplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdotplot.html)*: visualise machine learning results (a `pTarget` object) using dot plot and returns an object of class `ggplot`.
 
-- *[`xMLdensity`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdensity.html)*: visualise machine learning results (a `pTarget` object) using density plot and returns an object of class `ggplot`.
+- *[`xMLdensity`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdensity.html)*: visualise machine learning results (a `pTarget` or `dTarget` object) using density plot and returns an object of class `ggplot`.
 
-- *[`xMLzoom`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLzoom.html)*: visualise machine learning results (a `pTarget` object) using zoom plot and returns an object of class `ggplot`.
-
+- *[`xMLzoom`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLzoom.html)*: visualise machine learning results (a `pTarget` or `dTarget` object) using zoom plot and returns an object of class `ggplot`.
 
 ## Elementary functions
 
 - *[`xPierSNPsAdv`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierSNPs.html)*: prepares genetic predictors given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values). 
+
+- *[`xPierCross`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierCross.html)*: extracts priority matrix from a list of `dTarget`/`sTarget` objects. 
 
 - *[`xSNPeqtl`](http://rawgit.com/hfang-bristol/Pi/master/inst/xSNPeqtl.html)*: extracts eQTL-gene pairs given a list of SNPs.
 

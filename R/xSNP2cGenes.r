@@ -204,5 +204,17 @@ xSNP2cGenes <- function(data, entity=c("SNP","chr:start-end","data.frame","bed",
 		}
 	}
 	
+	####################################
+	# only keep those genes with GeneID
+	####################################
+	if(!is.null(df_cGenes)){
+		ind <- XGR::xSymbol2GeneID(df_cGenes$Gene, details=FALSE, verbose=verbose, RData.location=RData.location)
+		df_cGenes <- df_cGenes[!is.na(ind), ]
+		if(nrow(df_cGenes)==0){
+			df_cGenes <- NULL
+		}
+	}
+	####################################
+	
     invisible(df_cGenes)
 }

@@ -158,7 +158,7 @@ where \eqn{R_{i}} is the \eqn{i^{th}} rank (in a descreasing order)}
 
 \item{network}{the built-in network. Currently two sources of network
 information are supported: the STRING database (version 10) and the
-Pathways Commons database (version 7). STRING is a meta-integration of
+Pathway Commons database (version 7). STRING is a meta-integration of
 undirect interactions from the functional aspect, while Pathways
 Commons mainly contains both undirect and direct interactions from the
 physical/pathway aspect. Both have scores to control the confidence of
@@ -178,7 +178,7 @@ Commons, "PCommonsDN_high" indicates direct interactions with high
 confidence (supported with the PubMed references plus at least 2
 different sources), and "PCommonsUN_medium" for direct interactions
 with medium confidence (supported with the PubMed references). In
-addtion to pooled version of pathways from all data sources, the user
+addition to pooled version of pathways from all data sources, the user
 can also choose the pathway-merged network from individual sources,
 that is, "PCommonsDN_Reactome" for those from Reactome,
 "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those

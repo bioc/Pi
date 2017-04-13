@@ -4,7 +4,7 @@
 \alias{xPierSubnet}
 \title{Function to identify a gene network from top prioritised genes}
 \usage{
-xPierSubnet(pNode, priority.quantite = 0.1, network = c(NA,
+xPierSubnet(pNode, priority.quantile = 0.1, network = c(NA,
 "STRING_highest", "STRING_high", "STRING_medium", "STRING_low",
 "PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
@@ -18,35 +18,33 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
 
-\item{priority.quantite}{the quantite of the top priority genes. By
+\item{priority.quantile}{the quantile of the top priority genes. By
 default, 10% of top prioritised genes will be used for network
 analysis. If NULL or NA, all prioritised genes will be used}
 
-\item{network}{the built-in network. If NA, the network used for
-prioritisation will be used, which is part of the object of class
-"pNode". Otherwise, choose the other network of interest. Currently two
-sources of network information are supported: the STRING database
-(version 10) and the Pathways Commons database (version 7). STRING is a
-meta-integration of undirect interactions from the functional aspect,
-while Pathways Commons mainly contains both undirect and direct
-interactions from the physical/pathway aspect. Both have scores to
-control the confidence of interactions. Therefore, the user can choose
-the different quality of the interactions. In STRING, "STRING_highest"
-indicates interactions with highest confidence (confidence
-scores>=900), "STRING_high" for interactions with high confidence
-(confidence scores>=700), "STRING_medium" for interactions with medium
-confidence (confidence scores>=400), and "STRING_low" for interactions
-with low confidence (confidence scores>=150). For undirect/physical
-interactions from Pathways Commons, "PCommonsUN_high" indicates
-undirect interactions with high confidence (supported with the PubMed
-references plus at least 2 different sources), "PCommonsUN_medium" for
-undirect interactions with medium confidence (supported with the PubMed
+\item{network}{the built-in network. Currently two sources of network
+information are supported: the STRING database (version 10) and the
+Pathway Commons database (version 7). STRING is a meta-integration of
+undirect interactions from the functional aspect, while Pathways
+Commons mainly contains both undirect and direct interactions from the
+physical/pathway aspect. Both have scores to control the confidence of
+interactions. Therefore, the user can choose the different quality of
+the interactions. In STRING, "STRING_highest" indicates interactions
+with highest confidence (confidence scores>=900), "STRING_high" for
+interactions with high confidence (confidence scores>=700),
+"STRING_medium" for interactions with medium confidence (confidence
+scores>=400), and "STRING_low" for interactions with low confidence
+(confidence scores>=150). For undirect/physical interactions from
+Pathways Commons, "PCommonsUN_high" indicates undirect interactions
+with high confidence (supported with the PubMed references plus at
+least 2 different sources), "PCommonsUN_medium" for undirect
+interactions with medium confidence (supported with the PubMed
 references). For direct (pathway-merged) interactions from Pathways
 Commons, "PCommonsDN_high" indicates direct interactions with high
 confidence (supported with the PubMed references plus at least 2
 different sources), and "PCommonsUN_medium" for direct interactions
 with medium confidence (supported with the PubMed references). In
-addtion to pooled version of pathways from all data sources, the user
+addition to pooled version of pathways from all data sources, the user
 can also choose the pathway-merged network from individual sources,
 that is, "PCommonsDN_Reactome" for those from Reactome,
 "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those
@@ -131,7 +129,7 @@ RData.location=RData.location)
 
 # c) perform network analysis
 # find maximum-scoring subnet with the desired node number=50
-subnet <- xPierSubnet(pNode, priority.quantite=0.1, subnet.size=50,
+subnet <- xPierSubnet(pNode, priority.quantile=0.1, subnet.size=50,
 RData.location=RData.location)
 
 # d) save subnet results to the files called 'subnet_edges.txt' and 'subnet_nodes.txt'

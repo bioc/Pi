@@ -2,7 +2,7 @@
 #'
 #' \code{xMLzoom} is supposed to visualise machine learning results using zoom plot. It returns an object of class "ggplot".
 #'
-#' @param sTarget an object of class "sTarget"
+#' @param xTarget an object of class "sTarget" or "dTarget" (with the component 'pPerf')
 #' @param top the number of the top targets to be labelled/highlighted
 #' @param top.label.type how to label the top targets. It can be "box" drawing a box around the labels , and "text" for the text only
 #' @param top.label.size the highlight label size
@@ -25,21 +25,29 @@
 #' gp
 #' }
 
-xMLzoom <- function(sTarget, top=20, top.label.type=c("box","text"), top.label.size=3, top.label.query=NULL, point.shape=3, signature=TRUE)
+xMLzoom <- function(xTarget, top=20, top.label.type=c("box","text"), top.label.size=3, top.label.query=NULL, point.shape=3, signature=TRUE)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     top.label.type <- match.arg(top.label.type)
 
-    if(class(sTarget) != "sTarget"){
-    	stop("The function must apply to a 'sTarget' object.\n")
+    if(class(xTarget) == "dTarget"){
+    	if(is.null(xTarget$pPerf)){
+    		stop("The function must apply to a 'dTarget' object with the component 'pPerf'.\n")
+    	}
+    }else{
+		if(class(xTarget) != "sTarget"){
+			stop("The function must apply to a 'sTarget' object.\n")
+		}
     }
 
-	priority <- sTarget$priority
+	priority <- xTarget$priority
 	df <- data.frame(Symbol=rownames(priority), GS=priority$GS, Score=priority$priority, stringsAsFactors=FALSE)
     
-    df$GS <- factor(df$GS, levels=c("GSN","GSP","Predictive"))
-    color <- xColormap("ggplot2")(3)
+    #GS_level<-c("GSN","GSP","NEW")
+    GS_level <- sort(unique(df$GS))
+    df$GS <- factor(df$GS, levels=GS_level)
+    color <- xColormap("ggplot2")(length(GS_level))
     
 	df_highlight <- df[1:top, ]
 	top_cutoff <- base::min(df_highlight[,3])
@@ -49,10 +57,10 @@ xMLzoom <- function(sTarget, top=20, top.label.type=c("box","text"), top.label.s
 	gp <- ggplot(df, aes(x=Score, y=GS, color=GS)) + geom_point(alpha=0.95,shape=point.shape)
 	gp <- gp + scale_color_manual(values=color)
 	gp <- gp + theme_bw() + theme(legend.position="none", legend.title=element_blank(), axis.title.y=element_blank(), axis.text.y=element_text(size=12,face='bold'), axis.title.x=element_text(size=14,color="black",face="bold"))
-	gp <- gp + xlab("Composite scores\n(quantifying separation of GSP against GSN)")
+	gp <- gp + xlab("Composite scores\n(5-star ratings quantifying separation between GSP and GSN)")
     
     ## zoom
-    gp <- gp + ggforce::facet_zoom(x=(Score>=top_cutoff), zoom.data=(Score>=top_cutoff), zoom.size=2, show.area=TRUE)
+    gp <- gp + ggforce::facet_zoom(x=(Score>=top_cutoff), zoom.data=(Score>=top_cutoff), zoom.size=1.5, show.area=TRUE)
     
 	########################################
 	## ONLY restricted to genes in query

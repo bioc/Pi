@@ -19,10 +19,10 @@
 #' an object of class "sTarget", a list with following components:
 #' \itemize{
 #'  \item{\code{model}: a list of models, results from per-fold train set}
-#'  \item{\code{priority}: a data frame of nGene X 7 containing gene priority information, where nGene is the number of genes in the input data frame, and the 7 columns are "GS" (either 'GSP', or 'GSN', or 'Putative'), "name" (gene names), "rank" (ranks of the priority scores), "pvalue" (the cross-fold aggregated p-value of being GSP, per-fold p-value converted from empirical cumulative distribution of the probability of being GSP), "fdr" (fdr adjusted from the aggregated p-value), "priority" (-log10(pvalue) but rescaled into the 5-star ratings), and "description" (gene description)}
+#'  \item{\code{priority}: a data frame of nGene X 7 containing gene priority information, where nGene is the number of genes in the input data frame, and the 7 columns are "GS" (either 'GSP', or 'GSN', or 'NEW'), "name" (gene names), "rank" (ranks of the priority scores), "pvalue" (the cross-fold aggregated p-value of being GSP, per-fold p-value converted from empirical cumulative distribution of the probability of being GSP), "fdr" (fdr adjusted from the aggregated p-value), "priority" (-log10(pvalue) but rescaled into the 5-star ratings), and "description" (gene description)}
 #'  \item{\code{predictor}: a data frame, which is the same as the input data frame but inserting an additional column 'GS' in the first column}
 #'  \item{\code{pred2fold}: a list of data frame, results from per-fold test set}
-#'  \item{\code{prob2fold}: a data frame of nGene X 2+nfold containing the probability of being GSP, where nGene is the number of genes in the input data frame, nfold is the number of folds for cross validataion, and the first two columns are "GS" (either 'GSP', or 'GSN', or 'Putative'), "name" (gene names), and the rest columns storing the per-fold probability of being GSP}
+#'  \item{\code{prob2fold}: a data frame of nGene X 2+nfold containing the probability of being GSP, where nGene is the number of genes in the input data frame, nfold is the number of folds for cross validataion, and the first two columns are "GS" (either 'GSP', or 'GSN', or 'NEW'), "name" (gene names), and the rest columns storing the per-fold probability of being GSP}
 #'  \item{\code{importance2fold}: a data frame of nPredictor X 4+nfold containing the predictor importance info per fold, where nPredictor is the number of predictors, nfold is the number of folds for cross validataion, and the first 4 columns are "median" (the median of the importance across folds), "mad" (the median of absolute deviation of the importance across folds), "min" (the minimum of the importance across folds), "max" (the maximum of the importance across folds), and the rest columns storing the per-fold importance}
 #'  \item{\code{roc2fold}: a data frame of 1+nPredictor X 4+nfold containing the supervised/predictor ROC info (AUC values), where nPredictor is the number of predictors, nfold is the number of folds for cross validataion, and the first 4 columns are "median" (the median of the AUC values across folds), "mad" (the median of absolute deviation of the AUC values across folds), "min" (the minimum of the AUC values across folds), "max" (the maximum of the AUC values across folds), and the rest columns storing the per-fold AUC values}
 #'  \item{\code{fmax2fold}: a data frame of 1+nPredictor X 4+nfold containing the supervised/predictor PR info (F-max values), where nPredictor is the number of predictors, nfold is the number of folds for cross validataion, and the first 4 columns are "median" (the median of the F-max values across folds), "mad" (the median of absolute deviation of the F-max values across folds), "min" (the minimum of the F-max values across folds), "max" (the maximum of the F-max values across folds), and the rest columns storing the per-fold F-max values}
@@ -216,7 +216,13 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 	vec_mad <- apply(df_res, 1, stats::mad)
 	vec_min <- apply(df_res, 1, base::min)
 	vec_max <- apply(df_res, 1, base::max)
-    df_importance <- cbind(median=vec_median, mad=vec_mad, min=vec_min, max=vec_max, df_res)
+	#####
+	res_x <- apply(df_res, 1, stats::t.test)
+	vec_mean <- unlist(lapply(res_x, function(x) x$estimate))
+	vec_conf_lower <- unlist(lapply(res_x, function(x) x$conf.int[1]))
+	vec_conf_upper <- unlist(lapply(res_x, function(x) x$conf.int[2]))
+	#####
+    df_importance <- cbind(median=vec_median, mad=vec_mad, min=vec_min, max=vec_max, mean=vec_mean, conf_lower=vec_conf_lower, conf_upper=vec_conf_upper, df_res)
 
 	######################
 	## overall importance
@@ -298,7 +304,13 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 		vec_mad <- apply(df_res, 1, stats::mad)
 		vec_min <- apply(df_res, 1, base::min)
 		vec_max <- apply(df_res, 1, base::max)
-		df_ROC <- cbind(median=vec_median, mad=vec_mad, min=vec_min, max=vec_max, df_res)
+		#####
+		res_x <- apply(df_res, 1, stats::t.test)
+		vec_mean <- unlist(lapply(res_x, function(x) x$estimate))
+		vec_conf_lower <- unlist(lapply(res_x, function(x) x$conf.int[1]))
+		vec_conf_upper <- unlist(lapply(res_x, function(x) x$conf.int[2]))
+		#####
+		df_ROC <- cbind(median=vec_median, mad=vec_mad, min=vec_min, max=vec_max, mean=vec_mean, conf_lower=vec_conf_lower, conf_upper=vec_conf_upper, df_res)
 		
 		## df_Fmax
 		df_res <- do.call(rbind, ls_res)
@@ -314,7 +326,18 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 		vec_mad <- apply(df_res, 1, stats::mad)
 		vec_min <- apply(df_res, 1, base::min)
 		vec_max <- apply(df_res, 1, base::max)
+		#####
+		if(0){
+		res_x <- apply(df_res, 1, stats::t.test)
+		vec_mean <- unlist(lapply(res_x, function(x) x$estimate))
+		vec_conf_lower <- unlist(lapply(res_x, function(x) x$conf.int[1]))
+		vec_conf_upper <- unlist(lapply(res_x, function(x) x$conf.int[2]))
+		#####
+		df_Fmax <- cbind(median=vec_median, mad=vec_mad, min=vec_min, max=vec_max, mean=vec_mean, conf_lower=vec_conf_lower, conf_upper=vec_conf_upper, df_res)
+		}else{
 		df_Fmax <- cbind(median=vec_median, mad=vec_mad, min=vec_min, max=vec_max, df_res)
+		}
+    
     
     }else{
     	df_ROC <- NULL
@@ -369,7 +392,7 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 	#########################################
 	## output
 	### df_priority
-	output_gs <- rep('Predictive', length(df_ap))
+	output_gs <- rep('NEW', length(df_ap))
 	names(output_gs) <- names(df_ap)
 	ind <- match(names(df_ap), names(gs_targets))
 	output_gs[!is.na(ind)] <- gs_targets[ind[!is.na(ind)]]
