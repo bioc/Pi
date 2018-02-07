@@ -10,7 +10,7 @@ vignette: >
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 output: 
-  BiocStyle::html_document2:
+  BiocStyle::html_document:
         toc: true
         toc_depth: 2
         number_sections: true
