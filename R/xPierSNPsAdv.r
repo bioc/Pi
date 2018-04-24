@@ -13,12 +13,14 @@
 #' @param decay.exponent an integer specifying a decay exponent. By default, it sets to 2
 #' @param GR.SNP the genomic regions of SNPs. By default, it is 'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS SNPs and their LD SNPs (hg19). It can be 'dbSNP_Common', that is, Common SNPs from dbSNP (version 146) plus GWAS SNPs and their LD SNPs (hg19). Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to dbSNP IDs. Then, tell "GR.SNP" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
 #' @param GR.Gene the genomic regions of genes. By default, it is 'UCSC_knownGene', that is, UCSC known genes (together with genomic locations) based on human genome assembly hg19. It can be 'UCSC_knownCanonical', that is, UCSC known canonical genes (together with genomic locations) based on human genome assembly hg19. Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to Gene Symbols. Then, tell "GR.Gene" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
+#' @param include.TAD TAD boundary regions are also included. By default, it is 'none' to disable this option. Otherwise, inclusion of a TAD dataset to pre-filter SNP-nGene pairs (i.e. only those within a TAD region will be kept). TAD datasets can be one of "GM12878"  (lymphoblast), "IMR90" (fibroblast), "MSC" (mesenchymal stem cell) ,"TRO" (trophoblasts-like cell), "H1" (embryonic stem cell), "MES" (mesendoderm) and "NPC" (neural progenitor cell). Explanations can be found at \url{http://dx.doi.org/10.1016/j.celrep.2016.10.061}
 #' @param include.eQTL genes modulated by eQTL (also Lead SNPs or in LD with Lead SNPs) are also included. By default, it is 'NA' to disable this option. Otherwise, those genes modulated by eQTL will be included. Pre-built eQTL datasets are detailed in the section 'Note'
-#' @param eQTL.customised a user-input matrix or data frame with 3 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, and 3rd for eQTL mapping significance level (p-values or FDR). It is designed to allow the user analysing their eQTL data. This customisation (if provided) has the high priority over built-in eQTL data
+#' @param eQTL.customised a user-input matrix or data frame with 4 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, 3rd for eQTL mapping significance level (p-values or FDR), and 4th for contexts (required even though only one context is input). Alternatively, it can be a file containing these 4 columns. It is designed to allow the user analysing their eQTL data. This customisation (if provided) will populate built-in eQTL data
 #' @param include.HiC genes linked to input SNPs are also included. By default, it is 'NA' to disable this option. Otherwise, those genes linked to SNPs will be included according to Promoter Capture HiC (PCHiC) datasets. Pre-built HiC datasets are detailed in the section 'Note'
 #' @param cdf.function a character specifying a Cumulative Distribution Function (cdf). It can be one of 'exponential' based on exponential cdf, 'empirical' for empirical cdf
 #' @param scoring.scheme the method used to calculate seed gene scores under a set of SNPs. It can be one of "sum" for adding up, "max" for the maximum, and "sequential" for the sequential weighting. The sequential weighting is done via: \eqn{\sum_{i=1}{\frac{R_{i}}{i}}}, where \eqn{R_{i}} is the \eqn{i^{th}} rank (in a descreasing order)
-#' @param network the built-in network. Currently two sources of network information are supported: the STRING database (version 10) and the Pathway Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addition to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD
+#' @param network the built-in network. Currently two sources of network information are supported: the STRING database (version 10) and the Pathway Commons database (version 7). STRING is a meta-integration of undirect interactions from the functional aspect, while Pathways Commons mainly contains both undirect and direct interactions from the physical/pathway aspect. Both have scores to control the confidence of interactions. Therefore, the user can choose the different quality of the interactions. In STRING, "STRING_highest" indicates interactions with highest confidence (confidence scores>=900), "STRING_high" for interactions with high confidence (confidence scores>=700), "STRING_medium" for interactions with medium confidence (confidence scores>=400), and "STRING_low" for interactions with low confidence (confidence scores>=150). For undirect/physical interactions from Pathways Commons, "PCommonsUN_high" indicates undirect interactions with high confidence (supported with the PubMed references plus at least 2 different sources), "PCommonsUN_medium" for undirect interactions with medium confidence (supported with the PubMed references). For direct (pathway-merged) interactions from Pathways Commons, "PCommonsDN_high" indicates direct interactions with high confidence (supported with the PubMed references plus at least 2 different sources), and "PCommonsUN_medium" for direct interactions with medium confidence (supported with the PubMed references). In addition to pooled version of pathways from all data sources, the user can also choose the pathway-merged network from individual sources, that is, "PCommonsDN_Reactome" for those from Reactome, "PCommonsDN_KEGG" for those from KEGG, "PCommonsDN_HumanCyc" for those from HumanCyc, "PCommonsDN_PID" for those froom PID, "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC, "PCommonsDN_PhosphoSite" for those from PhosphoSite, and "PCommonsDN_CTD" for those from CTD. For direct (pathway-merged) interactions sourced from KEGG, it can be 'KEGG' for all, 'KEGG_metabolism' for pathways grouped into 'Metabolism', 'KEGG_genetic' for 'Genetic Information Processing' pathways, 'KEGG_environmental' for 'Environmental Information Processing' pathways, 'KEGG_cellular' for 'Cellular Processes' pathways, 'KEGG_organismal' for 'Organismal Systems' pathways, and 'KEGG_disease' for 'Human Diseases' pathways. 'REACTOME' for protein-protein interactions derived from Reactome pathways
+#' @param STRING.only the further restriction of STRING by interaction type. If NA, no such restriction. Otherwide, it can be one or more of "neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score". Useful options are c("experimental_score","database_score"): only experimental data (extracted from BIND, DIP, GRID, HPRD, IntAct, MINT, and PID) and curated data (extracted from Biocarta, BioCyc, GO, KEGG, and Reactome) are used
 #' @param weighted logical to indicate whether edge weights should be considered. By default, it sets to false. If true, it only works for the network from the STRING database
 #' @param network.customised an object of class "igraph". By default, it is NULL. It is designed to allow the user analysing their customised network data that are not listed in the above argument 'network'. This customisation (if provided) has the high priority over built-in network. If the user provides the "igraph" object with the "weight" edge attribute, RWR will assume to walk on the weighted network
 #' @param seeds.inclusive logical to indicate whether non-network seed genes are included for prioritisation. If TRUE (by default), these genes will be added to the netowrk
@@ -119,6 +121,53 @@
 #'  \item{\code{WESTRAng_blood_cis}: cis-eQTLs only.}
 #'  \item{\code{WESTRAng_blood_trans}: trans-eQTLs only.}
 #' }
+#' 10. Tissue-specific eQTLs from GTEx (version 6p; including 44 tissues). Sourced from http://www.biorxiv.org/content/early/2016/09/09/074450
+#' \itemize{
+#'  \item{\code{GTEx_V6p_Adipose_Subcutaneous}: cis-eQTLs in tissue "Adipose Subcutaneous".}
+#'  \item{\code{GTEx_V6p_Adipose_Visceral_Omentum}: cis-eQTLs in tissue "Adipose Visceral (Omentum)".}
+#'  \item{\code{GTEx_V6p_Adrenal_Gland}: cis-eQTLs in tissue "Adrenal Gland".}
+#'  \item{\code{GTEx_V6p_Artery_Aorta}: cis-eQTLs in tissue "Artery Aorta".}
+#'  \item{\code{GTEx_V6p_Artery_Coronary}: cis-eQTLs in tissue "Artery Coronary".}
+#'  \item{\code{GTEx_V6p_Artery_Tibial}: cis-eQTLs in tissue "Artery Tibial".}
+#'  \item{\code{GTEx_V6p_Brain_Anterior_cingulate_cortex_BA24}: cis-eQTLs in tissue "Brain Anterior cingulate cortex (BA24)".}
+#'  \item{\code{GTEx_V6p_Brain_Caudate_basal_ganglia}: cis-eQTLs in tissue "Brain Caudate (basal ganglia)".}
+#'  \item{\code{GTEx_V6p_Brain_Cerebellar_Hemisphere}: cis-eQTLs in tissue "Brain Cerebellar Hemisphere".}
+#'  \item{\code{GTEx_V6p_Brain_Cerebellum}: cis-eQTLs in tissue "Brain Cerebellum".}
+#'  \item{\code{GTEx_V6p_Brain_Cortex}: cis-eQTLs in tissue "Brain Cortex".}
+#'  \item{\code{GTEx_V6p_Brain_Frontal_Cortex_BA9}: cis-eQTLs in tissue "Brain Frontal Cortex (BA9)".}
+#'  \item{\code{GTEx_V6p_Brain_Hippocampus}: cis-eQTLs in tissue "Brain Hippocampus".}
+#'  \item{\code{GTEx_V6p_Brain_Hypothalamus}: cis-eQTLs in tissue "Brain Hypothalamus".}
+#'  \item{\code{GTEx_V6p_Brain_Nucleus_accumbens_basal_ganglia}: cis-eQTLs in tissue "Brain Nucleus accumbens (basal ganglia)".}
+#'  \item{\code{GTEx_V6p_Brain_Putamen_basal_ganglia}: cis-eQTLs in tissue "Brain Putamen (basal ganglia)".}
+#'  \item{\code{GTEx_V6p_Breast_Mammary_Tissue}: cis-eQTLs in tissue "Breast Mammary Tissue".}
+#'  \item{\code{GTEx_V6p_Cells_EBVtransformed_lymphocytes}: cis-eQTLs in tissue "Cells EBV-transformed lymphocytes".}
+#'  \item{\code{GTEx_V6p_Cells_Transformed_fibroblasts}: cis-eQTLs in tissue "Cells Transformed fibroblasts".}
+#'  \item{\code{GTEx_V6p_Colon_Sigmoid}: cis-eQTLs in tissue "Colon Sigmoid".}
+#'  \item{\code{GTEx_V6p_Colon_Transverse}: cis-eQTLs in tissue "Colon Transverse".}
+#'  \item{\code{GTEx_V6p_Esophagus_Gastroesophageal_Junction}: cis-eQTLs in tissue "Esophagus Gastroesophageal Junction".}
+#'  \item{\code{GTEx_V6p_Esophagus_Mucosa}: cis-eQTLs in tissue "Esophagus Mucosa".}
+#'  \item{\code{GTEx_V6p_Esophagus_Muscularis}: cis-eQTLs in tissue "Esophagus Muscularis".}
+#'  \item{\code{GTEx_V6p_Heart_Atrial_Appendage}: cis-eQTLs in tissue "Heart Atrial Appendage".}
+#'  \item{\code{GTEx_V6p_Heart_Left_Ventricle}: cis-eQTLs in tissue "Heart Left Ventricle".}
+#'  \item{\code{GTEx_V6p_Liver}: cis-eQTLs in tissue "Liver".}
+#'  \item{\code{GTEx_V6p_Lung}: cis-eQTLs in tissue "Lung".}
+#'  \item{\code{GTEx_V6p_Muscle_Skeletal}: cis-eQTLs in tissue "Muscle Skeletal".}
+#'  \item{\code{GTEx_V6p_Nerve_Tibial}: cis-eQTLs in tissue "Nerve Tibial".}
+#'  \item{\code{GTEx_V6p_Ovary}: cis-eQTLs in tissue "Ovary".}
+#'  \item{\code{GTEx_V6p_Pancreas}: cis-eQTLs in tissue "Pancreas".}
+#'  \item{\code{GTEx_V6p_Pituitary}: cis-eQTLs in tissue "Pituitary".}
+#'  \item{\code{GTEx_V6p_Prostate}: cis-eQTLs in tissue "Prostate".}
+#'  \item{\code{GTEx_V6p_Skin_Not_Sun_Exposed_Suprapubic}: cis-eQTLs in tissue "Skin Not Sun Exposed (Suprapubic)".}
+#'  \item{\code{GTEx_V6p_Skin_Sun_Exposed_Lower_leg}: cis-eQTLs in tissue "Skin Sun Exposed (Lower leg)".}
+#'  \item{\code{GTEx_V6p_Small_Intestine_Terminal_Ileum}: cis-eQTLs in tissue "Small Intestine Terminal Ileum".}
+#'  \item{\code{GTEx_V6p_Spleen}: cis-eQTLs in tissue "Spleen".}
+#'  \item{\code{GTEx_V6p_Stomach}: cis-eQTLs in tissue "Stomach".}
+#'  \item{\code{GTEx_V6p_Testis}: cis-eQTLs in tissue "Testis".}
+#'  \item{\code{GTEx_V6p_Thyroid}: cis-eQTLs in tissue "Thyroid".}
+#'  \item{\code{GTEx_V6p_Uterus}: cis-eQTLs in tissue "Uterus".}
+#'  \item{\code{GTEx_V6p_Vagina}: cis-eQTLs in tissue "Vagina".}
+#'  \item{\code{GTEx_V6p_Whole_Blood}: cis-eQTLs in tissue "Whole Blood".}
+#' }
 #' Pre-built HiC datasets are described below according to the data sources.\cr
 #' 1. Promoter Capture HiC datasets in 17 primary blood cell types. Sourced from Cell 2016, 167(5):1369-1384.e19
 #' \itemize{
@@ -161,6 +210,7 @@
 #' }
 #'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -169,12 +219,12 @@
 #' gr <- ImmunoBase$AS$variants
 #' AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 #'
-#' \dontrun{
 #' # b) perform priority analysis
-#' ls_pNode <- xPierSNPsAdv(data=AS, include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location)
+#' ls_pNode <- xPierSNPsAdv(data=AS, include.TAD='GM12878', include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location)
+#' #ls_pNode <- xPierSNPsAdv(data=AS, include.TAD='GM12878', include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location, eQTL.customised='eQTL.customised.Artery.txt')
 #' }
 
-xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, significance.threshold=5e-5, score.cap=10, distance.max=2000, decay.kernel=c("slow","constant","linear","rapid"), decay.exponent=2, GR.SNP=c("dbSNP_GWAS","dbSNP_Common"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), include.eQTL=c(NA,"JKscience_CD14","JKscience_LPS2","JKscience_LPS24","JKscience_IFN","JKscience_TS2A","JKscience_TS2A_CD14","JKscience_TS2A_LPS2","JKscience_TS2A_LPS24","JKscience_TS2A_IFN","JKscience_TS2B","JKscience_TS2B_CD14","JKscience_TS2B_LPS2","JKscience_TS2B_LPS24","JKscience_TS2B_IFN","JKscience_TS3A","JKng_bcell","JKng_bcell_cis","JKng_bcell_trans","JKng_mono","JKng_mono_cis","JKng_mono_trans","JKpg_CD4","JKpg_CD4_cis","JKpg_CD4_trans","JKpg_CD8","JKpg_CD8_cis","JKpg_CD8_trans","JKnc_neutro","JKnc_neutro_cis","JKnc_neutro_trans","WESTRAng_blood","WESTRAng_blood_cis","WESTRAng_blood_trans","JK_nk","JK_nk_cis","JK_nk_trans", "GTEx_V4_Adipose_Subcutaneous","GTEx_V4_Artery_Aorta","GTEx_V4_Artery_Tibial","GTEx_V4_Esophagus_Mucosa","GTEx_V4_Esophagus_Muscularis","GTEx_V4_Heart_Left_Ventricle","GTEx_V4_Lung","GTEx_V4_Muscle_Skeletal","GTEx_V4_Nerve_Tibial","GTEx_V4_Skin_Sun_Exposed_Lower_leg","GTEx_V4_Stomach","GTEx_V4_Thyroid","GTEx_V4_Whole_Blood","eQTLdb_NK","eQTLdb_CD14","eQTLdb_LPS2","eQTLdb_LPS24","eQTLdb_IFN"), eQTL.customised=NULL, include.HiC=c(NA, "Monocytes","Macrophages_M0","Macrophages_M1","Macrophages_M2","Neutrophils","Megakaryocytes","Endothelial_precursors","Erythroblasts","Fetal_thymus","Naive_CD4_T_cells","Total_CD4_T_cells","Activated_total_CD4_T_cells","Nonactivated_total_CD4_T_cells","Naive_CD8_T_cells","Total_CD8_T_cells","Naive_B_cells","Total_B_cells","PE.Monocytes","PE.Macrophages_M0","PE.Macrophages_M1","PE.Macrophages_M2","PE.Neutrophils","PE.Megakaryocytes","PE.Erythroblasts","PE.Naive_CD4_T_cells","PE.Naive_CD8_T_cells"), cdf.function=c("empirical","exponential"), scoring.scheme=c("max","sum","sequential"), network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD"), weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, verbose.details=FALSE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, significance.threshold=5e-5, score.cap=10, distance.max=2000, decay.kernel=c("slow","constant","linear","rapid"), decay.exponent=2, GR.SNP=c("dbSNP_GWAS","dbSNP_Common"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), include.TAD=c("none","GM12878","IMR90","MSC","TRO","H1","MES","NPC"), include.eQTL=c(NA,"JKscience_CD14","JKscience_LPS2","JKscience_LPS24","JKscience_IFN","JKscience_TS2A","JKscience_TS2A_CD14","JKscience_TS2A_LPS2","JKscience_TS2A_LPS24","JKscience_TS2A_IFN","JKscience_TS2B","JKscience_TS2B_CD14","JKscience_TS2B_LPS2","JKscience_TS2B_LPS24","JKscience_TS2B_IFN","JKscience_TS3A","JKng_bcell","JKng_bcell_cis","JKng_bcell_trans","JKng_mono","JKng_mono_cis","JKng_mono_trans","JKpg_CD4","JKpg_CD4_cis","JKpg_CD4_trans","JKpg_CD8","JKpg_CD8_cis","JKpg_CD8_trans","JKnc_neutro","JKnc_neutro_cis","JKnc_neutro_trans","WESTRAng_blood","WESTRAng_blood_cis","WESTRAng_blood_trans","JK_nk","JK_nk_cis","JK_nk_trans", "GTEx_V4_Adipose_Subcutaneous","GTEx_V4_Artery_Aorta","GTEx_V4_Artery_Tibial","GTEx_V4_Esophagus_Mucosa","GTEx_V4_Esophagus_Muscularis","GTEx_V4_Heart_Left_Ventricle","GTEx_V4_Lung","GTEx_V4_Muscle_Skeletal","GTEx_V4_Nerve_Tibial","GTEx_V4_Skin_Sun_Exposed_Lower_leg","GTEx_V4_Stomach","GTEx_V4_Thyroid","GTEx_V4_Whole_Blood","eQTLdb_NK","eQTLdb_CD14","eQTLdb_LPS2","eQTLdb_LPS24","eQTLdb_IFN"), eQTL.customised=NULL, include.HiC=c(NA, "Monocytes","Macrophages_M0","Macrophages_M1","Macrophages_M2","Neutrophils","Megakaryocytes","Endothelial_precursors","Erythroblasts","Fetal_thymus","Naive_CD4_T_cells","Total_CD4_T_cells","Activated_total_CD4_T_cells","Nonactivated_total_CD4_T_cells","Naive_CD8_T_cells","Total_CD8_T_cells","Naive_B_cells","Total_B_cells","PE.Monocytes","PE.Macrophages_M0","PE.Macrophages_M1","PE.Macrophages_M2","PE.Neutrophils","PE.Megakaryocytes","PE.Erythroblasts","PE.Naive_CD4_T_cells","PE.Naive_CD8_T_cells"), cdf.function=c("empirical","exponential"), scoring.scheme=c("max","sum","sequential"), network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, verbose.details=FALSE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
     startT <- Sys.time()
@@ -202,11 +252,13 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 		message(sprintf("Preparing the distance predictor (%s) ...", as.character(now)), appendLF=TRUE)
 	}
 	relative.importance <- c(1,0,0)
-    pNode_distance <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
+    pNode_distance <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.TAD=include.TAD, include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
     ls_pNode_distance <- list(pNode_distance)
     names(ls_pNode_distance) <- paste('nearbyGenes_', distance.max, '_', decay.kernel, sep='')
     
     ####################################################################################
+    
+    ls_pNode_eQTL <- NULL
     
     include.eQTLs <- include.eQTL[!is.na(include.eQTL)]
     if(length(include.eQTLs)>0){
@@ -219,14 +271,57 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 			relative.importance <- c(0,1,0)
 			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=x, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
 			if(verbose & is.null(pNode)){
-				message(sprintf("\tNote: this predictor '%s' has NULL", x), appendLF=TRUE)
+				message(sprintf("\tNote: this predictor '%s' is NULL", x), appendLF=TRUE)
 			}
 			return(pNode)
 		})
 		names(ls_pNode_eQTL) <- paste('eQTL_', names(ls_pNode_eQTL), sep='')
-    }else{
-    	ls_pNode_eQTL <- NULL
     }
+    
+    ################################
+    ################################
+    ls_pNode_eQTL_customised <- NULL
+    df_SGS_customised <- NULL
+    if(!is.null(eQTL.customised)){
+    
+		if(is.vector(eQTL.customised)){
+			# assume a file
+			df <- utils::read.delim(file=eQTL.customised, header=TRUE, row.names=NULL, stringsAsFactors=FALSE)
+		}else if(is.matrix(eQTL.customised) | is.data.frame(eQTL.customised)){
+			df <- eQTL.customised
+		}
+		
+		if(!is.null(df)){
+			colnames(df) <- c("SNP", "Gene", "Sig", "Context")
+			SGS_customised <- df
+			#SGS_customised <- cbind(df, Context=rep('Customised',nrow(df)))
+			
+			############################
+			# remove Gene if NA
+			# remove SNP if NA
+			df_SGS_customised <- SGS_customised[!is.na(SGS_customised[,1]) & !is.na(SGS_customised[,2]),]
+			############################
+		}
+    }
+    if(!is.null(df_SGS_customised)){
+		ls_df <- split(x=df_SGS_customised, f=df_SGS_customised$Context)
+		ls_pNode_eQTL_customised <- lapply(1:length(ls_df), function(i){
+			if(verbose){
+				now <- Sys.time()
+				message(sprintf("Preparing the customised eQTL predictor '%s' (%s) ...", names(ls_df)[i], as.character(now)), appendLF=TRUE)
+			}
+			relative.importance <- c(0,1,0)
+			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=NA, eQTL.customised=ls_df[[i]], include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
+			if(verbose & is.null(pNode)){
+				message(sprintf("\tNote: this predictor '%s' is NULL", names(ls_df)[i]), appendLF=TRUE)
+			}
+			return(pNode)
+		})
+		names(ls_pNode_eQTL_customised) <- paste('eQTL_', names(ls_df), sep='')
+    }
+    ls_pNode_eQTL <- c(ls_pNode_eQTL, ls_pNode_eQTL_customised)
+    ################################
+    ################################
     
     include.HiCs <- include.HiC[!is.na(include.HiC)]
     if(length(include.HiCs)>0){

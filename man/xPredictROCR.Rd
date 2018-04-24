@@ -6,7 +6,7 @@
 \usage{
 xPredictROCR(prediction, GSP, GSN, rescale = TRUE, plot = c("none",
 "ROC",
-"PR"), verbose = TRUE, signature = TRUE)
+"PR"), verbose = TRUE, font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{prediction}{a data frame containing predictions along with
@@ -28,6 +28,8 @@ curve returned, 'ROC' for ROC curve, and 'PR' for PR curve.}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to TRUE for display}
+
+\item{font.family}{the font family for texts}
 
 \item{signature}{a logical to indicate whether the signature is
 assigned to the plot caption. By default, it sets TRUE showing which

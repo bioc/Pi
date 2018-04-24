@@ -6,7 +6,7 @@
 \usage{
 xMLzoom(xTarget, top = 20, top.label.type = c("box", "text"),
 top.label.size = 3, top.label.query = NULL, point.shape = 3,
-signature = TRUE)
+font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{xTarget}{an object of class "sTarget" or "dTarget" (with the
@@ -26,6 +26,8 @@ labels in query can not be found, then none will be displayed}
 \item{point.shape}{an integer specifying point shapes. By default, it
 is 3 for cross. For details, please refere to
 \url{http://sape.inf.usi.ch/quick-reference/ggplot2/shape}}
+
+\item{font.family}{the font family for texts}
 
 \item{signature}{logical to indicate whether the signature is assigned
 to the plot caption. By default, it sets TRUE}

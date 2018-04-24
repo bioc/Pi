@@ -16,18 +16,18 @@ xSNP2cGenes(data, entity = c("SNP", "chr:start-end", "data.frame",
 "Naive_B_cells", "Total_B_cells", "PE.Monocytes", "PE.Macrophages_M0",
 "PE.Macrophages_M1", "PE.Macrophages_M2", "PE.Neutrophils",
 "PE.Megakaryocytes", "PE.Erythroblasts", "PE.Naive_CD4_T_cells",
-"PE.Naive_CD8_T_cells"), GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"),
-cdf.function = c("empirical", "exponential"), plot = FALSE,
-verbose = TRUE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata")
+"PE.Naive_CD8_T_cells", "Combined", "Combined_PE"), GR.SNP =
+c("dbSNP_GWAS",
+"dbSNP_Common"), cdf.function = c("empirical", "exponential"),
+plot = FALSE, verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{data}{NULL or a input vector containing SNPs. If NULL, all SNPs
-will be considered. If a input vector containing SNPs, SNPs should be
-provided as dbSNP ID (ie starting with rs) or in the format of
-'chrN:xxx', where N is either 1-22 or X, xxx is number; for example,
-'chr16:28525386'. Alternatively, it can be other formats/entities (see
-the next parameter 'entity')}
+\item{data}{an input vector containing SNPs. SNPs should be provided as
+dbSNP ID (ie starting with rs) or in the format of 'chrN:xxx', where N
+is either 1-22 or X, xxx is number; for example, 'chr16:28525386'.
+Alternatively, it can be other formats/entities (see the next parameter
+'entity')}
 
 \item{entity}{the data entity. By default, it is "SNP". For general
 use, it can also be one of "chr:start-end", "data.frame", "bed" or
@@ -94,6 +94,7 @@ promoters (baits) with the other end (preys) in Monocytes.}
 \item{\code{Megakaryocytes}: promoter interactomes in Megakaryocytes.}
 \item{\code{Endothelial_precursors}: promoter interactomes in
 Endothelial precursors.}
+\item{\code{Erythroblasts}: promoter interactomes in Erythroblasts.}
 \item{\code{Fetal_thymus}: promoter interactomes in Fetal thymus.}
 \item{\code{Naive_CD4_T_cells}: promoter interactomes in Naive CD4+ T
 cells.}
@@ -109,6 +110,8 @@ cells.}
 cells.}
 \item{\code{Naive_B_cells}: promoter interactomes in Naive B cells.}
 \item{\code{Total_B_cells}: promoter interactomes in Total B cells.}
+\item{\code{Combined}: promoter interactomes combined above; with score
+for the number of significant cell types plus scaled average.}
 }
 2. Promoter Capture HiC datasets (involving active promoters and
 enhancers) in 9 primary blood cell types. Sourced from Cell 2016,
@@ -133,6 +136,8 @@ Erythroblasts.}
 Naive CD4+ T cells.}
 \item{\code{PE.Naive_CD8_T_cells}: promoter-enhancer interactomes in
 Naive CD8+ T cells.}
+\item{\code{Combined_PE}: promoter interactomes combined above; with
+score for the number of significant cell types plus scaled average.}
 }
 }
 \examples{
@@ -142,6 +147,7 @@ library(Pi)
 }
 
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+\dontrun{
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -150,7 +156,6 @@ ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
 RData.location=RData.location)
 data <- names(ImmunoBase$AS$variants)
 
-\dontrun{
 # b) define HiC genes
 df_cGenes <- xSNP2cGenes(data, include.HiC="Monocytes",
 RData.location=RData.location)

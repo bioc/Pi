@@ -11,16 +11,25 @@ xPierGSEA(pNode, priority.top = NULL, ontology = c("GOBP", "GOMF",
 "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP",
 "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT",
 "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF",
-"MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6",
+"MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6p",
+"GTExV7",
 "CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug",
 "CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP",
-"CreedsGeneDN"), customised.genesets = NULL, size.range = c(10, 500),
+"CreedsGeneDN", "KEGG", "KEGGmetabolism", "KEGGgenetic",
+"KEGGenvironmental",
+"KEGGcellular", "KEGGorganismal", "KEGGdisease"),
+customised.genesets = NULL, size.range = c(10, 500),
+p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
+"hommel"),
 path.mode = c("all_paths", "shortest_paths", "all_shortest_paths"),
-weight = 1, nperm = 2000, fast = TRUE, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+weight = 1, seed = 825, nperm = 2000, fast = TRUE, verbose = TRUE,
+silent = FALSE, RData.location =
+"http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
-\item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
+\item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget").
+Alternatively, it can be a data frame with two columns ('priority' and
+'rank')}
 
 \item{priority.top}{the number of the top targets used for GSEA. By
 default, it is NULL meaning all targets are used}
@@ -37,16 +46,21 @@ Phenotypic Abnormality, "HPMI" for Human Phenotype Mode of Inheritance,
 Phenotype Mortality Aging, "MP" for Mammalian Phenotype, "EF" for
 Experimental Factor Ontology (used to annotate GWAS Catalog genes),
 Drug-Gene Interaction database ("DGIdb") for drugable categories,
-tissue-specific eQTL-containing genes from GTEx ("GTExV4" and
-"GTExV6"), crowd extracted expression of differential signatures from
-CREEDS ("CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN",
+tissue-specific eQTL-containing genes from GTEx ("GTExV4", "GTExV6p"
+and "GTExV7"), crowd extracted expression of differential signatures
+from CREEDS ("CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN",
 "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene",
-"CreedsGeneUP" and "CreedsGeneDN"), and the molecular signatures
-database (Msigdb, including "MsigdbH", "MsigdbC1", "MsigdbC2CGP",
-"MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME",
-"MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN",
-"MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6",
-"MsigdbC7")}
+"CreedsGeneUP" and "CreedsGeneDN"), KEGG pathways (including 'KEGG' for
+all, 'KEGGmetabolism' for 'Metabolism' pathways, 'KEGGgenetic' for
+'Genetic Information Processing' pathways, 'KEGGenvironmental' for
+'Environmental Information Processing' pathways, 'KEGGcellular' for
+'Cellular Processes' pathways, 'KEGGorganismal' for 'Organismal
+Systems' pathways, and 'KEGGdisease' for 'Human Diseases' pathways),
+and the molecular signatures database (Msigdb, including "MsigdbH",
+"MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP",
+"MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT",
+"MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF",
+"MsigdbC5CC", "MsigdbC6", "MsigdbC7")}
 
 \item{customised.genesets}{a list each containing gene symbols. By
 default, it is NULL. If the list provided, it will overtake the
@@ -55,6 +69,15 @@ previous parameter "ontology"}
 \item{size.range}{the minimum and maximum size of members of each term
 in consideration. By default, it sets to a minimum of 10 but no more
 than 500}
+
+\item{p.adjust.method}{the method used to adjust p-values. It can be
+one of "BH", "BY", "bonferroni", "holm", "hochberg" and "hommel". The
+first two methods "BH" (widely used) and "BY" control the false
+discovery rate (FDR: the expected proportion of false discoveries
+amongst the rejected hypotheses); the last four methods "bonferroni",
+"holm", "hochberg" and "hommel" are designed to give strong control of
+the family-wise error rate (FWER). Notes: FDR is a less stringent
+condition than FWER}
 
 \item{path.mode}{the mode of paths induced by vertices/nodes with input
 annotation data. It can be "all_paths" for all possible paths to the
@@ -66,6 +89,8 @@ for each node, find all shortest paths with the equal lengths)}
 unweighted (an equivalent to Kolmogorov-Smirnov, only considering the
 rank), "1" for weighted by input gene score (by default), and "2" for
 over-weighted, and so on}
+
+\item{seed}{an integer specifying the seed}
 
 \item{nperm}{the number of random permutations. For each permutation,
 gene-score associations will be permutated so that permutation of
@@ -79,7 +104,11 @@ biocLite(c("fgsea"))}. If not yet installed, this option will be
 disabled}
 
 \item{verbose}{logical to indicate whether the messages will be
-displayed in the screen. By default, it sets to false for no display}
+displayed in the screen. By default, it sets to true}
+
+\item{silent}{logical to indicate whether the messages will be silent
+completely. By default, it sets to false. If true, verbose will be
+forced to be false}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
@@ -91,22 +120,24 @@ an object of class "eGSEA", a list with following components:
 enrichment analysis result, where nTerm is the number of
 terms/genesets, and the 9 columns are "setID" (i.e. "Term ID"), "name"
 (i.e. "Term Name"), "nAnno" (i.e. number in members annotated by a
-term), "nLead" (i.e. number in members as leading genes), "es" (i.e.
-enrichment score), "nes" (i.e. normalised enrichment score; enrichment
-score but after being normalised by gene set size), "pvalue" (i.e.
-nominal p value), "adjp" (i.e. adjusted p value; p value but after
-being adjusted for multiple comparisons), "distance" (i.e. term
+term), "nLead" (i.e. number in members as leading genes), "peak" (i.e.
+the rank at peak), "total" (i.e. the total number of genes analysed),
+"es" (i.e. enrichment score), "nes" (i.e. normalised enrichment score;
+enrichment score but after being normalised by gene set size), "pvalue"
+(i.e. nominal p value), "adjp" (i.e. adjusted p value; p value but
+after being adjusted for multiple comparisons), "distance" (i.e. term
 distance or metadata)}
 \item{\code{leading}: a list of gene sets, each storing leading gene
 info (i.e. the named vector with names for gene symbols and elements
 for priority rank). Always, gene sets are identified by "setID"}
 \item{\code{full}: a list of gene sets, each storing full info on gene
-set enrichment analysis result (i.e. a data frame of nGene x 5, where
-nGene is the number of genes, and the 5 columns are "GeneID", "Rank"
+set enrichment analysis result (i.e. a data frame of nGene x 6, where
+nGene is the number of genes, and the 6 columns are "GeneID", "Rank"
 for priority rank, "Score" for priority score, "RES" for running
-enrichment score, and "Hits" for gene set hits info with 1 for gene
-hit, 2 for leading gene hit, 3 for the point defining leading genes, 0
-for no hit). Always, gene sets are identified by "setID"}
+enrichment score, "Hits" for gene set hits info with 1 for gene hit, 2
+for leading gene hit, 3 for the point defining leading genes, 0 for no
+hit), and "Symbol" for gene symbols. Always, gene sets are identified
+by "setID"}
 \item{\code{cross}: a matrix of nTerm X nTerm, with an on-diagnal cell
 for the leading genes observed in an individaul term, and off-diagnal
 cell for the overlapped leading genes shared between two terms}

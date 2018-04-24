@@ -114,7 +114,7 @@ It will depend on whether a package "caret" and its suggested packages
 have been installed. It can be installed via:
 \code{source("http://bioconductor.org/biocLite.R");
 biocLite(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"),
-siteRepos=c("http://cran.r-project.org")))}.
+siteRepos=c("http://cran.r-project.org"))}.
 }
 \examples{
 \dontrun{

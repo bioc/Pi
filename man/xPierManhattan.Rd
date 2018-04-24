@@ -7,10 +7,12 @@
 xPierManhattan(pNode, color = c("darkred", "darkgreen"), top = 50,
 top.label.type = c("box", "text"), top.label.size = 2,
 top.label.col = "darkblue", top.label.query = NULL,
-label.query.only = FALSE, y.scale = c("normal", "sqrt"),
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), signature = TRUE,
+label.query.only = FALSE, chromosome.only = TRUE, y.scale = c("normal",
+"sqrt", "log"), y.lab = NULL, GR.Gene = c("UCSC_knownGene",
+"UCSC_knownCanonical"), font.family = "sans", signature = TRUE,
 verbose = TRUE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata")
+"http://galahad.well.ox.ac.uk/bigdata",
+...)
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
@@ -37,8 +39,15 @@ labels in query can not be found, then all will be displayed}
 will be displayed. By default, it sets to FALSE. It only works when
 labels in query are enabled/found}
 
+\item{chromosome.only}{logical to indicate whether only genes from
+input data will be displayed. By default, it sets to TRUE}
+
 \item{y.scale}{how to transform the y scale. It can be "normal" for no
-transformation, and "sqrt" for square root transformation}
+transformation, "sqrt" for square root transformation, and "log" for
+log-based transformation}
+
+\item{y.lab}{the y labelling. If NULL (by default), it shows the column
+of input data}
 
 \item{GR.Gene}{the genomic regions of genes. By default, it is
 'UCSC_knownGene', that is, UCSC known genes (together with genomic
@@ -52,6 +61,8 @@ Symbols. Then, tell "GR.Gene" with your RData file name (with or
 without extension), plus specify your file RData path in
 "RData.location"}
 
+\item{font.family}{the font family for texts}
+
 \item{signature}{logical to indicate whether the signature is assigned
 to the plot caption. By default, it sets TRUE}
 
@@ -60,6 +71,9 @@ displayed in the screen. By default, it sets to false for no display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{...}{additional paramters associated with
+ggrepel::geom_text_repel}
 }
 \value{
 an object of class "ggplot", appended by an GR object called 'gr'

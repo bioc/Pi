@@ -17,9 +17,10 @@ displayed in the screen. By default, it sets to true for display}
 }
 \value{
 a data frame of nPair X 5 containing Gene-SNP pair info per context,
-where the 5 columns are "Gene" (seed genes), "SNP" (dbSNP), "Score" (an
+where the 6 columns are "Gene" (seed genes), "SNP" (dbSNP), "Score" (an
 SNP's genetic influential score on a seed gene), "Context"
-(predictors), "Flag" (indicative of Lead SNPs or LD SNPs)
+(predictors), "Flag" (indicative of Lead SNPs or LD SNPs), and "Pval"
+(the SNP p-value)
 }
 \description{
 \code{xPierEvidence} is supposed to extract evidence from a list of

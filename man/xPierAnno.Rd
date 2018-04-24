@@ -10,7 +10,13 @@ xPierAnno(data, list_pNode, network = c("STRING_highest",
 "PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
 "PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
 "PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
-"PCommonsDN_PhosphoSite", "PCommonsDN_CTD"), weighted = FALSE,
+"PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
+"KEGG_genetic", "KEGG_environmental", "KEGG_cellular",
+"KEGG_organismal",
+"KEGG_disease"), STRING.only = c(NA, "neighborhood_score",
+"fusion_score",
+"cooccurence_score", "coexpression_score", "experimental_score",
+"database_score", "textmining_score")[1], weighted = FALSE,
 network.customised = NULL, seeds.inclusive = TRUE,
 normalise = c("laplacian", "row", "column", "none"), restart = 0.7,
 normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
@@ -22,7 +28,8 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 names, 2nd column for the weight values. It intends to store annotation
 data or something similar}
 
-\item{list_pNode}{a list of "pNode" objects or a "pNode" object}
+\item{list_pNode}{a list of "pNode" objects or a "pNode" object.
+Alternatively, it is NULL, meaning no restrictioin}
 
 \item{network}{the built-in network. Currently two sources of network
 information are supported: the STRING database (version 10) and the
@@ -54,7 +61,22 @@ from HumanCyc, "PCommonsDN_PID" for those froom PID,
 "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for
 those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC,
 "PCommonsDN_PhosphoSite" for those from PhosphoSite, and
-"PCommonsDN_CTD" for those from CTD}
+"PCommonsDN_CTD" for those from CTD. For direct (pathway-merged)
+interactions sourced from KEGG, it can be 'KEGG' for all,
+'KEGG_metabolism' for pathways grouped into 'Metabolism',
+'KEGG_genetic' for 'Genetic Information Processing' pathways,
+'KEGG_environmental' for 'Environmental Information Processing'
+pathways, 'KEGG_cellular' for 'Cellular Processes' pathways,
+'KEGG_organismal' for 'Organismal Systems' pathways, and 'KEGG_disease'
+for 'Human Diseases' pathways}
+
+\item{STRING.only}{the further restriction of STRING by interaction
+type. If NA, no such restriction. Otherwide, it can be one or more of
+"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score".
+Useful options are c("experimental_score","database_score"): only
+experimental data (extracted from BIND, DIP, GRID, HPRD, IntAct, MINT,
+and PID) and curated data (extracted from Biocarta, BioCyc, GO, KEGG,
+and Reactome) are used}
 
 \item{weighted}{logical to indicate whether edge weights should be
 considered. By default, it sets to false. If true, it only works for
@@ -146,6 +168,7 @@ library(Pi)
 }
 
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+\dontrun{
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase
 ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
@@ -155,7 +178,6 @@ seeds.genes <- ImmunoBase$AS$genes_variants
 ## seeds weighted according to distance away from lead SNPs
 data <- 1- seeds.genes/500000
 
-\dontrun{
 # b) perform priority analysis
 pNode <- xPierGenes(data=data, network="PCommonsDN_medium",restart=0.7,
 RData.location=RData.location)

@@ -1,11 +1,12 @@
-#' Function to visualise features used for machine learning
+#' Function to visualise/assess features used for machine learning
 #'
-#' \code{xMLfeatureplot} is supposed to visualise features used for machine learning. Visualisation can be made using either boxplot or dot plot for AUC and F-max. It returns an object of class "ggplot" for AUC and F-max, and an object of class "trellis" for boxplot.
+#' \code{xMLfeatureplot} is supposed to visualise/assess features used for machine learning. Visualisation can be made using either boxplot or dot plot for AUC and F-max. It returns an object of class "ggplot" for AUC and F-max, and an object of class "trellis" for boxplot.
 #'
 #' @param df_predictor a data frame containing genes (in rows) and predictors (in columns), with their predictive scores inside it. This data frame must has gene symbols as row names
 #' @param GSP a vector containing Gold Standard Positive (GSP)
 #' @param GSN a vector containing Gold Standard Negative (GSN)
 #' @param displayBy which statistics will be used for displaying. It can be either "boxplot" for features themselves, "ROC" for AUC in ROC, "Fmax" for F-max in Precision-Recall curve)
+#' @param font.family the font family for texts
 #' @param ... additional parameters. Please refer to 'lattice::bwplot' for the complete list.
 #' @return an object of class "ggplot" for AUC and F-max, and an object of class "trellis" for boxplot
 #' @note none
@@ -21,7 +22,7 @@
 #' gp <- xMLfeatureplot(df_predictor, GSP, GSN, displayBy="ROC")
 #' }
 
-xMLfeatureplot <- function(df_predictor, GSP, GSN, displayBy=c("boxplot","ROC","Fmax"), ...)
+xMLfeatureplot <- function(df_predictor, GSP, GSN, displayBy=c("boxplot","ROC","Fmax"), font.family="sans", ...)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -93,7 +94,13 @@ xMLfeatureplot <- function(df_predictor, GSP, GSN, displayBy=c("boxplot","ROC","
 		df <- unique(bp$data[,c('Method','auroc','fmax')])
 		df_performance <- cbind(ROC=df$auroc, Fmax=df$fmax)
 		rownames(df_performance) <- df$Method
-
+		
+		#############
+		if(is.null(df_performance)){
+			return(NULL)
+		}
+		#############
+		
 		if(displayBy=='ROC'){
 			df <- data.frame(Val=df_performance[,1], stringsAsFactors=FALSE)
 			rownames(df) <- rownames(df_performance)
@@ -131,6 +138,9 @@ xMLfeatureplot <- function(df_predictor, GSP, GSN, displayBy=c("boxplot","ROC","
 		bp <- bp + scale_color_manual(values=xColormap("ggplot2")(length(levels(df$Predictor))))
 		bp <- bp + theme_bw() + theme(legend.position="right", legend.title=element_blank(), axis.title.y=element_blank(), axis.text.y=element_text(size=10,color="black"), axis.title.x=element_text(size=14,color="black"), panel.background=element_rect(fill=rgb(0.95,0.95,0.95,1)))
 		bp <- bp + xlab(xlab)
+	
+		## change font family to 'Arial'
+		bp <- bp + theme(text=element_text(family=font.family))
 	
 		## put arrows on x-axis
 		bp <- bp + theme(axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))

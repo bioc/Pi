@@ -2,7 +2,7 @@
 #'
 #' \code{xSNPhic} is supposed to extract HiC-gene pairs given a list of SNPs.
 #'
-#' @param data NULL or a input vector containing SNPs. If NULL, all SNPs will be considered. If a input vector containing SNPs, SNPs should be provided as dbSNP ID (ie starting with rs) or in the format of 'chrN:xxx', where N is either 1-22 or X, xxx is number; for example, 'chr16:28525386'. Alternatively, it can be other formats/entities (see the next parameter 'entity')
+#' @param data NULL or an input vector containing SNPs. If NULL, all SNPs will be considered. If a input vector containing SNPs, SNPs should be provided as dbSNP ID (ie starting with rs) or in the format of 'chrN:xxx', where N is either 1-22 or X, xxx is number; for example, 'chr16:28525386'. Alternatively, it can be other formats/entities (see the next parameter 'entity')
 #' @param entity the data entity. By default, it is "SNP". For general use, it can also be one of "chr:start-end", "data.frame", "bed" or "GRanges"
 #' @param include.HiC genes linked to input SNPs are also included. By default, it is 'NA' to disable this option. Otherwise, those genes linked to SNPs will be included according to Promoter Capture HiC (PCHiC) datasets. Pre-built HiC datasets are detailed in the section 'Note'
 #' @param GR.SNP the genomic regions of SNPs. By default, it is 'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS SNPs and their LD SNPs (hg19). It can be 'dbSNP_Common', that is, Common SNPs from dbSNP (version 146) plus GWAS SNPs and their LD SNPs (hg19). Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to dbSNP IDs. Then, tell "GR.SNP" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
@@ -39,6 +39,7 @@
 #'  \item{\code{Neutrophils}: promoter interactomes in Neutrophils.}
 #'  \item{\code{Megakaryocytes}: promoter interactomes in Megakaryocytes.}
 #'  \item{\code{Endothelial_precursors}: promoter interactomes in Endothelial precursors.}
+#'  \item{\code{Erythroblasts}: promoter interactomes in Erythroblasts.}
 #'  \item{\code{Fetal_thymus}: promoter interactomes in Fetal thymus.}
 #'  \item{\code{Naive_CD4_T_cells}: promoter interactomes in Naive CD4+ T cells.}
 #'  \item{\code{Total_CD4_T_cells}: promoter interactomes in Total CD4+ T cells.}
@@ -48,6 +49,7 @@
 #'  \item{\code{Total_CD8_T_cells}: promoter interactomes in Total CD8+ T cells.}
 #'  \item{\code{Naive_B_cells}: promoter interactomes in Naive B cells.}
 #'  \item{\code{Total_B_cells}: promoter interactomes in Total B cells.}
+#'  \item{\code{Combined}: promoter interactomes combined above; with score for the number of significant cell types plus scaled average.}
 #' }
 #' 2. Promoter Capture HiC datasets (involving active promoters and enhancers) in 9 primary blood cell types. Sourced from Cell 2016, 167(5):1369-1384.e19
 #' \itemize{
@@ -60,6 +62,7 @@
 #'  \item{\code{PE.Erythroblasts}: promoter-enhancer interactomes in Erythroblasts.}
 #'  \item{\code{PE.Naive_CD4_T_cells}: promoter-enhancer interactomes in Naive CD4+ T cells.}
 #'  \item{\code{PE.Naive_CD8_T_cells}: promoter-enhancer interactomes in Naive CD8+ T cells.}
+#'  \item{\code{Combined_PE}: promoter interactomes combined above; with score for the number of significant cell types plus scaled average.}
 #' }
 #' @export
 #' @seealso \code{\link{xRDataLoader}}
@@ -71,6 +74,7 @@
 #' }
 #'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -78,7 +82,6 @@
 #' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', RData.location=RData.location)
 #' data <- names(ImmunoBase$AS$variants)
 #'
-#' \dontrun{
 #' # b) extract HiC-gene pairs given a list of AS SNPs
 #' PCHiC <- xSNPhic(data, include.HiC="Monocytes", GR.SNP="dbSNP_GWAS", RData.location=RData.location)
 #' head(PCHiC$df)
@@ -91,7 +94,7 @@
 #' xPCHiCplot(g, glayout=layout_in_circle, vertex.label.cex=0.5)
 #' }
 
-xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed","GRanges"), include.HiC=c(NA, "Monocytes","Macrophages_M0","Macrophages_M1","Macrophages_M2","Neutrophils","Megakaryocytes","Endothelial_precursors","Erythroblasts","Fetal_thymus","Naive_CD4_T_cells","Total_CD4_T_cells","Activated_total_CD4_T_cells","Nonactivated_total_CD4_T_cells","Naive_CD8_T_cells","Total_CD8_T_cells","Naive_B_cells","Total_B_cells","PE.Monocytes","PE.Macrophages_M0","PE.Macrophages_M1","PE.Macrophages_M2","PE.Neutrophils","PE.Megakaryocytes","PE.Erythroblasts","PE.Naive_CD4_T_cells","PE.Naive_CD8_T_cells"), GR.SNP=c("dbSNP_GWAS","dbSNP_Common"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed","GRanges"), include.HiC=c(NA, "Monocytes","Macrophages_M0","Macrophages_M1","Macrophages_M2","Neutrophils","Megakaryocytes","Endothelial_precursors","Erythroblasts","Fetal_thymus","Naive_CD4_T_cells","Total_CD4_T_cells","Activated_total_CD4_T_cells","Nonactivated_total_CD4_T_cells","Naive_CD8_T_cells","Total_CD8_T_cells","Naive_B_cells","Total_B_cells","PE.Monocytes","PE.Macrophages_M0","PE.Macrophages_M1","PE.Macrophages_M2","PE.Neutrophils","PE.Megakaryocytes","PE.Erythroblasts","PE.Naive_CD4_T_cells","PE.Naive_CD8_T_cells", "Combined", "Combined_PE"), GR.SNP=c("dbSNP_GWAS","dbSNP_Common"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 	
 	entity <- match.arg(entity)
@@ -100,7 +103,7 @@ xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed"
     # Link to targets based on HiC
     ######################################################
     
-    default.include.HiC <- c("Monocytes","Macrophages_M0","Macrophages_M1","Macrophages_M2","Neutrophils","Megakaryocytes","Endothelial_precursors","Erythroblasts","Fetal_thymus","Naive_CD4_T_cells","Total_CD4_T_cells","Activated_total_CD4_T_cells","Nonactivated_total_CD4_T_cells","Naive_CD8_T_cells","Total_CD8_T_cells","Naive_B_cells","Total_B_cells","PE.Monocytes","PE.Macrophages_M0","PE.Macrophages_M1","PE.Macrophages_M2","PE.Neutrophils","PE.Megakaryocytes","PE.Erythroblasts","PE.Naive_CD4_T_cells","PE.Naive_CD8_T_cells")
+    default.include.HiC <- c("Monocytes","Macrophages_M0","Macrophages_M1","Macrophages_M2","Neutrophils","Megakaryocytes","Endothelial_precursors","Erythroblasts","Fetal_thymus","Naive_CD4_T_cells","Total_CD4_T_cells","Activated_total_CD4_T_cells","Nonactivated_total_CD4_T_cells","Naive_CD8_T_cells","Total_CD8_T_cells","Naive_B_cells","Total_B_cells","PE.Monocytes","PE.Macrophages_M0","PE.Macrophages_M1","PE.Macrophages_M2","PE.Neutrophils","PE.Megakaryocytes","PE.Erythroblasts","PE.Naive_CD4_T_cells","PE.Naive_CD8_T_cells", "Combined", "Combined_PE")
 	ind <- match(default.include.HiC, include.HiC)
 	include.HiC <- default.include.HiC[!is.na(ind)]
     
@@ -126,12 +129,54 @@ xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed"
 				message(sprintf("Processing %s ...", x), appendLF=TRUE)
 			}
 			
-			if(sum(grep("^PE.",x,perl=TRUE)) > 0){
-				RData.customised <- paste('ig.PCHiC_', x, sep='')
+			if(x == 'Combined'){
+				g <- xRDataLoader(RData.customised='ig.PCHiC', RData.location=RData.location, verbose=verbose)
+				df <- do.call(cbind, igraph::edge_attr(g))
+				if(1){
+					## new way
+					df[df<5] <- NA
+					res <- xAggregate(log(df), verbose=F)
+					vec_score <- res$Aggregate
+				}else{
+					## old way
+					num <- apply(df>=5, 1, sum)
+					dff <- df
+					dff[dff<5] <- 0
+					total <- apply(dff, 1, sum)
+					ave <- log(total / num)
+					ave_scale <- (ave - min(ave))/(max(ave) - min(ave)) * 0.9999999
+					vec_score <- num + ave_scale
+				}
+				ig <- g
+				E(ig)$score <- vec_score
+				for(i in igraph::edge_attr_names(g)){
+					ig <- igraph::delete_edge_attr(ig, i)
+				}
+				
+			}else if(x == 'Combined_PE'){
+				g <- xRDataLoader(RData.customised='ig.PCHiC_PE', RData.location=RData.location, verbose=verbose)
+				df <- do.call(cbind, igraph::edge_attr(g))
+				num <- apply(df>=5, 1, sum)
+				dff <- df
+				dff[dff<5] <- 0
+				total <- apply(dff, 1, sum)
+				ave <- log(total / num)
+				ave_scale <- (ave - min(ave))/(max(ave) - min(ave)) * 0.9999999
+				ig <- g
+				E(ig)$score <- num + ave_scale
+				for(i in igraph::edge_attr_names(g)){
+					ig <- igraph::delete_edge_attr(ig, i)
+				}
+				
 			}else{
-				RData.customised <- paste('ig.PCHiC.', x, sep='')
+			
+				if(sum(grep("^PE.",x,perl=TRUE)) > 0){
+					RData.customised <- paste('ig.PCHiC_', x, sep='')
+				}else{
+					RData.customised <- paste('ig.PCHiC.', x, sep='')
+				}
+				ig <- xRDataLoader(RData.customised=RData.customised, RData.location=RData.location, verbose=verbose)
 			}
-			ig <- xRDataLoader(RData.customised=RData.customised, RData.location=RData.location, verbose=verbose)
 			
 			## Convert from igraph into data.frame
   			df_nodes <- igraph::get.data.frame(ig, what="vertices")
@@ -141,8 +186,9 @@ xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed"
 			
 				nodes_gr <- xGR(data=df_nodes[,1], format="chr:start-end", verbose=verbose, RData.location=RData.location)
 				
-				maxgap <- 0
-				minoverlap <- 1L # 1b overlaps
+				maxgap <- -1L
+				#minoverlap <- 1L # 1b overlaps
+				minoverlap <- 0L
 				subject <- nodes_gr
 				query <- data_gr
 				#q2r <- suppressWarnings(GenomicRanges::findOverlaps(query=query, subject=subject, maxgap=maxgap, minoverlap=minoverlap, type="any", select="all", ignore.strand=TRUE))

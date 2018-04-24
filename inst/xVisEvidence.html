@@ -19,9 +19,11 @@ genes in a gene network. It returns an object of class &quot;igraph&quot;.
 <pre>
 xVisEvidence(xTarget, g = NA, nodes = NULL, node.info = c("smart",
 "none"), neighbor.order = 1, neighbor.seed = TRUE, neighbor.top = NULL,
-colormap = "ggplot2", legend.position = "topleft", legend.horiz =
-FALSE,
-verbose = TRUE, ...)
+largest.comp = TRUE, show = TRUE, colormap = "ggplot2",
+legend.position = "topleft", legend.horiz = FALSE, mtext.side = 3,
+verbose = TRUE, edge.width = NULL, vertex.size = NULL,
+vertex.size.nonseed = NULL, vertex.label.color = "blue",
+vertex.label.color.nonseed = NULL, ...)
 </pre>
 
 
@@ -64,6 +66,16 @@ only. By default, it sets to true</p>
 <p>the top number of the neighbors with the highest
 priority. By default, it sets to NULL to disable this parameter</p>
 </td></tr>
+<tr valign="top"><td><code>largest.comp</code></td>
+<td>
+<p>logical to indicate whether the largest component
+is only retained. By default, it sets to true for the largest component
+being left</p>
+</td></tr>
+<tr valign="top"><td><code>show</code></td>
+<td>
+<p>logical to indicate whether to show the graph</p>
+</td></tr>
 <tr valign="top"><td><code>colormap</code></td>
 <td>
 <p>short name for the colormap. It can be one of &quot;jet&quot;
@@ -80,18 +92,45 @@ standard color names can be found in
 </td></tr>
 <tr valign="top"><td><code>legend.position</code></td>
 <td>
-<p>the legend position. If NA, the legend will be
-hiden</p>
+<p>the legend position. If NA, the legend is not
+shown</p>
 </td></tr>
 <tr valign="top"><td><code>legend.horiz</code></td>
 <td>
 <p>logical specifying the legend horizon. If TRUE, set
 the legend horizontally rather than vertically</p>
 </td></tr>
+<tr valign="top"><td><code>mtext.side</code></td>
+<td>
+<p>the side of marginal text. If NA, it is not shown</p>
+</td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
 <p>logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+<tr valign="top"><td><code>edge.width</code></td>
+<td>
+<p>the width of the edge. If NULL, the width edge is
+proportional to the 'weight' edge attribute (if existed)</p>
+</td></tr>
+<tr valign="top"><td><code>vertex.size</code></td>
+<td>
+<p>the size of each vertex. If null, each vertex has
+the size proportional to the degree of nodes</p>
+</td></tr>
+<tr valign="top"><td><code>vertex.size.nonseed</code></td>
+<td>
+<p>the size of each nonseed vertex. If null,
+each vertex has the size proportional to the degree of nodes</p>
+</td></tr>
+<tr valign="top"><td><code>vertex.label.color</code></td>
+<td>
+<p>the color of vertex labels</p>
+</td></tr>
+<tr valign="top"><td><code>vertex.label.color.nonseed</code></td>
+<td>
+<p>the color of nonseed vertex labels</p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
@@ -126,12 +165,13 @@ RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## TNFRSF1A
 xVisEvidence(xTarget, nodes="TNFRSF1A", neighbor.order=1,
 neighbor.seed=TRUE, neighbor.top=NULL, vertex.label.color="black",
-vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=4,
-legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
+vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=1,
+vertex.label.family="Arial", legend.position="bottomleft",
+legend.horiz=TRUE, newpage=FALSE)
 ## UBA52
 xVisEvidence(xTarget, nodes="UBA52", neighbor.order=1,
 neighbor.seed=TRUE, neighbor.top=20, vertex.label.color="black",
-vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=4,
+vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=1,
 legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
 
 ## End(Not run)

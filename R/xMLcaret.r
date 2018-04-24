@@ -27,7 +27,7 @@
 #'  \item{\code{gp_cv}: a ggplot object for the ROC curves from repeated cross-validation}
 #'  \item{\code{evidence}: an object of the class "eTarget", a list with following components "evidence" and "metag"}
 #' }
-#' @note It will depend on whether a package "caret" and its suggested packages have been installed. It can be installed via: \code{source("http://bioconductor.org/biocLite.R"); biocLite(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"), siteRepos=c("http://cran.r-project.org")))}.
+#' @note It will depend on whether a package "caret" and its suggested packages have been installed. It can be installed via: \code{source("http://bioconductor.org/biocLite.R"); biocLite(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"), siteRepos=c("http://cran.r-project.org"))}.
 #' @export
 #' @include xMLcaret.r
 #' @examples
@@ -843,6 +843,9 @@ xMLcaret <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, method=c("gbm
 	
 		## priority: first log10-transformed ap and then being rescaled into the [0,5] range
 		priority <- -log10(vec_ap)
+		####
+		priority <- sqrt(priority)
+		####
 		vec_priority <- 5 * (priority - min(priority))/(max(priority) - min(priority))
 
 	}

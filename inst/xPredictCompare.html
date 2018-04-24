@@ -19,7 +19,8 @@ results. It returns an object of class &quot;ggplot&quot;.
 <pre>
 xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), type =
 c("curve",
-"bar"), sort = TRUE, detail = TRUE, facet = FALSE, signature = TRUE)
+"bar"), sort = TRUE, detail = TRUE, facet = FALSE,
+font.family = "sans", signature = TRUE)
 </pre>
 
 
@@ -54,6 +55,10 @@ performance. By default, it sets TRUE</p>
 <td>
 <p>logical to indicate whether to facet/wrap a 1d of panels
 into 2d. By default, it sets FALSE</p>
+</td></tr>
+<tr valign="top"><td><code>font.family</code></td>
+<td>
+<p>the font family for texts</p>
 </td></tr>
 <tr valign="top"><td><code>signature</code></td>
 <td>

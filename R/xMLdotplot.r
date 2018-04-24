@@ -4,6 +4,7 @@
 #'
 #' @param sTarget an object of class "sTarget"
 #' @param displayBy which statistics will be used for displaying. It can be either statistics across folds ("importance2fold" for predictor importance, "roc2fold" for AUC in ROC, "fmax2fold" for F-max in Precision-Recall curve) or overall statistics ("importance_accurancy" for predictor importance measured by accuracy decrease, "importance_gini" for predictor importance measured by Gini decrease, "ROC" for AUC in ROC, "Fmax" for F-max in Precision-Recall curve)
+#' @param font.family the font family for texts
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
 #' @return an object of class "ggplot"
 #' @note none
@@ -21,7 +22,7 @@
 #' gp
 #' }
 
-xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2fold","importance_accurancy","importance_gini","ROC","Fmax"), signature=TRUE) 
+xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2fold","importance_accurancy","importance_gini","ROC","Fmax"), font.family="sans", signature=TRUE) 
 {
     
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -81,7 +82,7 @@ xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2f
 	tmp <- paste(tmp,')',sep='')
 	df <- data.frame(name=tmp, df, stringsAsFactors=FALSE)
 	Predictor <- gsub('\n.*', '', as.character(df$name), perl=TRUE)
-	Method <- gsub('.*\n\\(|\\)', '', as.character(df$name), perl=TRUE)
+	Method <- gsub('.*\n\\(|\\)$', '', as.character(df$name), perl=TRUE)
 	df$Predictor <- Predictor
 	df$Method <- Method
 	
@@ -110,6 +111,9 @@ xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2f
     	caption <- paste("Created by xMLdotplot from Pi version", utils ::packageVersion("Pi"))
     	bp <- bp + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
     }
+	
+	## change font family to 'Arial'
+	bp <- bp + theme(text=element_text(family=font.family))
 	
 	## put arrows on x-axis
 	bp <- bp + theme(axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))

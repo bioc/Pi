@@ -38,6 +38,7 @@
 #' # get target priority in a discovery mode
 #' dTarget <- xPierMatrix(ls_pNode, displayBy="pvalue", aggregateBy="fishers")
 #' }
+
 xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
@@ -90,8 +91,19 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 		mat_evidence <- as.matrix(xSparseMatrix(df, rows=nodes, columns=NULL, verbose=FALSE))
 		###
 		# sorted by the number of seed gene types, followed by the total number of seed genes
-        mat_evidence <- mat_evidence[order(mat_evidence[,1],apply(mat_evidence,1,sum),decreasing=TRUE),]
-		###
+		if(ncol(mat_evidence)>1){
+        	mat_evidence <- mat_evidence[order(mat_evidence[,1],apply(mat_evidence,1,sum),decreasing=TRUE),]
+        }else{
+			####
+			# deal with only 1 predictor
+			####
+			tmp <- mat_evidence[order(mat_evidence[,1],apply(mat_evidence,1,sum),decreasing=TRUE),]
+			tmp_matrix <- matrix(tmp, ncol=ncol(mat_evidence))
+			colnames(tmp_matrix) <- colnames(mat_evidence)
+			rownames(tmp_matrix) <- names(tmp)
+			mat_evidence <- tmp_matrix
+			###
+		}
 		
 		############
 		## get edges involved
@@ -159,6 +171,9 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			######
 			## priority: first log10-transformed ap and then being rescaled into the [0,5] range
 			priority <- -log10(df_ap)
+			####
+			priority <- sqrt(priority)
+			####
 			priority <- 5 * (priority - min(priority))/(max(priority) - min(priority))
 			
 			## df_priority
@@ -169,12 +184,36 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			
 			## df_predictor
 			ind <- match(names(df_ap), rownames(df_predictor))
-			df_predictor <- df_predictor[ind,]
+			if(ncol(df_predictor)>1){
+				df_predictor <- df_predictor[ind,]
+			}else{
+				####
+				# deal with only 1 predictor
+				####
+				tmp <- df_predictor[ind,]
+				tmp_matrix <- matrix(tmp, ncol=ncol(df_predictor))
+				colnames(tmp_matrix) <- colnames(df_predictor)
+				rownames(tmp_matrix) <- names(tmp)
+				df_predictor <- tmp_matrix
+				####				
+			}
 			
 			## reorder mat_evidence
 			ind_row <- match(df_priority$name, rownames(mat_evidence))
 			ind_col <- match(unique(predictor_names), colnames(mat_evidence))
-			mat_evidence <- mat_evidence[ind_row, ind_col]
+			if(ncol(mat_evidence)>1){
+				mat_evidence <- mat_evidence[ind_row,ind_col]
+			}else{
+				####
+				# deal with only 1 predictor
+				####
+				tmp <- mat_evidence[ind_row,ind_col]
+				tmp_matrix <- matrix(tmp, ncol=ncol(mat_evidence))
+				colnames(tmp_matrix) <- colnames(mat_evidence)
+				rownames(tmp_matrix) <- names(tmp)
+				mat_evidence <- tmp_matrix
+				###
+			}
 			overall <- apply(mat_evidence!=0, 1, sum)
 			
 			## return dTarget
@@ -194,7 +233,7 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 		overall <- apply(mat_evidence!=0, 1, sum)
 
 		## return eTarget
-		eTarget <- list(evidence  = cbind(Overall=overall, mat_evidence),
+		eTarget <- list(evidence  = data.frame(Overall=overall, mat_evidence),
 						metag	  = metag
 						)
 		class(eTarget) <- "eTarget"

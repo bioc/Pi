@@ -5,6 +5,7 @@
 #' @param xTarget an object of class "xTarget" or "dTarget" (with the component 'pPerf')
 #' @param displayBy which targets will be used for displaying. It can be one of "GS" for gold standard targets, "GSN" for gold standard negatives, "GSP" for gold standard positives, "NEW" for putative/new targets (non-GS), "All" for all targets (by default)
 #' @param x.scale how to transform the x scale. It can be "normal" for no transformation, and "sqrt" for square root transformation (by default)
+#' @param font.family the font family for texts
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
 #' @return an object of class "ggplot"
 #' @note none
@@ -22,7 +23,7 @@
 #' gp
 #' }
 
-xMLdensity <- function(xTarget, displayBy=c("All","GS","GSN","GSP","NEW"), x.scale=c("sqrt","normal"), signature=TRUE) 
+xMLdensity <- function(xTarget, displayBy=c("All","GS","GSN","GSP","NEW"), x.scale=c("sqrt","normal"), font.family="sans", signature=TRUE) 
 {
     
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -81,10 +82,12 @@ xMLdensity <- function(xTarget, displayBy=c("All","GS","GSN","GSP","NEW"), x.sca
     	caption <- paste("Created by xMLdensity from Pi version", utils ::packageVersion("Pi"))
     	gp <- gp + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
     }
-	
+
+	## change font family to 'Arial'
+	gp <- gp + theme(text=element_text(family=font.family))
+
 	## put arrows on x- and y-axis
 	gp <- gp + theme(axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")), axis.line.y=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
-	
 	
 	invisible(gp)
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise prioritised genes in terms of a KEGG...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xPierKEGG"><tr><td>xPierKEGG</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to visualise prioritised genes in terms of a KEGG pathway</h2>
+
+<h3>Description</h3>
+
+<p><code>xPierKEGG</code> is supposed to visualise prioritised genes in terms of
+a KEGG pathway. It returns an object of class &quot;igraph&quot;.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xPierKEGG(xTarget, vis = c("net", "evidence", "pathview"), hsa =
+"hsa04621",
+priority.top = NULL, incoming.neighbor.order = 1, nodes_query = NULL,
+largest.comp = TRUE, pathview.filename = NULL,
+pathview.filetype = c("png", "pdf"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>xTarget</code></td>
+<td>
+<p>an object of class &quot;dTarget&quot; or &quot;sTarget&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>vis</code></td>
+<td>
+<p>the type of visualisation for a KEGG pathway. It can be one
+of &quot;net&quot; (visualising the network with nodes colored by priority score;
+by default), &quot;evidence&quot; for visualising the network with nodes as pie
+charts, and &quot;pathview&quot; for using the package &quot;pathview&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>hsa</code></td>
+<td>
+<p>the identity of KEGG pathway in query. The full list of
+pathways in human can be found at
+<a href="http://www.genome.jp/kegg-bin/show_organism?menu_type=pathway_maps&amp;org=hsa">http://www.genome.jp/kegg-bin/show_organism?menu_type=pathway_maps&amp;org=hsa</a>.
+For example, 'hsa04621' for 'NOD-like receptor signaling pathway',
+where the prefix 'hsa' can be ignored</p>
+</td></tr>
+<tr valign="top"><td><code>priority.top</code></td>
+<td>
+<p>the number of the top targets. By default, it is
+NULL meaning no such restriction</p>
+</td></tr>
+<tr valign="top"><td><code>incoming.neighbor.order</code></td>
+<td>
+<p>an integer giving the order of the
+incoming neighborhood. By default, it is 1-order incoming neighborhood</p>
+</td></tr>
+<tr valign="top"><td><code>nodes_query</code></td>
+<td>
+<p>which gene in query will be visualised. It (if not
+null) has the high priority over nodes selected by 'priority.top' and
+'incoming.neighbor.order' above</p>
+</td></tr>
+<tr valign="top"><td><code>largest.comp</code></td>
+<td>
+<p>logical to indicate whether the largest component
+is only retained. By default, it sets to true for the largest component
+being left</p>
+</td></tr>
+<tr valign="top"><td><code>pathview.filename</code></td>
+<td>
+<p>the file name saved using the package
+&quot;pathview&quot;. By default, it is NULL meaning &quot;hsa.Pi&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>pathview.filetype</code></td>
+<td>
+<p>the file format saved using the package
+&quot;pathview&quot;. It can be &quot;png&quot; or &quot;pdf&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to true</p>
+</td></tr>
+<tr valign="top"><td><code>RData.location</code></td>
+<td>
+<p>the characters to tell the location of built-in
+RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional graphic parameters. If the type of visualisation
+is 'net', see <code>xVisNet</code>; if the visualisation type is
+'evidence', see <code>xVisEvidence</code></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a subgraph, an object of class &quot;igraph&quot;.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If vis is 'pathview', it will depend on whether a package &quot;pathview&quot;
+has been installed. It can be installed via:
+<code>source("http://bioconductor.org/biocLite.R");
+biocLite("pathview")</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xVisNet</code>, <code>xVisEvidence</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
+## evidence
+xPierKEGG(xTarget, hsa="hsa04621", vis="evidence",
+RData.location=RData.location)
+## network
+xPierKEGG(xTarget, hsa="hsa04621", vis="net",
+RData.location=RData.location)
+## using pathview
+pv.out &lt;- xPierKEGG(xTarget, hsa="hsa04621", vis="pathview",
+pathview.filetype=c("png","pdf")[2], RData.location=RData.location)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

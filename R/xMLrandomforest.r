@@ -387,6 +387,9 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 	
 	## priority: first log10-transformed ap and then being rescaled into the [0,5] range
 	priority <- -log10(df_ap)
+	####
+	priority <- sqrt(priority)
+	####
 	priority <- 5 * (priority - min(priority))/(max(priority) - min(priority))
 	
 	#########################################

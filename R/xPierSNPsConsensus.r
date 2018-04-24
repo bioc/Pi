@@ -47,15 +47,16 @@
 #' library(Pi)
 #' }
 #'
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
 #' #AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase')
+#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', RData.location=RData.location)
 #' gr <- ImmunoBase$AS$variants
 #' AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 #'
-#' \dontrun{
 #' # b) perform priority analysis
 #' pNode <- xPierSNPsConsensus(data=AS, include.LD="EUR", include.eQTL=c("JKscience_TS2A","JKscience_TS3A"), network="PCommonsUN_medium", restart=0.7)
 #'

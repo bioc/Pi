@@ -2,9 +2,9 @@
 #'
 #' \code{xSNP2eGenes} is supposed to define eQTL genes given a list of SNPs or a customised eQTL mapping data. The eQTL weight is calcualted as Cumulative Distribution Function of negative log-transformed eQTL-reported signficance level. 
 #'
-#' @param data a input vector containing SNPs. SNPs should be provided as dbSNP ID (ie starting with rs). Alternatively, they can be in the format of 'chrN:xxx', where N is either 1-22 or X, xxx is number; for example, 'chr16:28525386'
+#' @param data an input vector containing SNPs. SNPs should be provided as dbSNP ID (ie starting with rs). Alternatively, they can be in the format of 'chrN:xxx', where N is either 1-22 or X, xxx is number; for example, 'chr16:28525386'
 #' @param include.eQTL genes modulated by eQTL (also Lead SNPs or in LD with Lead SNPs) are also included. By default, it is 'NA' to disable this option. Otherwise, those genes modulated by eQTL will be included. Pre-built eQTL datasets are detailed in the section 'Note'
-#' @param eQTL.customised a user-input matrix or data frame with 3 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, and 3rd for eQTL mapping significance level (p-values or FDR). It is designed to allow the user analysing their eQTL data. This customisation (if provided) has the high priority over built-in eQTL data.
+#' @param eQTL.customised a user-input matrix or data frame with 4 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, 3rd for eQTL mapping significance level (p-values or FDR), and 4th for contexts (required even though only one context is input). Alternatively, it can be a file containing these 4 columns. It is designed to allow the user analysing their eQTL data. This customisation (if provided) will populate built-in eQTL data
 #' @param cdf.function a character specifying a Cumulative Distribution Function (cdf). It can be one of 'exponential' based on exponential cdf, 'empirical' for empirical cdf
 #' @param plot logical to indicate whether the histogram plot (plus density or CDF plot) should be drawn. By default, it sets to false for no plotting
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
@@ -94,6 +94,53 @@
 #'  \item{\code{WESTRAng_blood_cis}: cis-eQTLs only.}
 #'  \item{\code{WESTRAng_blood_trans}: trans-eQTLs only.}
 #' }
+#' 10. Tissue-specific eQTLs from GTEx (version 6p; including 44 tissues). Sourced from http://www.biorxiv.org/content/early/2016/09/09/074450
+#' \itemize{
+#'  \item{\code{GTEx_V6p_Adipose_Subcutaneous}: cis-eQTLs in tissue "Adipose Subcutaneous".}
+#'  \item{\code{GTEx_V6p_Adipose_Visceral_Omentum}: cis-eQTLs in tissue "Adipose Visceral (Omentum)".}
+#'  \item{\code{GTEx_V6p_Adrenal_Gland}: cis-eQTLs in tissue "Adrenal Gland".}
+#'  \item{\code{GTEx_V6p_Artery_Aorta}: cis-eQTLs in tissue "Artery Aorta".}
+#'  \item{\code{GTEx_V6p_Artery_Coronary}: cis-eQTLs in tissue "Artery Coronary".}
+#'  \item{\code{GTEx_V6p_Artery_Tibial}: cis-eQTLs in tissue "Artery Tibial".}
+#'  \item{\code{GTEx_V6p_Brain_Anterior_cingulate_cortex_BA24}: cis-eQTLs in tissue "Brain Anterior cingulate cortex (BA24)".}
+#'  \item{\code{GTEx_V6p_Brain_Caudate_basal_ganglia}: cis-eQTLs in tissue "Brain Caudate (basal ganglia)".}
+#'  \item{\code{GTEx_V6p_Brain_Cerebellar_Hemisphere}: cis-eQTLs in tissue "Brain Cerebellar Hemisphere".}
+#'  \item{\code{GTEx_V6p_Brain_Cerebellum}: cis-eQTLs in tissue "Brain Cerebellum".}
+#'  \item{\code{GTEx_V6p_Brain_Cortex}: cis-eQTLs in tissue "Brain Cortex".}
+#'  \item{\code{GTEx_V6p_Brain_Frontal_Cortex_BA9}: cis-eQTLs in tissue "Brain Frontal Cortex (BA9)".}
+#'  \item{\code{GTEx_V6p_Brain_Hippocampus}: cis-eQTLs in tissue "Brain Hippocampus".}
+#'  \item{\code{GTEx_V6p_Brain_Hypothalamus}: cis-eQTLs in tissue "Brain Hypothalamus".}
+#'  \item{\code{GTEx_V6p_Brain_Nucleus_accumbens_basal_ganglia}: cis-eQTLs in tissue "Brain Nucleus accumbens (basal ganglia)".}
+#'  \item{\code{GTEx_V6p_Brain_Putamen_basal_ganglia}: cis-eQTLs in tissue "Brain Putamen (basal ganglia)".}
+#'  \item{\code{GTEx_V6p_Breast_Mammary_Tissue}: cis-eQTLs in tissue "Breast Mammary Tissue".}
+#'  \item{\code{GTEx_V6p_Cells_EBVtransformed_lymphocytes}: cis-eQTLs in tissue "Cells EBV-transformed lymphocytes".}
+#'  \item{\code{GTEx_V6p_Cells_Transformed_fibroblasts}: cis-eQTLs in tissue "Cells Transformed fibroblasts".}
+#'  \item{\code{GTEx_V6p_Colon_Sigmoid}: cis-eQTLs in tissue "Colon Sigmoid".}
+#'  \item{\code{GTEx_V6p_Colon_Transverse}: cis-eQTLs in tissue "Colon Transverse".}
+#'  \item{\code{GTEx_V6p_Esophagus_Gastroesophageal_Junction}: cis-eQTLs in tissue "Esophagus Gastroesophageal Junction".}
+#'  \item{\code{GTEx_V6p_Esophagus_Mucosa}: cis-eQTLs in tissue "Esophagus Mucosa".}
+#'  \item{\code{GTEx_V6p_Esophagus_Muscularis}: cis-eQTLs in tissue "Esophagus Muscularis".}
+#'  \item{\code{GTEx_V6p_Heart_Atrial_Appendage}: cis-eQTLs in tissue "Heart Atrial Appendage".}
+#'  \item{\code{GTEx_V6p_Heart_Left_Ventricle}: cis-eQTLs in tissue "Heart Left Ventricle".}
+#'  \item{\code{GTEx_V6p_Liver}: cis-eQTLs in tissue "Liver".}
+#'  \item{\code{GTEx_V6p_Lung}: cis-eQTLs in tissue "Lung".}
+#'  \item{\code{GTEx_V6p_Muscle_Skeletal}: cis-eQTLs in tissue "Muscle Skeletal".}
+#'  \item{\code{GTEx_V6p_Nerve_Tibial}: cis-eQTLs in tissue "Nerve Tibial".}
+#'  \item{\code{GTEx_V6p_Ovary}: cis-eQTLs in tissue "Ovary".}
+#'  \item{\code{GTEx_V6p_Pancreas}: cis-eQTLs in tissue "Pancreas".}
+#'  \item{\code{GTEx_V6p_Pituitary}: cis-eQTLs in tissue "Pituitary".}
+#'  \item{\code{GTEx_V6p_Prostate}: cis-eQTLs in tissue "Prostate".}
+#'  \item{\code{GTEx_V6p_Skin_Not_Sun_Exposed_Suprapubic}: cis-eQTLs in tissue "Skin Not Sun Exposed (Suprapubic)".}
+#'  \item{\code{GTEx_V6p_Skin_Sun_Exposed_Lower_leg}: cis-eQTLs in tissue "Skin Sun Exposed (Lower leg)".}
+#'  \item{\code{GTEx_V6p_Small_Intestine_Terminal_Ileum}: cis-eQTLs in tissue "Small Intestine Terminal Ileum".}
+#'  \item{\code{GTEx_V6p_Spleen}: cis-eQTLs in tissue "Spleen".}
+#'  \item{\code{GTEx_V6p_Stomach}: cis-eQTLs in tissue "Stomach".}
+#'  \item{\code{GTEx_V6p_Testis}: cis-eQTLs in tissue "Testis".}
+#'  \item{\code{GTEx_V6p_Thyroid}: cis-eQTLs in tissue "Thyroid".}
+#'  \item{\code{GTEx_V6p_Uterus}: cis-eQTLs in tissue "Uterus".}
+#'  \item{\code{GTEx_V6p_Vagina}: cis-eQTLs in tissue "Vagina".}
+#'  \item{\code{GTEx_V6p_Whole_Blood}: cis-eQTLs in tissue "Whole Blood".}
+#' }
 #' @export
 #' @seealso \code{\link{xRDataLoader}}
 #' @include xSNP2eGenes.r
@@ -104,6 +151,7 @@
 #' }
 #'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -112,12 +160,11 @@
 #' gr <- ImmunoBase$AS$variants
 #' AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 #'
-#' \dontrun{
 #' # b) define eQTL genes
 #' df_eGenes <- xSNP2eGenes(data=AS[,1], include.eQTL="JKscience_TS2A", RData.location=RData.location)
 #' }
 
-xSNP2eGenes <- function(data, include.eQTL=c(NA,"JKscience_CD14","JKscience_LPS2","JKscience_LPS24","JKscience_IFN","JKscience_TS2A","JKscience_TS2A_CD14","JKscience_TS2A_LPS2","JKscience_TS2A_LPS24","JKscience_TS2A_IFN","JKscience_TS2B","JKscience_TS2B_CD14","JKscience_TS2B_LPS2","JKscience_TS2B_LPS24","JKscience_TS2B_IFN","JKscience_TS3A","JKng_bcell","JKng_bcell_cis","JKng_bcell_trans","JKng_mono","JKng_mono_cis","JKng_mono_trans","JKpg_CD4","JKpg_CD4_cis","JKpg_CD4_trans","JKpg_CD8","JKpg_CD8_cis","JKpg_CD8_trans","JKnc_neutro","JKnc_neutro_cis","JKnc_neutro_trans","WESTRAng_blood","WESTRAng_blood_cis","WESTRAng_blood_trans","JK_nk","JK_nk_cis","JK_nk_trans", "GTEx_V4_Adipose_Subcutaneous","GTEx_V4_Artery_Aorta","GTEx_V4_Artery_Tibial","GTEx_V4_Esophagus_Mucosa","GTEx_V4_Esophagus_Muscularis","GTEx_V4_Heart_Left_Ventricle","GTEx_V4_Lung","GTEx_V4_Muscle_Skeletal","GTEx_V4_Nerve_Tibial","GTEx_V4_Skin_Sun_Exposed_Lower_leg","GTEx_V4_Stomach","GTEx_V4_Thyroid","GTEx_V4_Whole_Blood","eQTLdb_NK","eQTLdb_CD14","eQTLdb_LPS2","eQTLdb_LPS24","eQTLdb_IFN"), eQTL.customised=NULL, cdf.function=c("empirical","exponential"), plot=FALSE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xSNP2eGenes <- function(data, include.eQTL=c(NA,"JKscience_CD14","JKscience_LPS2","JKscience_LPS24","JKscience_IFN","JKscience_TS2A","JKscience_TS2A_CD14","JKscience_TS2A_LPS2","JKscience_TS2A_LPS24","JKscience_TS2A_IFN","JKscience_TS2B","JKscience_TS2B_CD14","JKscience_TS2B_LPS2","JKscience_TS2B_LPS24","JKscience_TS2B_IFN","JKscience_TS3A","JKng_bcell","JKng_bcell_cis","JKng_bcell_trans","JKng_mono","JKng_mono_cis","JKng_mono_trans","JKpg_CD4","JKpg_CD4_cis","JKpg_CD4_trans","JKpg_CD8","JKpg_CD8_cis","JKpg_CD8_trans","JKnc_neutro","JKnc_neutro_cis","JKnc_neutro_trans","WESTRAng_blood","WESTRAng_blood_cis","WESTRAng_blood_trans","JK_nk","JK_nk_cis","JK_nk_trans", "GTEx_V4_Adipose_Subcutaneous","GTEx_V4_Artery_Aorta","GTEx_V4_Artery_Tibial","GTEx_V4_Esophagus_Mucosa","GTEx_V4_Esophagus_Muscularis","GTEx_V4_Heart_Left_Ventricle","GTEx_V4_Lung","GTEx_V4_Muscle_Skeletal","GTEx_V4_Nerve_Tibial","GTEx_V4_Skin_Sun_Exposed_Lower_leg","GTEx_V4_Stomach","GTEx_V4_Thyroid","GTEx_V4_Whole_Blood", "GTEx_V6p_Adipose_Subcutaneous","GTEx_V6p_Adipose_Visceral_Omentum","GTEx_V6p_Adrenal_Gland","GTEx_V6p_Artery_Aorta","GTEx_V6p_Artery_Coronary","GTEx_V6p_Artery_Tibial","GTEx_V6p_Brain_Anterior_cingulate_cortex_BA24","GTEx_V6p_Brain_Caudate_basal_ganglia","GTEx_V6p_Brain_Cerebellar_Hemisphere","GTEx_V6p_Brain_Cerebellum","GTEx_V6p_Brain_Cortex","GTEx_V6p_Brain_Frontal_Cortex_BA9","GTEx_V6p_Brain_Hippocampus","GTEx_V6p_Brain_Hypothalamus","GTEx_V6p_Brain_Nucleus_accumbens_basal_ganglia","GTEx_V6p_Brain_Putamen_basal_ganglia","GTEx_V6p_Breast_Mammary_Tissue","GTEx_V6p_Cells_EBVtransformed_lymphocytes","GTEx_V6p_Cells_Transformed_fibroblasts","GTEx_V6p_Colon_Sigmoid","GTEx_V6p_Colon_Transverse","GTEx_V6p_Esophagus_Gastroesophageal_Junction","GTEx_V6p_Esophagus_Mucosa","GTEx_V6p_Esophagus_Muscularis","GTEx_V6p_Heart_Atrial_Appendage","GTEx_V6p_Heart_Left_Ventricle","GTEx_V6p_Liver","GTEx_V6p_Lung","GTEx_V6p_Muscle_Skeletal","GTEx_V6p_Nerve_Tibial","GTEx_V6p_Ovary","GTEx_V6p_Pancreas","GTEx_V6p_Pituitary","GTEx_V6p_Prostate","GTEx_V6p_Skin_Not_Sun_Exposed_Suprapubic","GTEx_V6p_Skin_Sun_Exposed_Lower_leg","GTEx_V6p_Small_Intestine_Terminal_Ileum","GTEx_V6p_Spleen","GTEx_V6p_Stomach","GTEx_V6p_Testis","GTEx_V6p_Thyroid","GTEx_V6p_Uterus","GTEx_V6p_Vagina","GTEx_V6p_Whole_Blood"), eQTL.customised=NULL, cdf.function=c("empirical","exponential"), plot=FALSE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one

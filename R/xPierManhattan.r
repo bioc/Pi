@@ -10,11 +10,15 @@
 #' @param top.label.col the highlight label color
 #' @param top.label.query which top genes in query will be labelled. By default, it sets to NULL meaning all top genes will be displayed. If labels in query can not be found, then all will be displayed
 #' @param label.query.only logical to indicate whether only genes in query will be displayed. By default, it sets to FALSE. It only works when labels in query are enabled/found
-#' @param y.scale how to transform the y scale. It can be "normal" for no transformation, and "sqrt" for square root transformation
+#' @param chromosome.only logical to indicate whether only genes from input data will be displayed. By default, it sets to TRUE
+#' @param y.scale how to transform the y scale. It can be "normal" for no transformation, "sqrt" for square root transformation, and "log" for log-based transformation
+#' @param y.lab the y labelling. If NULL (by default), it shows the column of input data
 #' @param GR.Gene the genomic regions of genes. By default, it is 'UCSC_knownGene', that is, UCSC known genes (together with genomic locations) based on human genome assembly hg19. It can be 'UCSC_knownCanonical', that is, UCSC known canonical genes (together with genomic locations) based on human genome assembly hg19. Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to Gene Symbols. Then, tell "GR.Gene" with your RData file name (with or without extension), plus specify your file RData path in "RData.location"
+#' @param font.family the font family for texts
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to false for no display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param ... additional paramters associated with ggrepel::geom_text_repel
 #' @return an object of class "ggplot", appended by an GR object called 'gr'
 #' @note none
 #' @export
@@ -60,8 +64,7 @@
 #' mp
 #' }
 
-
-xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, y.scale=c("normal","sqrt"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), signature=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", signature=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -116,8 +119,10 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 	## for sorting
 	chrlabs <- paste('chr', as.character(c(1:22,'X','Y')), sep='')
 	#######
-	ind <- chrlabs %in% unique(as.character(gr@seqnames@values))
-	chrlabs <- chrlabs[ind]
+	if(chromosome.only){
+		ind <- chrlabs %in% unique(as.character(gr@seqnames@values))
+		chrlabs <- chrlabs[ind]
+	}
 	#######	
 	#eval(parse(text="seqlevels(gr) <- chrlabs"))
 	GenomeInfoDb::seqlevels(gr) <- chrlabs
@@ -205,9 +210,9 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 		midpoint <- priority <- Symbol <- NULL
 		if(!is.null(df_highlight)){
 			if(top.label.type=="text"){
-				bp <- bp + ggrepel::geom_text_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
+				bp <- bp + ggrepel::geom_text_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold.italic', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')), ...)
 			}else if(top.label.type=="box"){
-				bp <- bp + ggrepel::geom_label_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold', box.padding=unit(0.2,"lines"), point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')))
+				bp <- bp + ggrepel::geom_label_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold.italic', box.padding=unit(0.2,"lines"), point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')), ...)
 			}
 		}
 	}
@@ -216,9 +221,16 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
     if(y.scale=="sqrt"){
     	x <- NULL
     	bp <- bp + scale_y_continuous(trans=scales::sqrt_trans(), breaks=scales::trans_breaks("log10", function(x) 10^x, n=2))
+    }else if(y.scale=="log"){
+    	x <- NULL
+    	bp <- bp + scale_y_continuous(trans=scales::log_trans(), breaks=scales::trans_breaks("log10", function(x) 10^x, n=2)) + annotation_logticks(sides='l')
     }
 	
-	bp <- bp + theme(axis.title.y=element_text(size=14), axis.text.x=element_text(angle=45, hjust=1,color="black",size=12), panel.background=element_rect(fill=rgb(0.95,0.95,0.95,1)))
+	if(!is.null(y.lab)){
+		bp <- bp + ylab(y.lab)
+	}
+	
+	bp <- bp + theme(axis.title.y=element_text(size=12), axis.text.y=element_text(color="black",size=8), axis.text.x=element_text(angle=45, hjust=1,color="black",size=10), panel.background=element_rect(fill=rgb(0.95,0.95,0.95,1)))
 	
 	## caption
     if(signature){
@@ -226,10 +238,12 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
     	bp <- bp + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
     }
 	
+	## change font family to 'Arial'
+	bp <- bp + theme(text=element_text(family=font.family))
+	
 	## put arrows on y-axis and x-axis
 	bp <- bp + theme(axis.line.y=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")), axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
-	
-	
+
     mp <- bp
     mp$gr <- gr
     

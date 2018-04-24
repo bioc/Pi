@@ -38,7 +38,8 @@ cd ~/Sites/XGR
 R
 #devtools::install_github(c("Bioconductor/BiocStyle"))
 #rmarkdown::render("now.Pi_vignettes.Rmd", BiocStyle::html_document(toc=TRUE,toc_depth=2,number_sections=TRUE,hightlight="default",toc_float=FALSE))
-rmarkdown::render("now.Pi_vignettes.Rmd", BiocStyle::html_document2(toc=TRUE,toc_depth=2,number_sections=TRUE,theme="journal", hightlight="monochrome",toc_float=TRUE,code_folding="hide"))
+#rmarkdown::render("now.Pi_vignettes.Rmd", BiocStyle::html_document2(toc=TRUE,toc_depth=2,number_sections=TRUE,theme="journal", hightlight="monochrome",toc_float=TRUE,code_folding="hide"))
+rmarkdown::render("now.Pi_vignettes.Rmd", BiocStyle::html_document(toc=TRUE,toc_depth=2,number_sections=TRUE,theme="journal", hightlight="monochrome",toc_float=TRUE,code_folding="hide"))
 #knitr::purl("now.Pi_vignettes.Rmd")
 q('no')
 ################################################
@@ -208,7 +209,7 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 
 - *[`xPredictCompare`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPredictCompare.html)*: compares the prediction/prioritisation performance.
 
-- *[`xGSsimulator`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSsimulator.html)*: simulates the gold standard negatives (GSN) from gold standard positives (GSP) considering the gene interaction evidence.
+- *[`xGSsimulator`](http://rawgit.com/hfang-bristol/Pi/master/inst/xGSsimulator.html)*: simulates the gold standard negatives (GSN) from gold standard positives (GSP) considering the gene interaction evidence and returns an object of class `sGS`.
 
 - *[`xPierROCR`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierROCR.html)*: assesses the dTarget performance via ROC and PR analysis.
 
@@ -216,17 +217,17 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 
 ## Integral functions
 
-- *[`xMLrandomforest`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLrandomforest.html)*: integrates predictor matrix via machine learning algorithm random forest and returns an object of class `pTarget`.
+- *[`xMLrandomforest`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLrandomforest.html)*: integrates predictor matrix via machine learning algorithm random forest and returns an object of class `sTarget`.
 
-- *[`xMLcaret`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLcaret.html)*: integrates predictor matrix in a supervised manner via machine learning algorithms using caret and returns an object of class `pTarget`.
+- *[`xMLcaret`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLcaret.html)*: integrates predictor matrix in a supervised manner via machine learning algorithms using caret and returns an object of class `sTarget`.
 
 - *[`xMLparameters`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLparameters.html)*: visualises cross-validation performance against tuning parameters.
 
-- *[`xMLdotplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdotplot.html)*: visualise machine learning results (a `pTarget` object) using dot plot and returns an object of class `ggplot`.
+- *[`xMLdotplot`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdotplot.html)*: visualise machine learning results (a `sTarget` object) using dot plot and returns an object of class `ggplot`.
 
-- *[`xMLdensity`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdensity.html)*: visualise machine learning results (a `pTarget` or `dTarget` object) using density plot and returns an object of class `ggplot`.
+- *[`xMLdensity`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLdensity.html)*: visualise machine learning results (a `sTarget` or `dTarget` object) using density plot and returns an object of class `ggplot`.
 
-- *[`xMLzoom`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLzoom.html)*: visualise machine learning results (a `pTarget` or `dTarget` object) using zoom plot and returns an object of class `ggplot`.
+- *[`xMLzoom`](http://rawgit.com/hfang-bristol/Pi/master/inst/xMLzoom.html)*: visualise machine learning results (a `sTarget` or `dTarget` object) using zoom plot and returns an object of class `ggplot`.
 
 ## Elementary functions
 
@@ -264,7 +265,7 @@ library(Pi)
 
 # optionally, specify the local location of built-in RData
 # by default:
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
@@ -277,7 +278,7 @@ RData.location <- "~/Sites/SVN/github/bigdata_dev"
 Spondyloarthritis-associated GWAS lead SNPs are collected mainly from GWAS Catalog [@Welter2014], complemented by [ImmunoBase](http://www.immunobase.org) and latest publications. 
 
 ```{r, eval=TRUE}
-data.file <- "http://galahad.well.ox.ac.uk/bigdata_dev/Spondyloarthritis.txt"
+data.file <- file.path(RData.location, "Spondyloarthritis.txt")
 data <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
 ```
 

@@ -5,7 +5,7 @@
 \title{Function to visualise cross-validation performance against tuning parameters}
 \usage{
 xMLcompare(list_ML, metric = c("ROC", "Sens", "Spec"), xlab = NA,
-xlimits = c(0.5, 1))
+xlimits = c(0.5, 1), font.family = "sans")
 }
 \arguments{
 \item{list_ML}{a list of class "train" or "train.formula" objects
@@ -17,6 +17,8 @@ xlimits = c(0.5, 1))
 \item{xlab}{a title for the x axis}
 
 \item{xlimits}{the limit for the x axis}
+
+\item{font.family}{the font family for texts}
 }
 \value{
 an object of class "ggplot"

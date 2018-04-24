@@ -10,9 +10,13 @@ xPierSubnet(pNode, priority.quantile = 0.1, network = c(NA,
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD"), network.customised = NULL, subnet.significance =
-0.01,
-subnet.size = NULL, verbose = TRUE,
+"PCommonsDN_CTD", "KEGG", "KEGG_metabolism", "KEGG_genetic",
+"KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
+"KEGG_disease",
+"REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score", "coexpression_score", "experimental_score",
+"database_score", "textmining_score")[1], network.customised = NULL,
+subnet.significance = 0.01, subnet.size = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -52,7 +56,23 @@ from HumanCyc, "PCommonsDN_PID" for those froom PID,
 "PCommonsDN_PANTHER" for those from PANTHER, "PCommonsDN_ReconX" for
 those from ReconX, "PCommonsDN_TRANSFAC" for those from TRANSFAC,
 "PCommonsDN_PhosphoSite" for those from PhosphoSite, and
-"PCommonsDN_CTD" for those from CTD}
+"PCommonsDN_CTD" for those from CTD. For direct (pathway-merged)
+interactions sourced from KEGG, it can be 'KEGG' for all,
+'KEGG_metabolism' for pathways grouped into 'Metabolism',
+'KEGG_genetic' for 'Genetic Information Processing' pathways,
+'KEGG_environmental' for 'Environmental Information Processing'
+pathways, 'KEGG_cellular' for 'Cellular Processes' pathways,
+'KEGG_organismal' for 'Organismal Systems' pathways, and 'KEGG_disease'
+for 'Human Diseases' pathways. 'REACTOME' for protein-protein
+interactions derived from Reactome pathways}
+
+\item{STRING.only}{the further restriction of STRING by interaction
+type. If NA, no such restriction. Otherwide, it can be one or more of
+"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score".
+Useful options are c("experimental_score","database_score"): only
+experimental data (extracted from BIND, DIP, GRID, HPRD, IntAct, MINT,
+and PID) and curated data (extracted from Biocarta, BioCyc, GO, KEGG,
+and Reactome) are used}
 
 \item{network.customised}{an object of class "igraph". By default, it
 is NULL. It is designed to allow the user analysing their customised
@@ -82,8 +102,8 @@ RData files. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 a subgraph with a maximum score, an object of class "igraph". It has
-ndoe attributes: signficance, score, priority (part of the "pNode"
-object)
+ndoe attributes: signficance, score, type, priority (part of the
+"pNode" object)
 }
 \description{
 \code{xPierSubnet} is supposed to identify maximum-scoring gene
@@ -112,6 +132,7 @@ library(Pi)
 }
 
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+\dontrun{
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -121,7 +142,6 @@ RData.location=RData.location)
 gr <- ImmunoBase$AS$variants
 AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
-\dontrun{
 # b) perform priority analysis
 pNode <- xPierSNPs(data=AS, include.eQTL="JKng_mono",
 include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,

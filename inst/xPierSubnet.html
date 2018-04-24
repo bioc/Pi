@@ -25,9 +25,13 @@ xPierSubnet(pNode, priority.quantile = 0.1, network = c(NA,
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD"), network.customised = NULL, subnet.significance =
-0.01,
-subnet.size = NULL, verbose = TRUE,
+"PCommonsDN_CTD", "KEGG", "KEGG_metabolism", "KEGG_genetic",
+"KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
+"KEGG_disease",
+"REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score", "coexpression_score", "experimental_score",
+"database_score", "textmining_score")[1], network.customised = NULL,
+subnet.significance = 0.01, subnet.size = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
@@ -77,7 +81,25 @@ from HumanCyc, &quot;PCommonsDN_PID&quot; for those froom PID,
 &quot;PCommonsDN_PANTHER&quot; for those from PANTHER, &quot;PCommonsDN_ReconX&quot; for
 those from ReconX, &quot;PCommonsDN_TRANSFAC&quot; for those from TRANSFAC,
 &quot;PCommonsDN_PhosphoSite&quot; for those from PhosphoSite, and
-&quot;PCommonsDN_CTD&quot; for those from CTD</p>
+&quot;PCommonsDN_CTD&quot; for those from CTD. For direct (pathway-merged)
+interactions sourced from KEGG, it can be 'KEGG' for all,
+'KEGG_metabolism' for pathways grouped into 'Metabolism',
+'KEGG_genetic' for 'Genetic Information Processing' pathways,
+'KEGG_environmental' for 'Environmental Information Processing'
+pathways, 'KEGG_cellular' for 'Cellular Processes' pathways,
+'KEGG_organismal' for 'Organismal Systems' pathways, and 'KEGG_disease'
+for 'Human Diseases' pathways. 'REACTOME' for protein-protein
+interactions derived from Reactome pathways</p>
+</td></tr>
+<tr valign="top"><td><code>STRING.only</code></td>
+<td>
+<p>the further restriction of STRING by interaction
+type. If NA, no such restriction. Otherwide, it can be one or more of
+&quot;neighborhood_score&quot;,&quot;fusion_score&quot;,&quot;cooccurence_score&quot;,&quot;coexpression_score&quot;,&quot;experimental_score&quot;,&quot;database_score&quot;,&quot;textmining_score&quot;.
+Useful options are c(&quot;experimental_score&quot;,&quot;database_score&quot;): only
+experimental data (extracted from BIND, DIP, GRID, HPRD, IntAct, MINT,
+and PID) and curated data (extracted from Biocarta, BioCyc, GO, KEGG,
+and Reactome) are used</p>
 </td></tr>
 <tr valign="top"><td><code>network.customised</code></td>
 <td>
@@ -121,8 +143,8 @@ RData files. See <code>xRDataLoader</code> for details</p>
 <h3>Value</h3>
 
 <p>a subgraph with a maximum score, an object of class &quot;igraph&quot;. It has
-ndoe attributes: signficance, score, priority (part of the &quot;pNode&quot;
-object)
+ndoe attributes: signficance, score, type, priority (part of the
+&quot;pNode&quot; object)
 </p>
 
 
@@ -159,6 +181,7 @@ library(Pi)
 ## End(Not run)
 
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+## Not run: 
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #data.file &lt;- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -168,7 +191,6 @@ RData.location=RData.location)
 gr &lt;- ImmunoBase$AS$variants
 AS &lt;- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 
-## Not run: 
 # b) perform priority analysis
 pNode &lt;- xPierSNPs(data=AS, include.eQTL="JKng_mono",
 include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7,

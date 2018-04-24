@@ -1,15 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise features used for machine learning</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to visualise/assess features used for machine...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
 <table width="100%" summary="page for xMLfeatureplot"><tr><td>xMLfeatureplot</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to visualise features used for machine learning</h2>
+<h2>Function to visualise/assess features used for machine learning</h2>
 
 <h3>Description</h3>
 
-<p><code>xMLfeatureplot</code> is supposed to visualise features used for
+<p><code>xMLfeatureplot</code> is supposed to visualise/assess features used for
 machine learning. Visualisation can be made using either boxplot or dot
 plot for AUC and F-max. It returns an object of class &quot;ggplot&quot; for AUC
 and F-max, and an object of class &quot;trellis&quot; for boxplot.
@@ -20,7 +20,7 @@ and F-max, and an object of class &quot;trellis&quot; for boxplot.
 
 <pre>
 xMLfeatureplot(df_predictor, GSP, GSN, displayBy = c("boxplot", "ROC",
-"Fmax"), ...)
+"Fmax"), font.family = "sans", ...)
 </pre>
 
 
@@ -46,6 +46,10 @@ data frame must has gene symbols as row names</p>
 <p>which statistics will be used for displaying. It can
 be either &quot;boxplot&quot; for features themselves, &quot;ROC&quot; for AUC in ROC,
 &quot;Fmax&quot; for F-max in Precision-Recall curve)</p>
+</td></tr>
+<tr valign="top"><td><code>font.family</code></td>
+<td>
+<p>the font family for texts</p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>

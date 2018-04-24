@@ -19,8 +19,8 @@ using dot plot. It returns an object of class &quot;ggplot&quot;.
 <pre>
 xMLdotplot(sTarget, displayBy = c("importance2fold", "roc2fold",
 "fmax2fold",
-"importance_accurancy", "importance_gini", "ROC", "Fmax"), signature =
-TRUE)
+"importance_accurancy", "importance_gini", "ROC", "Fmax"),
+font.family = "sans", signature = TRUE)
 </pre>
 
 
@@ -40,6 +40,10 @@ Precision-Recall curve) or overall statistics (&quot;importance_accurancy&quot;
 for predictor importance measured by accuracy decrease,
 &quot;importance_gini&quot; for predictor importance measured by Gini decrease,
 &quot;ROC&quot; for AUC in ROC, &quot;Fmax&quot; for F-max in Precision-Recall curve)</p>
+</td></tr>
+<tr valign="top"><td><code>font.family</code></td>
+<td>
+<p>the font family for texts</p>
 </td></tr>
 <tr valign="top"><td><code>signature</code></td>
 <td>

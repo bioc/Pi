@@ -6,7 +6,8 @@
 \usage{
 xGSEAbarplot(eGSEA, top_num = 10, displayBy = c("nes", "adjp", "fdr",
 "pvalue"), FDR.cutoff = 0.05, bar.label = TRUE, bar.label.size = 3,
-wrap.width = NULL, signature = TRUE)
+bar.color = "lightyellow-orange", bar.width = 0.8, wrap.width = NULL,
+font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{eGSEA}{an object of class "eGSEA"}
@@ -29,7 +30,15 @@ FDR. By default, it sets to true for bar labelling}
 \item{bar.label.size}{an integer specifying the bar labelling text
 size. By default, it sets to 3}
 
+\item{bar.color}{either NULL or fill color names ('lightyellow-orange'
+by default)}
+
+\item{bar.width}{bar width. By default, 80% of the resolution of the
+data}
+
 \item{wrap.width}{a positive integer specifying wrap width of name}
+
+\item{font.family}{the font family for texts}
 
 \item{signature}{logical to indicate whether the signature is assigned
 to the plot caption. By default, it sets TRUE showing which function is

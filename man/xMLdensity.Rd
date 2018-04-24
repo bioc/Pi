@@ -5,7 +5,7 @@
 \title{Function to visualise machine learning results using density plot}
 \usage{
 xMLdensity(xTarget, displayBy = c("All", "GS", "GSN", "GSP", "NEW"),
-x.scale = c("sqrt", "normal"), signature = TRUE)
+x.scale = c("sqrt", "normal"), font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{xTarget}{an object of class "xTarget" or "dTarget" (with the
@@ -18,6 +18,8 @@ targets (non-GS), "All" for all targets (by default)}
 
 \item{x.scale}{how to transform the x scale. It can be "normal" for no
 transformation, and "sqrt" for square root transformation (by default)}
+
+\item{font.family}{the font family for texts}
 
 \item{signature}{logical to indicate whether the signature is assigned
 to the plot caption. By default, it sets TRUE showing which function is

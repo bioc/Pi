@@ -6,9 +6,11 @@
 \usage{
 xVisEvidence(xTarget, g = NA, nodes = NULL, node.info = c("smart",
 "none"), neighbor.order = 1, neighbor.seed = TRUE, neighbor.top = NULL,
-colormap = "ggplot2", legend.position = "topleft", legend.horiz =
-FALSE,
-verbose = TRUE, ...)
+largest.comp = TRUE, show = TRUE, colormap = "ggplot2",
+legend.position = "topleft", legend.horiz = FALSE, mtext.side = 3,
+verbose = TRUE, edge.width = NULL, vertex.size = NULL,
+vertex.size.nonseed = NULL, vertex.label.color = "blue",
+vertex.label.color.nonseed = NULL, ...)
 }
 \arguments{
 \item{xTarget}{an object of class "dTarget", "sTarget" or "eTarget"}
@@ -33,6 +35,12 @@ only. By default, it sets to true}
 \item{neighbor.top}{the top number of the neighbors with the highest
 priority. By default, it sets to NULL to disable this parameter}
 
+\item{largest.comp}{logical to indicate whether the largest component
+is only retained. By default, it sets to true for the largest component
+being left}
+
+\item{show}{logical to indicate whether to show the graph}
+
 \item{colormap}{short name for the colormap. It can be one of "jet"
 (jet colormap), "bwr" (blue-white-red colormap), "gbr" (green-black-red
 colormap), "wyr" (white-yellow-red colormap), "br" (black-red
@@ -45,14 +53,29 @@ names, e.g. "lightyellow-orange" (by default), "blue-black-yellow",
 standard color names can be found in
 \url{http://html-color-codes.info/color-names}}
 
-\item{legend.position}{the legend position. If NA, the legend will be
-hiden}
+\item{legend.position}{the legend position. If NA, the legend is not
+shown}
 
 \item{legend.horiz}{logical specifying the legend horizon. If TRUE, set
 the legend horizontally rather than vertically}
 
+\item{mtext.side}{the side of marginal text. If NA, it is not shown}
+
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}
+
+\item{edge.width}{the width of the edge. If NULL, the width edge is
+proportional to the 'weight' edge attribute (if existed)}
+
+\item{vertex.size}{the size of each vertex. If null, each vertex has
+the size proportional to the degree of nodes}
+
+\item{vertex.size.nonseed}{the size of each nonseed vertex. If null,
+each vertex has the size proportional to the degree of nodes}
+
+\item{vertex.label.color}{the color of vertex labels}
+
+\item{vertex.label.color.nonseed}{the color of nonseed vertex labels}
 
 \item{...}{additional graphic parameters. See
 \url{http://igraph.org/r/doc/plot.common.html} for the complete list.}
@@ -74,12 +97,13 @@ RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
 ## TNFRSF1A
 xVisEvidence(xTarget, nodes="TNFRSF1A", neighbor.order=1,
 neighbor.seed=TRUE, neighbor.top=NULL, vertex.label.color="black",
-vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=4,
-legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
+vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=1,
+vertex.label.family="Arial", legend.position="bottomleft",
+legend.horiz=TRUE, newpage=FALSE)
 ## UBA52
 xVisEvidence(xTarget, nodes="UBA52", neighbor.order=1,
 neighbor.seed=TRUE, neighbor.top=20, vertex.label.color="black",
-vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=4,
+vertex.label.cex=0.7, vertex.label.dist=0.6, vertex.label.font=1,
 legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
 }
 }

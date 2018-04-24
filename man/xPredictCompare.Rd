@@ -6,7 +6,8 @@
 \usage{
 xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), type =
 c("curve",
-"bar"), sort = TRUE, detail = TRUE, facet = FALSE, signature = TRUE)
+"bar"), sort = TRUE, detail = TRUE, facet = FALSE,
+font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{list_pPerf}{a list of "pPerf" objects}
@@ -25,6 +26,8 @@ performance. By default, it sets TRUE}
 
 \item{facet}{logical to indicate whether to facet/wrap a 1d of panels
 into 2d. By default, it sets FALSE}
+
+\item{font.family}{the font family for texts}
 
 \item{signature}{a logical to indicate whether the signature is
 assigned to the plot caption. By default, it sets TRUE showing which

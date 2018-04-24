@@ -21,10 +21,12 @@ an object of class &quot;ggplot&quot;.
 xPierManhattan(pNode, color = c("darkred", "darkgreen"), top = 50,
 top.label.type = c("box", "text"), top.label.size = 2,
 top.label.col = "darkblue", top.label.query = NULL,
-label.query.only = FALSE, y.scale = c("normal", "sqrt"),
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), signature = TRUE,
+label.query.only = FALSE, chromosome.only = TRUE, y.scale = c("normal",
+"sqrt", "log"), y.lab = NULL, GR.Gene = c("UCSC_knownGene",
+"UCSC_knownCanonical"), font.family = "sans", signature = TRUE,
 verbose = TRUE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata")
+"http://galahad.well.ox.ac.uk/bigdata",
+...)
 </pre>
 
 
@@ -71,10 +73,21 @@ labels in query can not be found, then all will be displayed</p>
 will be displayed. By default, it sets to FALSE. It only works when
 labels in query are enabled/found</p>
 </td></tr>
+<tr valign="top"><td><code>chromosome.only</code></td>
+<td>
+<p>logical to indicate whether only genes from
+input data will be displayed. By default, it sets to TRUE</p>
+</td></tr>
 <tr valign="top"><td><code>y.scale</code></td>
 <td>
 <p>how to transform the y scale. It can be &quot;normal&quot; for no
-transformation, and &quot;sqrt&quot; for square root transformation</p>
+transformation, &quot;sqrt&quot; for square root transformation, and &quot;log&quot; for
+log-based transformation</p>
+</td></tr>
+<tr valign="top"><td><code>y.lab</code></td>
+<td>
+<p>the y labelling. If NULL (by default), it shows the column
+of input data</p>
 </td></tr>
 <tr valign="top"><td><code>GR.Gene</code></td>
 <td>
@@ -90,6 +103,10 @@ Symbols. Then, tell &quot;GR.Gene&quot; with your RData file name (with or
 without extension), plus specify your file RData path in
 &quot;RData.location&quot;</p>
 </td></tr>
+<tr valign="top"><td><code>font.family</code></td>
+<td>
+<p>the font family for texts</p>
+</td></tr>
 <tr valign="top"><td><code>signature</code></td>
 <td>
 <p>logical to indicate whether the signature is assigned
@@ -104,6 +121,11 @@ displayed in the screen. By default, it sets to false for no display</p>
 <td>
 <p>the characters to tell the location of built-in
 RData files. See <code>xRDataLoader</code> for details</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional paramters associated with
+ggrepel::geom_text_repel</p>
 </td></tr>
 </table>
 

@@ -8,6 +8,7 @@
 #' @param rescale logical to indicate whether to linearly rescale predictive scores for GSP/GSN targets to the range [0,1]. By default, it sets to TRUE
 #' @param plot the way to plot performance curve. It can be 'none' for no curve returned, 'ROC' for ROC curve, and 'PR' for PR curve. 
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to TRUE for display
+#' @param font.family the font family for texts
 #' @param signature a logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
 #' @return 
 #' If plot is 'none' (by default), an object of class "pPerf", a list with following components:
@@ -36,7 +37,7 @@
 #' pPerf <- xPredictROCR(prediction, GSP, GSN)
 #' }
 
-xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC","PR"), verbose=TRUE, signature=TRUE)
+xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC","PR"), verbose=TRUE, font.family="sans", signature=TRUE)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -107,6 +108,10 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 		return(NULL)
 	}
 	#pred_obj <- ROCR::prediction(predictions=pred_label$pred, labels=pred_label$label)
+
+	## acc: Accuracy=(TP+TN)/(P+N)
+	res <- ROCR::performance(pred_obj, measure="acc")
+	acc <- unlist(res@y.values)
 	
 	## auc: Area under the ROC curve
 	res <- ROCR::performance(pred_obj, measure="auc")
@@ -123,10 +128,14 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
     fpr <- unlist(perf_roc@x.values)
     
     ## PR curves
-	perf_pr <- ROCR::performance(pred_obj, measure="prec", x.measure="rec")    
+	perf_pr <- ROCR::performance(pred_obj, measure="prec", x.measure="rec")
     prec <- unlist(perf_pr@y.values)
     rec <- unlist(perf_pr@x.values)
     
+    ## TPR vs pcfall (Prediction-conditioned fallout: FP/(TP+FP))
+	#perf_tprfdr <- ROCR::performance(pred_obj, measure="tpr", x.measure="pcfall")    
+    #tpr <- unlist(perf_tprfdr@y.values)
+    #fdr <- unlist(perf_tprfdr@x.values)
     ##############################################################################################
     
     if(verbose){
@@ -162,14 +171,18 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 			caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("Pi"))
 			p <- p + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
 		}
-		## put arrows on both axes
-		p <- p + theme(axis.line=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
 		
 		## Add the point with the maximum F
 		p <- p + geom_point(data=df_PRS[i,], aes(x=Recall,y=Precision), colour="red")
 		#p <- p + geom_text_repel(data=df_PRS[i,], family="Times New Roman", aes(x=Recall, y=Precision, label=paste0('Fmax = MAX{2*P*R/(P+R)} = ',signif(fmax,digits=3))))
 		#p <- p + geom_text_repel(data=df_PRS[i,], family="Times New Roman", aes(x=Recall, y=Precision, label=paste0('Fmax = ',signif(fmax,digits=3))))
 		p <- p + geom_text(data=df_PRS[i,], family="Times New Roman", aes(x=Recall, y=Precision, label=paste0('Fmax = ',signif(fmax,digits=3))))
+		
+		## change font family to 'Arial'
+		p <- p + theme(text=element_text(family=font.family))
+		
+		## put arrows on both axes
+		p <- p + theme(axis.line=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
 		
 		p$PRS <- df_PRS
 		p$AUROC <- auroc
@@ -192,6 +205,10 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
 			caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("Pi"))
 			p <- p + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
 		}
+		
+		## change font family to 'Arial'
+		p <- p + theme(text=element_text(family=font.family))
+		
 		## put arrows on both axes
 		p <- p + theme(axis.line=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
 		

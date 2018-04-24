@@ -162,7 +162,9 @@ dTarget <- function(priority, predictor, metag){
 #' @export
 print.dTarget <- function(x, ...) {
 	cat(sprintf("An object of S3 class '%s', with %d components:", class(x), length(names(x))), "\n", sep="")
-	cat(sprintf("  $metag: an igraph object with %d nodes and %d edges", vcount(x$metag), ecount(x$metag)), "\n", sep="")
+	if(!is.null(x$metag)){
+		cat(sprintf("  $metag: an igraph object with %d nodes and %d edges", vcount(x$metag), ecount(x$metag)), "\n", sep="")
+	}
 	cat(sprintf("  $predictor: a data frame of %d rows X %d columns", dim(x$predictor)[1],dim(x$predictor)[2]), "\n", sep="")
 	cat(sprintf("  $priority: a data frame of %d rows X %d columns", dim(x$priority)[1],dim(x$priority)[2]), "\n", sep="")
 	if(!is.null(x$pPerf)){
@@ -411,6 +413,7 @@ print.eGSEA <- function(x, ...) {
 	cat(sprintf("  $cross: a matrix of %d X %d", dim(x$cross)[1], dim(x$cross)[2]), "\n", sep="")
 	cat("\n--------------------------------------------------\n")
 	cat("$df_summary:\n")
-	print(x$df_summary[1:2,], row.names=FALSE)
+	print(x$df_summary[1:min(2,nrow(x$df_summary)),], row.names=FALSE)
 	cat("......\n")
 }
+

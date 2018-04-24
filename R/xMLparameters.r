@@ -143,7 +143,7 @@ theta.3D=40, phi.3D=25)
 		
 	}
 
-    invisible(res)
+    invisible()
 }
 
     

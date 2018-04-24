@@ -8,6 +8,7 @@
 #' @param sort logical to indicate whether to sort methods according to performance. By default, it sets TRUE
 #' @param detail logical to indicate whether to label methods along with performance. By default, it sets TRUE
 #' @param facet logical to indicate whether to facet/wrap a 1d of panels into 2d. By default, it sets FALSE
+#' @param font.family the font family for texts
 #' @param signature a logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
 #' @return an object of class "ggplot" or NULL (if all input pPerf objects are NULL)
 #' @note none
@@ -28,7 +29,7 @@
 #' bp + theme(legend.position=c(0.75,0.25))
 #' }
 
-xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve","bar"), sort=TRUE, detail=TRUE, facet=FALSE, signature=TRUE)
+xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve","bar"), sort=TRUE, detail=TRUE, facet=FALSE, font.family="sans", signature=TRUE)
 {
 
     displayBy <- match.arg(displayBy)
@@ -198,8 +199,15 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 		caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("XGR"))
 		p <- p + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
 	}
+	
+	p <- p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+	
+	## change font family to 'Arial'
+	p <- p + theme(text=element_text(family=font.family))
+	
 	## put arrows on both axes
 	p <- p + theme(axis.line=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
+
 	
 	invisible(p)
 }

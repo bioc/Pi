@@ -40,6 +40,7 @@
 #' }
 #'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
 #' #data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
@@ -47,7 +48,6 @@
 #' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', RData.location=RData.location)
 #' data <- names(ImmunoBase$AS$variants)
 #'
-#' \dontrun{
 #' # b) extract HiC-gene pairs given a list of AS SNPs
 #' PCHiC <- xSNPhic(data, include.HiC="Monocytes", GR.SNP="dbSNP_GWAS", RData.location=RData.location)
 #' head(PCHiC$df)
