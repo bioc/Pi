@@ -135,7 +135,7 @@ xSNPhic <- function(data=NULL, entity=c("SNP","chr:start-end","data.frame","bed"
 				if(1){
 					## new way
 					df[df<5] <- NA
-					res <- xAggregate(log(df), verbose=F)
+					res <- xAggregate(log(df), verbose=FALSE)
 					vec_score <- res$Aggregate
 				}else{
 					## old way

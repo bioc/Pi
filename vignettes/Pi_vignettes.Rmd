@@ -278,7 +278,7 @@ RData.location <- "~/Sites/SVN/github/bigdata_dev"
 Spondyloarthritis-associated GWAS lead SNPs are collected mainly from GWAS Catalog [@Welter2014], complemented by [ImmunoBase](http://www.immunobase.org) and latest publications. 
 
 ```{r, eval=TRUE}
-data.file <- file.path(RData.location, "Spondyloarthritis.txt")
+data.file <- "http://galahad.well.ox.ac.uk/bigdata/Spondyloarthritis.txt"
 data <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
 ```
 
