@@ -66,7 +66,7 @@ a KEGG pathway. It returns an object of class "igraph".
 If vis is 'pathview', it will depend on whether a package "pathview"
 has been installed. It can be installed via:
 \code{source("http://bioconductor.org/biocLite.R");
-biocLite("pathview")}.
+BiocManager::install("pathview")}.
 }
 \examples{
 \dontrun{

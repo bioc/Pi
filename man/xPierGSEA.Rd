@@ -100,7 +100,7 @@ gene-term associations is realised}
 resulting. By default, it sets to true, but not necessarily does so. It
 will depend on whether the package "fgsea" has been installed. It can
 be installed via: \code{source("http://bioconductor.org/biocLite.R");
-biocLite(c("fgsea"))}. If not yet installed, this option will be
+BiocManager::install(c("fgsea"))}. If not yet installed, this option will be
 disabled}
 
 \item{verbose}{logical to indicate whether the messages will be

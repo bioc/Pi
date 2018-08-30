@@ -50,7 +50,7 @@ multicores is used. By default, it sets to true, but not necessarily
 does so. It will depend on whether these two packages "foreach" and
 "doParallel" have been installed. It can be installed via:
 \code{source("http://bioconductor.org/biocLite.R");
-biocLite(c("foreach","doParallel"))}. If not yet installed, this option
+BiocManager::install(c("foreach","doParallel"))}. If not yet installed, this option
 will be disabled}
 
 \item{multicores}{an integer to specify how many cores will be

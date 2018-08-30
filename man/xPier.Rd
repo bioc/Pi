@@ -50,7 +50,7 @@ system-specific (now only Linux or Mac OS). Also, it will depend on
 whether these two packages "foreach" and "doMC" have been installed. It
 can be installed via:
 \code{source("http://bioconductor.org/biocLite.R");
-biocLite(c("foreach","doMC"))}. If not yet installed, this option will
+BiocManager::install(c("foreach","doMC"))}. If not yet installed, this option will
 be disabled}
 
 \item{multicores}{an integer to specify how many cores will be

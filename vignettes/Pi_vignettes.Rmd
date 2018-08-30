@@ -59,17 +59,19 @@ The latest version on different platforms can be installed following instruction
 **Install [`Pi`](http://www.bioconductor.org/packages/Pi) (the latest stable release version from Bioconductor):**
 
 ```{r eval=FALSE}
-source("http://bioconductor.org/biocLite.R")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
 # to use the latest version of Bioconductor, upgrade it: biocLite("BiocUpgrade") 
-biocLite("Pi")
+BiocManager::install("Pi")
 ```
 
 **Also install the latest development version from github (highly recommended):**
 
 ```{r eval=FALSE, echo=TRUE}
 # first, install the dependant packages (the stable version)
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("XGR","devtools"), siteRepos=c("http://cran.r-project.org"))
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install(c("XGR","devtools"), siteRepos=c("http://cran.r-project.org"))
 
 # then, install the `Pi` package and its dependency (the latest version)
 library(devtools)
