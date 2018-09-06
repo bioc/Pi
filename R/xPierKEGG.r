@@ -16,7 +16,8 @@
 #' @param ... additional graphic parameters. If the type of visualisation is 'net', see \code{\link{xVisNet}}; if the visualisation type is 'evidence', see \code{\link{xVisEvidence}}
 #' @return
 #' a subgraph, an object of class "igraph".
-#' @note If vis is 'pathview', it will depend on whether a package "pathview" has been installed. It can be installed via: \code{source("http://bioconductor.org/biocLite.R"); biocLite("pathview")}.
+#' @note If vis is 'pathview', it will depend on whether a package "pathview" has been installed. It can be installed via: \code{if (!requireNamespace("BiocManager", quietly=TRUE)); BiocManager::install("pathview")}.
+    install.packages("BiocManager"); BiocManager::install("pathview")}.
 #' @export
 #' @seealso \code{\link{xVisNet}}, \code{\link{xVisEvidence}}
 #' @include xPierKEGG.r

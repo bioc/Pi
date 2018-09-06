@@ -99,7 +99,8 @@ gene-term associations is realised}
 \item{fast}{logical to indicate whether to fast calculate GSEA
 resulting. By default, it sets to true, but not necessarily does so. It
 will depend on whether the package "fgsea" has been installed. It can
-be installed via: \code{source("http://bioconductor.org/biocLite.R");
+be installed via: \code{if (!requireNamespace("BiocManager", quietly=TRUE));
+    install.packages("BiocManager");
 BiocManager::install(c("fgsea"))}. If not yet installed, this option will be
 disabled}
 

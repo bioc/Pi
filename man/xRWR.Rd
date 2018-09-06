@@ -49,7 +49,8 @@ output affinity matrix have the same quantiles}
 multicores is used. By default, it sets to true, but not necessarily
 does so. It will depend on whether these two packages "foreach" and
 "doParallel" have been installed. It can be installed via:
-\code{source("http://bioconductor.org/biocLite.R");
+\code{if (!requireNamespace("BiocManager", quietly=TRUE));
+    install.packages("BiocManager");
 BiocManager::install(c("foreach","doParallel"))}. If not yet installed, this option
 will be disabled}
 

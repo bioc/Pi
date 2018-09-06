@@ -61,7 +61,7 @@ The latest version on different platforms can be installed following instruction
 ```{r eval=FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-# to use the latest version of Bioconductor, upgrade it: biocLite("BiocUpgrade") 
+# to use the latest version of Bioconductor, upgrade it: BiocManager::install("BiocUpgrade") 
 BiocManager::install("Pi")
 ```
 

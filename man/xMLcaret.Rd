@@ -112,7 +112,8 @@ it. It returns an object of class 'sTarget'.
 \note{
 It will depend on whether a package "caret" and its suggested packages
 have been installed. It can be installed via:
-\code{source("http://bioconductor.org/biocLite.R");
+\code{if (!requireNamespace("BiocManager", quietly=TRUE));
+    install.packages("BiocManager");
 BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"),
 siteRepos=c("http://cran.r-project.org"))}.
 }
