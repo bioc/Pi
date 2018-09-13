@@ -5,63 +5,30 @@
 \title{Function to prioritise genes given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)}
 \usage{
 xPierSNPs(data, include.LD = NA, LD.customised = NULL, LD.r2 = 0.8,
-significance.threshold = 5e-05, score.cap = 10, distance.max = 2000,
-decay.kernel = c("slow", "constant", "linear", "rapid"),
-decay.exponent = 2, GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"),
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
-include.TAD = c("none", "GM12878", "IMR90", "MSC", "TRO", "H1", "MES",
-"NPC"), include.eQTL = c(NA, "JKscience_CD14", "JKscience_LPS2",
-"JKscience_LPS24", "JKscience_IFN", "JKscience_TS2A",
-"JKscience_TS2A_CD14",
-"JKscience_TS2A_LPS2", "JKscience_TS2A_LPS24", "JKscience_TS2A_IFN",
-"JKscience_TS2B", "JKscience_TS2B_CD14", "JKscience_TS2B_LPS2",
-"JKscience_TS2B_LPS24", "JKscience_TS2B_IFN", "JKscience_TS3A",
-"JKng_bcell",
-"JKng_bcell_cis", "JKng_bcell_trans", "JKng_mono", "JKng_mono_cis",
-"JKng_mono_trans", "JKpg_CD4", "JKpg_CD4_cis", "JKpg_CD4_trans",
-"JKpg_CD8",
-"JKpg_CD8_cis", "JKpg_CD8_trans", "JKnc_neutro", "JKnc_neutro_cis",
-"JKnc_neutro_trans", "WESTRAng_blood", "WESTRAng_blood_cis",
-"WESTRAng_blood_trans", "JK_nk", "JK_nk_cis", "JK_nk_trans",
-"GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
-"GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
-"GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
-"GTEx_V4_Lung", "GTEx_V4_Muscle_Skeletal", "GTEx_V4_Nerve_Tibial",
-"GTEx_V4_Skin_Sun_Exposed_Lower_leg", "GTEx_V4_Stomach",
-"GTEx_V4_Thyroid",
-"GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14", "eQTLdb_LPS2",
-"eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL, include.HiC =
-c(NA,
-"Monocytes", "Macrophages_M0", "Macrophages_M1", "Macrophages_M2",
-"Neutrophils", "Megakaryocytes", "Endothelial_precursors",
-"Erythroblasts",
-"Fetal_thymus", "Naive_CD4_T_cells", "Total_CD4_T_cells",
-"Activated_total_CD4_T_cells", "Nonactivated_total_CD4_T_cells",
-"Naive_CD8_T_cells", "Total_CD8_T_cells", "Naive_B_cells",
-"Total_B_cells",
-"PE.Monocytes", "PE.Macrophages_M0", "PE.Macrophages_M1",
-"PE.Macrophages_M2",
-"PE.Neutrophils", "PE.Megakaryocytes", "PE.Erythroblasts",
-"PE.Naive_CD4_T_cells", "PE.Naive_CD8_T_cells"),
-cdf.function = c("empirical", "exponential"), relative.importance =
-c(1/3,
-1/3, 1/3), scoring.scheme = c("max", "sum", "sequential"),
-network = c("STRING_highest", "STRING_high", "STRING_medium",
-"STRING_low",
-"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
-"PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
-"PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
-"PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD", "KEGG", "KEGG_metabolism", "KEGG_genetic",
-"KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
-"KEGG_disease",
-"REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
-"cooccurence_score", "coexpression_score", "experimental_score",
-"database_score", "textmining_score")[1], weighted = FALSE,
-network.customised = NULL, seeds.inclusive = TRUE,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.7,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
+significance.threshold = 5e-05, score.cap = 10,
+distance.max = 2000, decay.kernel = c("slow", "constant", "linear",
+"rapid"), decay.exponent = 2, GR.SNP = c("dbSNP_GWAS",
+"dbSNP_Common", "dbSNP_Single"), GR.Gene = c("UCSC_knownGene",
+"UCSC_knownCanonical"), include.TAD = c("none", "GM12878", "IMR90",
+"MSC", "TRO", "H1", "MES", "NPC"), include.eQTL = NA,
+eQTL.customised = NULL, include.HiC = NA,
+cdf.function = c("empirical", "exponential"),
+relative.importance = c(1/3, 1/3, 1/3), scoring.scheme = c("max",
+"sum", "sequential"), network = c("STRING_highest", "STRING_high",
+"STRING_medium", "STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
+"PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
+"PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
+"PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
+"PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
+"KEGG_genetic", "KEGG_environmental", "KEGG_cellular",
+"KEGG_organismal",
+"KEGG_disease", "REACTOME"), STRING.only = c(NA, "neighborhood_score",
+"fusion_score", "cooccurence_score", "coexpression_score",
+"experimental_score", "database_score", "textmining_score")[1],
+weighted = FALSE, network.customised = NULL,
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.7, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -150,10 +117,9 @@ region will be kept). TAD datasets can be one of "GM12878"
 (mesendoderm) and "NPC" (neural progenitor cell). Explanations can be
 found at \url{http://dx.doi.org/10.1016/j.celrep.2016.10.061}}
 
-\item{include.eQTL}{genes modulated by eQTL (also Lead SNPs or in LD
-with Lead SNPs) are also included. By default, it is 'NA' to disable
-this option. Otherwise, those genes modulated by eQTL will be included.
-Pre-built eQTL datasets are detailed in the section 'Note'}
+\item{include.eQTL}{the eQTL supported currently. By default, it is
+'NA' to disable this option. Pre-built eQTL datasets are detailed in
+\code{\link{xDefineEQTL}}}
 
 \item{eQTL.customised}{a user-input matrix or data frame with 4
 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, 3rd for eQTL
@@ -166,8 +132,8 @@ populate built-in eQTL data}
 \item{include.HiC}{genes linked to input SNPs are also included. By
 default, it is 'NA' to disable this option. Otherwise, those genes
 linked to SNPs will be included according to Promoter Capture HiC
-(PCHiC) datasets. Pre-built HiC datasets are detailed in the section
-'Note'}
+(PCHiC) datasets. Pre-built HiC datasets are detailed in
+\code{\link{xDefineHIC}}}
 
 \item{cdf.function}{a character specifying a Cumulative Distribution
 Function (cdf). It can be one of 'exponential' based on exponential
@@ -269,12 +235,7 @@ output affinity matrix have the same quantiles}
 multicores is used. By default, it sets to true, but not necessarily
 does so. Partly because parallel backends available will be
 system-specific (now only Linux or Mac OS). Also, it will depend on
-whether these two packages "foreach" and "doMC" have been installed. It
-can be installed via:
-\code{if (!requireNamespace("BiocManager", quietly=TRUE));
-    install.packages("BiocManager");
-BiocManager::install(c("foreach","doMC"))}. If not yet installed, this option will
-be disabled}
+whether these two packages "foreach" and "doMC" have been installed}
 
 \item{multicores}{an integer to specify how many cores will be
 registered as the multicore parallel backend to the 'foreach' package.
@@ -344,242 +305,6 @@ priority score is the affinity score estimated by Random Walk with
 Restart (RWR), measured as the affinity of all nodes in the graph to
 the seeds.}
 }
-Pre-built eQTL datasets are described below according to the data
-sources.\cr
-1. Context-specific eQTLs in monocytes: resting and activating states.
-Sourced from Science 2014, 343(6175):1246949
-\itemize{
-\item{\code{JKscience_TS2A}: cis-eQTLs in either state (based on 228
-individuals with expression data available for all experimental
-conditions).}
-\item{\code{JKscience_TS2A_CD14}: cis-eQTLs only in the resting/CD14+
-state (based on 228 individuals).}
-\item{\code{JKscience_TS2A_LPS2}: cis-eQTLs only in the activating
-state induced by 2-hour LPS (based on 228 individuals).}
-\item{\code{JKscience_TS2A_LPS24}: cis-eQTLs only in the activating
-state induced by 24-hour LPS (based on 228 individuals).}
-\item{\code{JKscience_TS2A_IFN}: cis-eQTLs only in the activating state
-induced by 24-hour interferon-gamma (based on 228 individuals).}
-\item{\code{JKscience_TS2B}: cis-eQTLs in either state (based on 432
-individuals).}
-\item{\code{JKscience_TS2B_CD14}: cis-eQTLs only in the resting/CD14+
-state (based on 432 individuals).}
-\item{\code{JKscience_TS2B_LPS2}: cis-eQTLs only in the activating
-state induced by 2-hour LPS (based on 432 individuals).}
-\item{\code{JKscience_TS2B_LPS24}: cis-eQTLs only in the activating
-state induced by 24-hour LPS (based on 432 individuals).}
-\item{\code{JKscience_TS2B_IFN}: cis-eQTLs only in the activating state
-induced by 24-hour interferon-gamma (based on 432 individuals).}
-\item{\code{JKscience_TS3A}: trans-eQTLs in either state.}
-\item{\code{JKscience_CD14}: cis and trans-eQTLs in the resting/CD14+
-state (based on 228 individuals).}
-\item{\code{JKscience_LPS2}: cis and trans-eQTLs in the activating
-state induced by 2-hour LPS (based on 228 individuals).}
-\item{\code{JKscience_LPS24}: cis and trans-eQTLs in the activating
-state induced by 24-hour LPS (based on 228 individuals).}
-\item{\code{JKscience_IFN}: cis and trans-eQTLs in the activating state
-induced by 24-hour interferon-gamma (based on 228 individuals).}
-}
-2. eQTLs in B cells. Sourced from Nature Genetics 2012, 44(5):502-510
-\itemize{
-\item{\code{JKng_bcell}: cis- and trans-eQTLs.}
-\item{\code{JKng_bcell_cis}: cis-eQTLs only.}
-\item{\code{JKng_bcell_trans}: trans-eQTLs only.}
-}
-3. eQTLs in monocytes. Sourced from Nature Genetics 2012, 44(5):502-510
-\itemize{
-\item{\code{JKng_mono}: cis- and trans-eQTLs.}
-\item{\code{JKng_mono_cis}: cis-eQTLs only.}
-\item{\code{JKng_mono_trans}: trans-eQTLs only.}
-}
-4. eQTLs in neutrophils. Sourced from Nature Communications 2015,
-7(6):7545
-\itemize{
-\item{\code{JKnc_neutro}: cis- and trans-eQTLs.}
-\item{\code{JKnc_neutro_cis}: cis-eQTLs only.}
-\item{\code{JKnc_neutro_trans}: trans-eQTLs only.}
-}
-5. eQTLs in NK cells. Unpublished
-\itemize{
-\item{\code{JK_nk}: cis- and trans-eQTLs.}
-\item{\code{JK_nk_cis}: cis-eQTLs only.}
-\item{\code{JK_nk_trans}: trans-eQTLs only.}
-}
-6. Tissue-specific eQTLs from GTEx (version 4; incuding 13 tissues).
-Sourced from Science 2015, 348(6235):648-60
-\itemize{
-\item{\code{GTEx_V4_Adipose_Subcutaneous}: cis-eQTLs in tissue 'Adipose
-Subcutaneous'.}
-\item{\code{GTEx_V4_Artery_Aorta}: cis-eQTLs in tissue 'Artery Aorta'.}
-\item{\code{GTEx_V4_Artery_Tibial}: cis-eQTLs in tissue 'Artery
-Tibial'.}
-\item{\code{GTEx_V4_Esophagus_Mucosa}: cis-eQTLs in tissue 'Esophagus
-Mucosa'.}
-\item{\code{GTEx_V4_Esophagus_Muscularis}: cis-eQTLs in tissue
-'Esophagus Muscularis'.}
-\item{\code{GTEx_V4_Heart_Left_Ventricle}: cis-eQTLs in tissue 'Heart
-Left Ventricle'.}
-\item{\code{GTEx_V4_Lung}: cis-eQTLs in tissue 'Lung'.}
-\item{\code{GTEx_V4_Muscle_Skeletal}: cis-eQTLs in tissue 'Muscle
-Skeletal'.}
-\item{\code{GTEx_V4_Nerve_Tibial}: cis-eQTLs in tissue 'Nerve Tibial'.}
-\item{\code{GTEx_V4_Skin_Sun_Exposed_Lower_leg}: cis-eQTLs in tissue
-'Skin Sun Exposed Lower leg'.}
-\item{\code{GTEx_V4_Stomach}: cis-eQTLs in tissue 'Stomach'.}
-\item{\code{GTEx_V4_Thyroid}: cis-eQTLs in tissue 'Thyroid'.}
-\item{\code{GTEx_V4_Whole_Blood}: cis-eQTLs in tissue 'Whole Blood'.}
-}
-7. eQTLs in CD4 T cells. Sourced from PLoS Genetics 2017
-\itemize{
-\item{\code{JKpg_CD4}: cis- and trans-eQTLs.}
-\item{\code{JKpg_CD4_cis}: cis-eQTLs only.}
-\item{\code{JKpg_CD4_trans}: trans-eQTLs only.}
-}
-8. eQTLs in CD8 T cells. Sourced from PLoS Genetics 2017
-\itemize{
-\item{\code{JKpg_CD8}: cis- and trans-eQTLs.}
-\item{\code{JKpg_CD8_cis}: cis-eQTLs only.}
-\item{\code{JKpg_CD8_trans}: trans-eQTLs only.}
-}
-9. eQTLs in blood. Sourced from Nature Genetics 2013, 45(10):1238-1243
-\itemize{
-\item{\code{WESTRAng_blood}: cis- and trans-eQTLs.}
-\item{\code{WESTRAng_blood_cis}: cis-eQTLs only.}
-\item{\code{WESTRAng_blood_trans}: trans-eQTLs only.}
-}
-10. Tissue-specific eQTLs from GTEx (version 6p; including 44 tissues).
-Sourced from http://www.biorxiv.org/content/early/2016/09/09/074450
-\itemize{
-\item{\code{GTEx_V6p_Adipose_Subcutaneous}: cis-eQTLs in tissue
-"Adipose Subcutaneous".}
-\item{\code{GTEx_V6p_Adipose_Visceral_Omentum}: cis-eQTLs in tissue
-"Adipose Visceral (Omentum)".}
-\item{\code{GTEx_V6p_Adrenal_Gland}: cis-eQTLs in tissue "Adrenal
-Gland".}
-\item{\code{GTEx_V6p_Artery_Aorta}: cis-eQTLs in tissue "Artery
-Aorta".}
-\item{\code{GTEx_V6p_Artery_Coronary}: cis-eQTLs in tissue "Artery
-Coronary".}
-\item{\code{GTEx_V6p_Artery_Tibial}: cis-eQTLs in tissue "Artery
-Tibial".}
-\item{\code{GTEx_V6p_Brain_Anterior_cingulate_cortex_BA24}: cis-eQTLs
-in tissue "Brain Anterior cingulate cortex (BA24)".}
-\item{\code{GTEx_V6p_Brain_Caudate_basal_ganglia}: cis-eQTLs in tissue
-"Brain Caudate (basal ganglia)".}
-\item{\code{GTEx_V6p_Brain_Cerebellar_Hemisphere}: cis-eQTLs in tissue
-"Brain Cerebellar Hemisphere".}
-\item{\code{GTEx_V6p_Brain_Cerebellum}: cis-eQTLs in tissue "Brain
-Cerebellum".}
-\item{\code{GTEx_V6p_Brain_Cortex}: cis-eQTLs in tissue "Brain
-Cortex".}
-\item{\code{GTEx_V6p_Brain_Frontal_Cortex_BA9}: cis-eQTLs in tissue
-"Brain Frontal Cortex (BA9)".}
-\item{\code{GTEx_V6p_Brain_Hippocampus}: cis-eQTLs in tissue "Brain
-Hippocampus".}
-\item{\code{GTEx_V6p_Brain_Hypothalamus}: cis-eQTLs in tissue "Brain
-Hypothalamus".}
-\item{\code{GTEx_V6p_Brain_Nucleus_accumbens_basal_ganglia}: cis-eQTLs
-in tissue "Brain Nucleus accumbens (basal ganglia)".}
-\item{\code{GTEx_V6p_Brain_Putamen_basal_ganglia}: cis-eQTLs in tissue
-"Brain Putamen (basal ganglia)".}
-\item{\code{GTEx_V6p_Breast_Mammary_Tissue}: cis-eQTLs in tissue
-"Breast Mammary Tissue".}
-\item{\code{GTEx_V6p_Cells_EBVtransformed_lymphocytes}: cis-eQTLs in
-tissue "Cells EBV-transformed lymphocytes".}
-\item{\code{GTEx_V6p_Cells_Transformed_fibroblasts}: cis-eQTLs in
-tissue "Cells Transformed fibroblasts".}
-\item{\code{GTEx_V6p_Colon_Sigmoid}: cis-eQTLs in tissue "Colon
-Sigmoid".}
-\item{\code{GTEx_V6p_Colon_Transverse}: cis-eQTLs in tissue "Colon
-Transverse".}
-\item{\code{GTEx_V6p_Esophagus_Gastroesophageal_Junction}: cis-eQTLs in
-tissue "Esophagus Gastroesophageal Junction".}
-\item{\code{GTEx_V6p_Esophagus_Mucosa}: cis-eQTLs in tissue "Esophagus
-Mucosa".}
-\item{\code{GTEx_V6p_Esophagus_Muscularis}: cis-eQTLs in tissue
-"Esophagus Muscularis".}
-\item{\code{GTEx_V6p_Heart_Atrial_Appendage}: cis-eQTLs in tissue
-"Heart Atrial Appendage".}
-\item{\code{GTEx_V6p_Heart_Left_Ventricle}: cis-eQTLs in tissue "Heart
-Left Ventricle".}
-\item{\code{GTEx_V6p_Liver}: cis-eQTLs in tissue "Liver".}
-\item{\code{GTEx_V6p_Lung}: cis-eQTLs in tissue "Lung".}
-\item{\code{GTEx_V6p_Muscle_Skeletal}: cis-eQTLs in tissue "Muscle
-Skeletal".}
-\item{\code{GTEx_V6p_Nerve_Tibial}: cis-eQTLs in tissue "Nerve
-Tibial".}
-\item{\code{GTEx_V6p_Ovary}: cis-eQTLs in tissue "Ovary".}
-\item{\code{GTEx_V6p_Pancreas}: cis-eQTLs in tissue "Pancreas".}
-\item{\code{GTEx_V6p_Pituitary}: cis-eQTLs in tissue "Pituitary".}
-\item{\code{GTEx_V6p_Prostate}: cis-eQTLs in tissue "Prostate".}
-\item{\code{GTEx_V6p_Skin_Not_Sun_Exposed_Suprapubic}: cis-eQTLs in
-tissue "Skin Not Sun Exposed (Suprapubic)".}
-\item{\code{GTEx_V6p_Skin_Sun_Exposed_Lower_leg}: cis-eQTLs in tissue
-"Skin Sun Exposed (Lower leg)".}
-\item{\code{GTEx_V6p_Small_Intestine_Terminal_Ileum}: cis-eQTLs in
-tissue "Small Intestine Terminal Ileum".}
-\item{\code{GTEx_V6p_Spleen}: cis-eQTLs in tissue "Spleen".}
-\item{\code{GTEx_V6p_Stomach}: cis-eQTLs in tissue "Stomach".}
-\item{\code{GTEx_V6p_Testis}: cis-eQTLs in tissue "Testis".}
-\item{\code{GTEx_V6p_Thyroid}: cis-eQTLs in tissue "Thyroid".}
-\item{\code{GTEx_V6p_Uterus}: cis-eQTLs in tissue "Uterus".}
-\item{\code{GTEx_V6p_Vagina}: cis-eQTLs in tissue "Vagina".}
-\item{\code{GTEx_V6p_Whole_Blood}: cis-eQTLs in tissue "Whole Blood".}
-}
-Pre-built HiC datasets are described below according to the data
-sources.\cr
-1. Promoter Capture HiC datasets in 17 primary blood cell types.
-Sourced from Cell 2016, 167(5):1369-1384.e19
-\itemize{
-\item{\code{Monocytes}: physical interactions (CHiCAGO score >=5) of
-promoters (baits) with the other end (preys) in Monocytes.}
-\item{\code{Macrophages_M0}: promoter interactomes in Macrophages M0.}
-\item{\code{Macrophages_M1}: promoter interactomes in Macrophages M1.}
-\item{\code{Macrophages_M2}: promoter interactomes in Macrophages M2.}
-\item{\code{Neutrophils}: promoter interactomes in Neutrophils.}
-\item{\code{Megakaryocytes}: promoter interactomes in Megakaryocytes.}
-\item{\code{Endothelial_precursors}: promoter interactomes in
-Endothelial precursors.}
-\item{\code{Fetal_thymus}: promoter interactomes in Fetal thymus.}
-\item{\code{Naive_CD4_T_cells}: promoter interactomes in Naive CD4+ T
-cells.}
-\item{\code{Total_CD4_T_cells}: promoter interactomes in Total CD4+ T
-cells.}
-\item{\code{Activated_total_CD4_T_cells}: promoter interactomes in
-Activated total CD4+ T cells.}
-\item{\code{Nonactivated_total_CD4_T_cells}: promoter interactomes in
-Nonactivated total CD4+ T cells.}
-\item{\code{Naive_CD8_T_cells}: promoter interactomes in Naive CD8+ T
-cells.}
-\item{\code{Total_CD8_T_cells}: promoter interactomes in Total CD8+ T
-cells.}
-\item{\code{Naive_B_cells}: promoter interactomes in Naive B cells.}
-\item{\code{Total_B_cells}: promoter interactomes in Total B cells.}
-}
-2. Promoter Capture HiC datasets (involving active promoters and
-enhancers) in 9 primary blood cell types. Sourced from Cell 2016,
-167(5):1369-1384.e19
-\itemize{
-\item{\code{PE.Monocytes}: physical interactions (CHiCAGO score >=5) of
-promoters (baits) with the other end (enhancers as preys) in
-Monocytes.}
-\item{\code{PE.Macrophages_M0}: promoter-enhancer interactomes in
-Macrophages M0.}
-\item{\code{PE.Macrophages_M1}: promoter-enhancer interactomes in
-Macrophages M1.}
-\item{\code{PE.Macrophages_M2}: promoter-enhancer interactomes in
-Macrophages M2.}
-\item{\code{PE.Neutrophils}: promoter-enhancer interactomes in
-Neutrophils.}
-\item{\code{PE.Megakaryocytes}: promoter-enhancer interactomes in
-Megakaryocytes.}
-\item{\code{PE.Erythroblasts}: promoter-enhancer interactomes in
-Erythroblasts.}
-\item{\code{PE.Naive_CD4_T_cells}: promoter-enhancer interactomes in
-Naive CD4+ T cells.}
-\item{\code{PE.Naive_CD8_T_cells}: promoter-enhancer interactomes in
-Naive CD8+ T cells.}
-}
 }
 \examples{
 \dontrun{
@@ -587,15 +312,11 @@ Naive CD8+ T cells.}
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 
 \dontrun{
 # a) provide the SNPs with the significance info
-## get lead SNPs reported in AS GWAS and their significance info (p-values)
-#data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
-#AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
-RData.location=RData.location)
+data(ImmunoBase)
 gr <- ImmunoBase$AS$variants
 AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
 

@@ -5,12 +5,12 @@
 \title{Function to visualise evidence for prioritised genes in a gene network}
 \usage{
 xVisEvidence(xTarget, g = NA, nodes = NULL, node.info = c("smart",
-"none"), neighbor.order = 1, neighbor.seed = TRUE, neighbor.top = NULL,
-largest.comp = TRUE, show = TRUE, colormap = "ggplot2",
-legend.position = "topleft", legend.horiz = FALSE, mtext.side = 3,
-verbose = TRUE, edge.width = NULL, vertex.size = NULL,
-vertex.size.nonseed = NULL, vertex.label.color = "blue",
-vertex.label.color.nonseed = NULL, ...)
+"none"), neighbor.order = 1, neighbor.seed = TRUE,
+neighbor.top = NULL, largest.comp = TRUE, show = TRUE,
+colormap = "ggplot2", legend.position = "topleft",
+legend.horiz = FALSE, mtext.side = 3, verbose = TRUE,
+edge.width = NULL, vertex.size = NULL, vertex.size.nonseed = NULL,
+vertex.label.color = "blue", vertex.label.color.nonseed = NULL, ...)
 }
 \arguments{
 \item{xTarget}{an object of class "dTarget", "sTarget" or "eTarget"}
@@ -92,7 +92,7 @@ genes in a gene network. It returns an object of class "igraph".
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 ## TNFRSF1A
 xVisEvidence(xTarget, nodes="TNFRSF1A", neighbor.order=1,

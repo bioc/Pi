@@ -18,8 +18,7 @@ using dot plot. It returns an object of class &quot;ggplot&quot;.
 
 <pre>
 xMLdotplot(sTarget, displayBy = c("importance2fold", "roc2fold",
-"fmax2fold",
-"importance_accurancy", "importance_gini", "ROC", "Fmax"),
+"fmax2fold", "importance_accurancy", "importance_gini", "ROC", "Fmax"),
 font.family = "sans", signature = TRUE)
 </pre>
 
@@ -80,7 +79,7 @@ used to draw this graph</p>
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 gp &lt;- xMLdotplot(sTarget, displayBy="importance_accurancy")
 gp

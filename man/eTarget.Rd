@@ -29,7 +29,7 @@ an object of S3 class \code{eTarget}
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 eTarget(evidence, metag)
 }

@@ -5,8 +5,9 @@
 \title{Function to implement Random Walk with Restart (RWR) on the input graph}
 \usage{
 xRWR(g, normalise = c("laplacian", "row", "column", "none"),
-setSeeds = NULL, restart = 0.75, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE)
+setSeeds = NULL, restart = 0.75,
+normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
+multicores = NULL, verbose = TRUE)
 }
 \arguments{
 \item{g}{an object of class "igraph" or "graphNEL"}
@@ -48,11 +49,7 @@ output affinity matrix have the same quantiles}
 \item{parallel}{logical to indicate whether parallel computation with
 multicores is used. By default, it sets to true, but not necessarily
 does so. It will depend on whether these two packages "foreach" and
-"doParallel" have been installed. It can be installed via:
-\code{if (!requireNamespace("BiocManager", quietly=TRUE));
-    install.packages("BiocManager");
-BiocManager::install(c("foreach","doParallel"))}. If not yet installed, this option
-will be disabled}
+"doParallel" have been installed}
 
 \item{multicores}{an integer to specify how many cores will be
 registered as the multicore parallel backend to the 'foreach' package.

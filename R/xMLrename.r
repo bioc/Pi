@@ -15,7 +15,7 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' old_names <- colnames(sTarget$predictor)[-c(1,2)]
 #' new_names <- c('Annotation_disease genes (dGenes)', 'Annotation_phenotype genes (pGenes)', 'Annotation_function genes (fGenes)', 'nearbyGenes_nearby genes (nGenes)', 'eQTL_eQTL: resting state (CD14+)', 'eQTL_eQTL: activating state (CD14+ by LPS2h)', 'eQTL_eQTL: activating state (CD14+ by LPS24h)', 'eQTL_eQTL: activating state (CD14+ by IFN24h)', 'eQTL_eQTL: B cells', 'eQTL_eQTL: monocytes', 'eQTL_eQTL: CD4+ T cells', 'eQTL_eQTL: CD8+ T cells', 'eQTL_eQTL: neutrophils', 'eQTL_eQTL: NK cells','eQTL_eQTL: peripheral blood', 'HiC_Hi-C: monocytes', 'HiC_Hi-C: macrophages (M0)', 'HiC_Hi-C: macrophages (M1)', 'HiC_Hi-C: macrophages (M2)', 'HiC_Hi-C: neutrophils', 'HiC_Hi-C: CD4+ T cells (naive)', 'HiC_Hi-C: CD4+ T cells (total)', 'HiC_Hi-C: CD8+ T cells (naive)', 'HiC_Hi-C: CD8+ T cells (total)', 'HiC_Hi-C: B cells (naive)', 'HiC_Hi-C: B cells (total)')

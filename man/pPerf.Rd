@@ -39,7 +39,7 @@ ROC_perf, PR_perf, Pred_obj.
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 pPerf(PRS, AUROC, Fmax, ROC_perf, PR_perf, Pred_obj)
 }

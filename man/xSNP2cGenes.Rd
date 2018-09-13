@@ -6,18 +6,7 @@
 \usage{
 xSNP2cGenes(data, entity = c("SNP", "chr:start-end", "data.frame",
 "bed",
-"GRanges"), include.HiC = c(NA, "Monocytes", "Macrophages_M0",
-"Macrophages_M1", "Macrophages_M2", "Neutrophils", "Megakaryocytes",
-"Endothelial_precursors", "Erythroblasts", "Fetal_thymus",
-"Naive_CD4_T_cells", "Total_CD4_T_cells",
-"Activated_total_CD4_T_cells",
-"Nonactivated_total_CD4_T_cells", "Naive_CD8_T_cells",
-"Total_CD8_T_cells",
-"Naive_B_cells", "Total_B_cells", "PE.Monocytes", "PE.Macrophages_M0",
-"PE.Macrophages_M1", "PE.Macrophages_M2", "PE.Neutrophils",
-"PE.Megakaryocytes", "PE.Erythroblasts", "PE.Naive_CD4_T_cells",
-"PE.Naive_CD8_T_cells", "Combined", "Combined_PE"), GR.SNP =
-c("dbSNP_GWAS",
+"GRanges"), include.HiC = NA, GR.SNP = c("dbSNP_GWAS",
 "dbSNP_Common"), cdf.function = c("empirical", "exponential"),
 plot = FALSE, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
@@ -36,8 +25,8 @@ use, it can also be one of "chr:start-end", "data.frame", "bed" or
 \item{include.HiC}{genes linked to input SNPs are also included. By
 default, it is 'NA' to disable this option. Otherwise, those genes
 linked to SNPs will be included according to Promoter Capture HiC
-(PCHiC) datasets. Pre-built HiC datasets are detailed in the section
-'Note'}
+(PCHiC) datasets. Pre-built HiC datasets are detailed in
+\code{\link{xDefineHIC}}}
 
 \item{GR.SNP}{the genomic regions of SNPs. By default, it is
 'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS
@@ -80,65 +69,7 @@ SNPs. The HiC weight is calcualted as Cumulative Distribution Function
 of HiC interaction scores.
 }
 \note{
-Pre-built HiC datasets are described below according to the data
-sources.\cr
-1. Promoter Capture HiC datasets in 17 primary blood cell types.
-Sourced from Cell 2016, 167(5):1369-1384.e19
-\itemize{
-\item{\code{Monocytes}: physical interactions (CHiCAGO score >=5) of
-promoters (baits) with the other end (preys) in Monocytes.}
-\item{\code{Macrophages_M0}: promoter interactomes in Macrophages M0.}
-\item{\code{Macrophages_M1}: promoter interactomes in Macrophages M1.}
-\item{\code{Macrophages_M2}: promoter interactomes in Macrophages M2.}
-\item{\code{Neutrophils}: promoter interactomes in Neutrophils.}
-\item{\code{Megakaryocytes}: promoter interactomes in Megakaryocytes.}
-\item{\code{Endothelial_precursors}: promoter interactomes in
-Endothelial precursors.}
-\item{\code{Erythroblasts}: promoter interactomes in Erythroblasts.}
-\item{\code{Fetal_thymus}: promoter interactomes in Fetal thymus.}
-\item{\code{Naive_CD4_T_cells}: promoter interactomes in Naive CD4+ T
-cells.}
-\item{\code{Total_CD4_T_cells}: promoter interactomes in Total CD4+ T
-cells.}
-\item{\code{Activated_total_CD4_T_cells}: promoter interactomes in
-Activated total CD4+ T cells.}
-\item{\code{Nonactivated_total_CD4_T_cells}: promoter interactomes in
-Nonactivated total CD4+ T cells.}
-\item{\code{Naive_CD8_T_cells}: promoter interactomes in Naive CD8+ T
-cells.}
-\item{\code{Total_CD8_T_cells}: promoter interactomes in Total CD8+ T
-cells.}
-\item{\code{Naive_B_cells}: promoter interactomes in Naive B cells.}
-\item{\code{Total_B_cells}: promoter interactomes in Total B cells.}
-\item{\code{Combined}: promoter interactomes combined above; with score
-for the number of significant cell types plus scaled average.}
-}
-2. Promoter Capture HiC datasets (involving active promoters and
-enhancers) in 9 primary blood cell types. Sourced from Cell 2016,
-167(5):1369-1384.e19
-\itemize{
-\item{\code{PE.Monocytes}: physical interactions (CHiCAGO score >=5) of
-promoters (baits) with the other end (enhancers as preys) in
-Monocytes.}
-\item{\code{PE.Macrophages_M0}: promoter-enhancer interactomes in
-Macrophages M0.}
-\item{\code{PE.Macrophages_M1}: promoter-enhancer interactomes in
-Macrophages M1.}
-\item{\code{PE.Macrophages_M2}: promoter-enhancer interactomes in
-Macrophages M2.}
-\item{\code{PE.Neutrophils}: promoter-enhancer interactomes in
-Neutrophils.}
-\item{\code{PE.Megakaryocytes}: promoter-enhancer interactomes in
-Megakaryocytes.}
-\item{\code{PE.Erythroblasts}: promoter-enhancer interactomes in
-Erythroblasts.}
-\item{\code{PE.Naive_CD4_T_cells}: promoter-enhancer interactomes in
-Naive CD4+ T cells.}
-\item{\code{PE.Naive_CD8_T_cells}: promoter-enhancer interactomes in
-Naive CD8+ T cells.}
-\item{\code{Combined_PE}: promoter interactomes combined above; with
-score for the number of significant cell types plus scaled average.}
-}
+none
 }
 \examples{
 \dontrun{
@@ -146,14 +77,10 @@ score for the number of significant cell types plus scaled average.}
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
-## get lead SNPs reported in AS GWAS and their significance info (p-values)
-#data.file <- "http://galahad.well.ox.ac.uk/bigdata/AS.txt"
-#AS <- read.delim(data.file, header=TRUE, stringsAsFactors=FALSE)
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
-RData.location=RData.location)
+data(ImmunoBase)
 data <- names(ImmunoBase$AS$variants)
 
 # b) define HiC genes
@@ -162,5 +89,5 @@ RData.location=RData.location)
 }
 }
 \seealso{
-\code{\link{xSNPhic}}
+\code{\link{xRDataLoader}}
 }

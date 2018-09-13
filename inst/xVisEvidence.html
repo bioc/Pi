@@ -18,12 +18,12 @@ genes in a gene network. It returns an object of class &quot;igraph&quot;.
 
 <pre>
 xVisEvidence(xTarget, g = NA, nodes = NULL, node.info = c("smart",
-"none"), neighbor.order = 1, neighbor.seed = TRUE, neighbor.top = NULL,
-largest.comp = TRUE, show = TRUE, colormap = "ggplot2",
-legend.position = "topleft", legend.horiz = FALSE, mtext.side = 3,
-verbose = TRUE, edge.width = NULL, vertex.size = NULL,
-vertex.size.nonseed = NULL, vertex.label.color = "blue",
-vertex.label.color.nonseed = NULL, ...)
+"none"), neighbor.order = 1, neighbor.seed = TRUE,
+neighbor.top = NULL, largest.comp = TRUE, show = TRUE,
+colormap = "ggplot2", legend.position = "topleft",
+legend.horiz = FALSE, mtext.side = 3, verbose = TRUE,
+edge.width = NULL, vertex.size = NULL, vertex.size.nonseed = NULL,
+vertex.label.color = "blue", vertex.label.color.nonseed = NULL, ...)
 </pre>
 
 
@@ -160,7 +160,7 @@ each vertex has the size proportional to the degree of nodes</p>
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 ## TNFRSF1A
 xVisEvidence(xTarget, nodes="TNFRSF1A", neighbor.order=1,

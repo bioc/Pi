@@ -16,8 +16,7 @@
 #' @param ... additional graphic parameters. If the type of visualisation is 'net', see \code{\link{xVisNet}}; if the visualisation type is 'evidence', see \code{\link{xVisEvidence}}
 #' @return
 #' a subgraph, an object of class "igraph".
-#' @note If vis is 'pathview', it will depend on whether a package "pathview" has been installed. It can be installed via: \code{if (!requireNamespace("BiocManager", quietly=TRUE)); BiocManager::install("pathview")}.
-    install.packages("BiocManager"); BiocManager::install("pathview")}.
+#' @note If vis is 'pathview', it will depend on whether a package "pathview" has been installed. It can be installed via: \code{BiocManager::install("pathview")}.
 #' @export
 #' @seealso \code{\link{xVisNet}}, \code{\link{xVisEvidence}}
 #' @include xPierKEGG.r
@@ -26,7 +25,7 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' ## evidence
 #' xPierKEGG(xTarget, hsa="hsa04621", vis="evidence", RData.location=RData.location)

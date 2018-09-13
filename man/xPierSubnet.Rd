@@ -16,7 +16,10 @@ xPierSubnet(pNode, priority.quantile = 0.1, network = c(NA,
 "REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
 "cooccurence_score", "coexpression_score", "experimental_score",
 "database_score", "textmining_score")[1], network.customised = NULL,
-subnet.significance = 0.01, subnet.size = NULL, verbose = TRUE,
+subnet.significance = 0.01, subnet.size = NULL,
+test.permutation = FALSE, num.permutation = 100,
+respect = c("none", "degree"), aggregateBy = c("Ztransform",
+"fishers", "logistic", "orderStatistic"), verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -94,6 +97,29 @@ leading to the desired number of nodes in the resulting subnet.
 Notably, the given significance threshold will be overwritten by this
 option}
 
+\item{test.permutation}{logical to indicate whether the permutation
+test is perform to estimate the significance of identified network with
+the same number of nodes. By default, it sets to false}
+
+\item{num.permutation}{the number of permutations generating the null
+distribution of the identified network}
+
+\item{respect}{how to respect nodes to be sampled. It can be one of
+'none' (randomly sampling) and 'degree' (degree-preserving sampling)}
+
+\item{aggregateBy}{the aggregate method used to aggregate edge
+confidence p-values. It can be either "orderStatistic" for the method
+based on the order statistics of p-values, or "fishers" for Fisher's
+method, "Ztransform" for Z-transform method, "logistic" for the
+logistic method. Without loss of generality, the Z-transform method
+does well in problems where evidence against the combined null is
+spread widely (equal footings) or when the total evidence is weak;
+Fisher's method does best in problems where the evidence is
+concentrated in a relatively small fraction of the individual tests or
+when the evidence is at least moderately strong; the logistic method
+provides a compromise between these two. Notably, the aggregate methods
+'Ztransform' and 'logistic' are preferred here}
+
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}
 
@@ -103,7 +129,8 @@ RData files. See \code{\link{xRDataLoader}} for details}
 \value{
 a subgraph with a maximum score, an object of class "igraph". It has
 ndoe attributes: signficance, score, type, priority (part of the
-"pNode" object)
+"pNode" object). If permutation test is enabled, it also has a graph
+attribute (combinedP) and an edge attribute (edgeConfidence)
 }
 \description{
 \code{xPierSubnet} is supposed to identify maximum-scoring gene
@@ -131,7 +158,7 @@ genes is much higher.
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)

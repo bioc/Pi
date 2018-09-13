@@ -54,7 +54,7 @@ returns an object of class "ggplot".
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 gp <- xPieplot(df,
 columns=c('dGene','pGene','fGene','nGene','eGene','cGene'),

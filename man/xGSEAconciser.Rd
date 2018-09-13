@@ -32,7 +32,7 @@ meets both criteria: 1) |A&B| > 0.9*|B|; and 2) |A&B| > 0.5*|A|.
 none
 }
 \examples{
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 eGSEA_concise <- xGSEAconciser(eGSEA)
 }

@@ -20,7 +20,7 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' gp <- xMLzoom(sTarget)
 #' gp
@@ -58,7 +58,7 @@ xMLzoom <- function(xTarget, top=20, top.label.type=c("box","text"), top.label.s
 	gp <- ggplot(df, aes(x=Score, y=GS, color=GS)) + geom_point(alpha=0.95,shape=point.shape)
 	gp <- gp + scale_color_manual(values=color)
 	gp <- gp + theme_bw() + theme(legend.position="none", legend.title=element_blank(), axis.title.y=element_blank(), axis.text.y=element_text(size=12,face='bold'), axis.title.x=element_text(size=14,color="black",face="bold"))
-	gp <- gp + xlab("Composite scores\n(5-star ratings quantifying separation between GSP and GSN)")
+	gp <- gp + xlab("Pi rating\n(quantifying separation between GSP and GSN)")
     
     ## zoom
     gp <- gp + ggforce::facet_zoom(x=(Score>=top_cutoff), zoom.data=(Score>=top_cutoff), zoom.size=1.5, show.area=TRUE)

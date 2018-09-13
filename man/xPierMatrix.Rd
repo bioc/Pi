@@ -5,10 +5,9 @@
 \title{Function to extract priority or evidence matrix from a list of pNode objects}
 \usage{
 xPierMatrix(list_pNode, displayBy = c("score", "rank", "weight",
-"pvalue",
-"evidence"), combineBy = c("union", "intersect"), aggregateBy =
-c("none",
-"fishers", "logistic", "Ztransform", "orderStatistic"), verbose = TRUE,
+"pvalue", "evidence"), combineBy = c("union", "intersect"),
+aggregateBy = c("none", "fishers", "logistic", "Ztransform",
+"orderStatistic"), verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -91,7 +90,7 @@ none
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # get predictor matrix for targets
 df_score <- xPierMatrix(ls_pNode)

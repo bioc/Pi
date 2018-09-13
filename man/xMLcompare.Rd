@@ -34,7 +34,7 @@ none
 \dontrun{
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 gp <- xMLcompare(ls_ML, xlimits=c(0.5,1))
 }

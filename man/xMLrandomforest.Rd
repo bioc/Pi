@@ -7,10 +7,8 @@
 xMLrandomforest(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
 nfold = 3, nrepeat = 10, seed = 825, mtry = NULL, ntree = 1000,
 fold.aggregateBy = c("logistic", "Ztransform", "fishers",
-"orderStatistic"),
-verbose = TRUE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata",
-...)
+"orderStatistic"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
 }
 \arguments{
 \item{list_pNode}{a list of "pNode" objects or a "pNode" object}
@@ -145,7 +143,7 @@ none
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sTarget <- xMLrandomforest(df_prediction, GSP, GSN)
 }

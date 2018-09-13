@@ -23,7 +23,7 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' bp <- xGSEAbarplot(eGSEA, top_num="auto", displayBy="nes")
 #' #pdf(file="GSEA_barplot.pdf", height=6, width=12, compress=TRUE)

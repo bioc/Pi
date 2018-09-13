@@ -6,8 +6,8 @@
 \usage{
 xGSEAbarplot(eGSEA, top_num = 10, displayBy = c("nes", "adjp", "fdr",
 "pvalue"), FDR.cutoff = 0.05, bar.label = TRUE, bar.label.size = 3,
-bar.color = "lightyellow-orange", bar.width = 0.8, wrap.width = NULL,
-font.family = "sans", signature = TRUE)
+bar.color = "lightyellow-orange", bar.width = 0.8,
+wrap.width = NULL, font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{eGSEA}{an object of class "eGSEA"}
@@ -59,7 +59,7 @@ none
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 bp <- xGSEAbarplot(eGSEA, top_num="auto", displayBy="nes")
 #pdf(file="GSEA_barplot.pdf", height=6, width=12, compress=TRUE)

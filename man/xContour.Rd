@@ -5,10 +5,11 @@
 \title{Function to visualise a numeric matrix as a contour plot}
 \usage{
 xContour(data, main = "", xlab = "", ylab = "", key = "",
-nlevels = 50, colormap = c("darkblue-lightblue-lightyellow-darkorange",
-"bwr", "jet", "gbr", "wyr", "br", "yr", "rainbow", "wb"),
-highlight = c("none", "min", "max"), highlight.col = "white",
-x.label.cex = 0.95, x.label.srt = 30, signature = FALSE, ...)
+nlevels = 50,
+colormap = c("darkblue-lightblue-lightyellow-darkorange", "bwr", "jet",
+"gbr", "wyr", "br", "yr", "rainbow", "wb"), highlight = c("none",
+"min", "max"), highlight.col = "white", x.label.cex = 0.95,
+x.label.srt = 30, signature = FALSE, ...)
 }
 \arguments{
 \item{data}{a numeric matrix for the contour plot}

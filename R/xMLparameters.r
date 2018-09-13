@@ -27,7 +27,7 @@
 #' \dontrun{
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' xMLparameters(df_fit, nD="2D")
 #' xMLparameters(df_fit, nD="3D", theta.3D=40, phi.3D=60)

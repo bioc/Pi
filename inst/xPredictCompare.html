@@ -17,10 +17,9 @@ results. It returns an object of class &quot;ggplot&quot;.
 <h3>Usage</h3>
 
 <pre>
-xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), type =
-c("curve",
-"bar"), sort = TRUE, detail = TRUE, facet = FALSE,
-font.family = "sans", signature = TRUE)
+xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"),
+type = c("curve", "bar"), sort = TRUE, detail = TRUE,
+facet = FALSE, font.family = "sans", signature = TRUE)
 </pre>
 
 
@@ -97,7 +96,7 @@ NULL)
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 bp &lt;- xPredictCompare(ls_pPerf, displayBy="ROC")
 print(bp)

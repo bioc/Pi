@@ -23,8 +23,9 @@ is also supported.
 
 <pre>
 xRWR(g, normalise = c("laplacian", "row", "column", "none"),
-setSeeds = NULL, restart = 0.75, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE)
+setSeeds = NULL, restart = 0.75,
+normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
+multicores = NULL, verbose = TRUE)
 </pre>
 
 
@@ -82,10 +83,7 @@ output affinity matrix have the same quantiles</p>
 <p>logical to indicate whether parallel computation with
 multicores is used. By default, it sets to true, but not necessarily
 does so. It will depend on whether these two packages &quot;foreach&quot; and
-&quot;doParallel&quot; have been installed. It can be installed via:
-<code>source("http://bioconductor.org/biocLite.R");
-biocLite(c("foreach","doParallel"))</code>. If not yet installed, this option
-will be disabled</p>
+&quot;doParallel&quot; have been installed</p>
 </td></tr>
 <tr valign="top"><td><code>multicores</code></td>
 <td>

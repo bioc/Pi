@@ -12,8 +12,8 @@ crosslink = c("genehancer", "PCHiC_combined", "GTEx_V6p_combined",
 nearby.distance.max = 50000, nearby.decay.kernel = c("rapid", "slow",
 "linear", "constant"), nearby.decay.exponent = 2,
 network = c("STRING_highest", "STRING_high", "STRING_medium",
-"STRING_low",
-"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
+"PCommonsDN_high",
 "PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
 "PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
 "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
@@ -176,12 +176,7 @@ output affinity matrix have the same quantiles}
 multicores is used. By default, it sets to true, but not necessarily
 does so. Partly because parallel backends available will be
 system-specific (now only Linux or Mac OS). Also, it will depend on
-whether these two packages "foreach" and "doMC" have been installed. It
-can be installed via:
-\code{if (!requireNamespace("BiocManager", quietly=TRUE));
-    install.packages("BiocManager");
-BiocManager::install(c("foreach","doMC"))}. If not yet installed, this option will
-be disabled}
+whether these two packages "foreach" and "doMC" have been installed}
 
 \item{multicores}{an integer to specify how many cores will be
 registered as the multicore parallel backend to the 'foreach' package.
@@ -225,7 +220,7 @@ operating systems. It returns an object of class "pNode".
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 
 \dontrun{
 # a) provide the seed SNPs with the significance info

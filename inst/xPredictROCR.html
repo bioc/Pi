@@ -21,8 +21,8 @@ containing predicted targets and predictive scores.
 
 <pre>
 xPredictROCR(prediction, GSP, GSN, rescale = TRUE, plot = c("none",
-"ROC",
-"PR"), verbose = TRUE, font.family = "sans", signature = TRUE)
+"ROC", "PR"), verbose = TRUE, font.family = "sans",
+signature = TRUE)
 </pre>
 
 
@@ -124,7 +124,7 @@ along PR curve
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 pPerf &lt;- xPredictROCR(prediction, GSP, GSN)
 

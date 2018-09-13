@@ -24,10 +24,8 @@ it. It returns an object of class 'sTarget'.
 xMLrandomforest(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
 nfold = 3, nrepeat = 10, seed = 825, mtry = NULL, ntree = 1000,
 fold.aggregateBy = c("logistic", "Ztransform", "fishers",
-"orderStatistic"),
-verbose = TRUE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata",
-...)
+"orderStatistic"), verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
 </pre>
 
 
@@ -219,7 +217,7 @@ following components &quot;evidence&quot; and &quot;metag&quot;
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 sTarget &lt;- xMLrandomforest(df_prediction, GSP, GSN)
 

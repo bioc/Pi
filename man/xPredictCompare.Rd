@@ -4,10 +4,9 @@
 \alias{xPredictCompare}
 \title{Function to compare prediction performance results}
 \usage{
-xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"), type =
-c("curve",
-"bar"), sort = TRUE, detail = TRUE, facet = FALSE,
-font.family = "sans", signature = TRUE)
+xPredictCompare(list_pPerf, displayBy = c("ROC", "PR"),
+type = c("curve", "bar"), sort = TRUE, detail = TRUE,
+facet = FALSE, font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{list_pPerf}{a list of "pPerf" objects}
@@ -50,7 +49,7 @@ none
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 bp <- xPredictCompare(ls_pPerf, displayBy="ROC")
 print(bp)

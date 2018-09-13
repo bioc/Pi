@@ -12,8 +12,7 @@
 #' @param weight an integer specifying score weight. It can be "0" for unweighted (an equivalent to Kolmogorov-Smirnov, only considering the rank), "1" for weighted by input gene score (by default), and "2" for over-weighted, and so on
 #' @param seed an integer specifying the seed
 #' @param nperm the number of random permutations. For each permutation, gene-score associations will be permutated so that permutation of gene-term associations is realised
-#' @param fast logical to indicate whether to fast calculate GSEA resulting. By default, it sets to true, but not necessarily does so. It will depend on whether the package "fgsea" has been installed. It can be installed via: \code{if (!requireNamespace("BiocManager", quietly=TRUE)); BiocManager::install(c("fgsea"))}. If not yet installed, this option will be disabled
-    install.packages("BiocManager"); BiocManager::install(c("fgsea"))}. If not yet installed, this option will be disabled
+#' @param fast logical to indicate whether to fast calculate GSEA resulting. By default, it sets to true, but not necessarily does so. It will depend on whether the package "fgsea" has been installed
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true
 #' @param silent logical to indicate whether the messages will be silent completely. By default, it sets to false. If true, verbose will be forced to be false
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
@@ -35,7 +34,7 @@
 #' library(Pi)
 #' }
 #'
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the seed nodes/genes with the weight info
 #' ## load ImmunoBase

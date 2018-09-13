@@ -36,7 +36,7 @@ performance, importance, evidence.
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sTarget(priority, predictor, performance, importance, evidence)
 }

@@ -6,11 +6,10 @@
 \usage{
 xMLcaret(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
 method = c("gbm", "svmRadial", "rda", "knn", "pls", "nnet", "rf",
-"myrf",
-"cforest", "glmnet", "glm", "bayesglm", "LogitBoost", "xgbLinear",
-"xgbTree"),
-nfold = 3, nrepeat = 10, seed = 825, aggregateBy = c("none",
-"logistic", "Ztransform", "fishers", "orderStatistic"), verbose = TRUE,
+"myrf", "cforest", "glmnet", "glm", "bayesglm", "LogitBoost",
+"xgbLinear", "xgbTree"), nfold = 3, nrepeat = 10, seed = 825,
+aggregateBy = c("none", "logistic", "Ztransform", "fishers",
+"orderStatistic"), verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -112,17 +111,14 @@ it. It returns an object of class 'sTarget'.
 \note{
 It will depend on whether a package "caret" and its suggested packages
 have been installed. It can be installed via:
-\code{if (!requireNamespace("BiocManager", quietly=TRUE));
-    install.packages("BiocManager");
-BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"),
-siteRepos=c("http://cran.r-project.org"))}.
+\code{BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"))}.
 }
 \examples{
 \dontrun{
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sTarget <- xMLcaret(df_prediction, GSP, GSN, method="myrf")
 }

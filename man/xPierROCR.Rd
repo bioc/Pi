@@ -59,7 +59,7 @@ along PR curve
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 dTarget <- xPierROCR(dTarget, GSP, GSN)
 gp <- xPredictCompare(dTarget$pPerf)

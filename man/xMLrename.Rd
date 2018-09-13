@@ -29,7 +29,7 @@ none
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 old_names <- colnames(sTarget$predictor)[-c(1,2)]
 new_names <- c('Annotation_disease genes (dGenes)',

@@ -17,10 +17,9 @@ a KEGG pathway. It returns an object of class &quot;igraph&quot;.
 <h3>Usage</h3>
 
 <pre>
-xPierKEGG(xTarget, vis = c("net", "evidence", "pathview"), hsa =
-"hsa04621",
-priority.top = NULL, incoming.neighbor.order = 1, nodes_query = NULL,
-largest.comp = TRUE, pathview.filename = NULL,
+xPierKEGG(xTarget, vis = c("net", "evidence", "pathview"),
+hsa = "hsa04621", priority.top = NULL, incoming.neighbor.order = 1,
+nodes_query = NULL, largest.comp = TRUE, pathview.filename = NULL,
 pathview.filetype = c("png", "pdf"), verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
 </pre>
@@ -109,8 +108,7 @@ is 'net', see <code>xVisNet</code>; if the visualisation type is
 
 <p>If vis is 'pathview', it will depend on whether a package &quot;pathview&quot;
 has been installed. It can be installed via:
-<code>source("http://bioconductor.org/biocLite.R");
-biocLite("pathview")</code>.
+<code>BiocManager::install("pathview")</code>.
 </p>
 
 
@@ -128,7 +126,7 @@ biocLite("pathview")</code>.
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 ## evidence
 xPierKEGG(xTarget, hsa="hsa04621", vis="evidence",

@@ -4,14 +4,14 @@
 \alias{xGSEAdotplot}
 \title{Function to visualise GSEA results using dot plot}
 \usage{
-xGSEAdotplot(eGSEA, top = 1, colormap = "lightblue-darkblue", zlim =
-NULL,
-ncolors = 64, xlab = NULL, title = NULL, subtitle = c("leading",
-"enrichment", "both", "none"), clab = "5-star\\nrating",
-x.scale = c("normal", "sqrt", "log"), peak = TRUE, peak.color = "red",
-leading = FALSE, leading.size = 2, leading.color = "black",
-leading.alpha = 0.6, leading.padding = 0.2, leading.arrow = 0.01,
-leading.force = 0.01, leading.query = NULL, leading.query.only = FALSE,
+xGSEAdotplot(eGSEA, top = 1, colormap = "lightblue-darkblue",
+zlim = NULL, ncolors = 64, xlab = NULL, title = NULL,
+subtitle = c("leading", "enrichment", "both", "none"),
+clab = "5-star\\nrating", x.scale = c("normal", "sqrt", "log"),
+peak = TRUE, peak.color = "red", leading = FALSE,
+leading.size = 2, leading.color = "black", leading.alpha = 0.6,
+leading.padding = 0.2, leading.arrow = 0.01, leading.force = 0.01,
+leading.query = NULL, leading.query.only = FALSE,
 leading.edge.only = FALSE, compact = FALSE, font.family = "sans",
 signature = TRUE, ...)
 }
@@ -114,7 +114,7 @@ none
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 gp <- xGSEAdotplot(eGSEA, top=1)
 #gp <- xGSEAdotplot(eGSEA, top=1, peak=FALSE, compact=TRUE, signature=FALSE)

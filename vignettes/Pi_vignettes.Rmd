@@ -4,7 +4,7 @@ author: "Hai Fang, the ULTRA-DD Consortium, Julian C Knight"
 date: "`r Sys.Date()`"
 package: "`r pkg_ver('Pi')`"
 abstract: >
-  This document provides instructions on how to use an R/Bioconductor package called Priority index (or Pi). Pi is developed as a genomic-led target prioritisation system, with the focus on leveraging human genetic data to prioritise potential drug targets at the gene, pathway and network level. The long-term goal is to use such information to enhance early-stage target validation. Based on evidence of disease association from genome-wide association studies (GWAS), this prioritisation system is able to generate evidence to support identification of the specific modulated genes (seed genes) that are responsible for the genetic association signal by utilising knowledge of linkage disequilibrium (co-inherited genetic variants), distance of associated variants from the gene, evidence of independent genetic association with gene expression in disease relevant cell/tissue types and states, and evidence of physical interaction involving variants and genes in primary blood cell types. Seed genes are scored in an integrative way, quantifying the genetic influence. Scored seed genes are subsequently used as baits to rank seed genes plus additional (non-seed) genes; this is achieved by iteratively exploring the global connectivity of a gene interaction network. Genes with the highest priority are further used to identify/prioritise pathways that are significantly enriched with highly prioritised genes. Prioritised genes are also used to identify a gene network interconnecting highly prioritised genes and a minimal number of less prioritised genes (which act as linkers bringing together highly prioritised genes).
+  This user manual provides instructions on how to use an R/Bioconductor package "Pi". Pi is developed as a genetics-led target prioritisation system, with the focus on leveraging human genetic data to prioritise potential drug targets at the gene and pathway level. The long-term goal is to use such information to enhance early-stage target selection and validation. Based on evidence of disease association from genome-wide association studies (GWAS), this prioritisation system is able to generate evidence to support identification of the specific modulated genes (genomic seed genes) that are responsible for the genetic association signal: (i) nearby genes (nGene) based on genomic proximity; (ii) expression-associated genes (eGene) based on summary data produced from eQTL mapping; and (iii) chromatin conformation genes (cGene) based on summary data produced from promoter capture Hi-C studies. Restricted to genomic seed genes (nGene, eGene and cGene), gene-level ontology annotations are further used to define three types of annotation predictors on the basis of relatedness to immune function and dysfunction: (i) function genes (fGene) using Gene Ontology; (ii) disease gene (dGene), causing rare genetic disease using OMIM and Disease Ontology; and (iii) phenotype genes (pGene) using Human Phenotype Ontology and using Mammalian Phenotype Ontology. For each type of seed genes (and their scores), non-seed genes under network influence are identified using the random walk with restart (RWR) algorithm, that is, identification of non-seed genes based on network connectivity/affinity of gene interaction information to seed genes. In summary, given GWAS summary data for a trait, a gene-predictor matrix is constructed containing affinity scores, with columns for genomic and annotation predictors and rows for seed and non-seed genes. Using the gene-predictor matrix prepared, target prioritizations are enabled at the gene and pathway level under two modes ("discovery" and "supervised"), each consisting of three sequential steps: Step 1 (shared by both modes), the preparation of the predictor matrix from GWAS summary data; Step 2 (specific to each mode), the prioritisation of target genes, either through meta-analysis (discovery mode) to prioritise target genes with substantial genetic support and/or with rich network connectivity, or through machine learning (supervised mode) to prioritise target genes guided by knowledge of efficacious drugs; and Step 3 (shared by both modes), the prioritisation of target pathways individually and at crosstalk based on the prioritised target genes.
 vignette: >
  %\VignetteIndexEntry{Pi User Manual (R/Bioconductor package)}
  %\VignetteEngine{knitr::rmarkdown}
@@ -59,19 +59,17 @@ The latest version on different platforms can be installed following instruction
 **Install [`Pi`](http://www.bioconductor.org/packages/Pi) (the latest stable release version from Bioconductor):**
 
 ```{r eval=FALSE}
-if (!requireNamespace("BiocManager", quietly=TRUE))
-    install.packages("BiocManager")
-# to use the latest version of Bioconductor, upgrade it: BiocManager::install("BiocUpgrade") 
-BiocManager::install("Pi")
+source("http://bioconductor.org/biocLite.R")
+# to use the latest version of Bioconductor, upgrade it: biocLite("BiocUpgrade") 
+biocLite("Pi")
 ```
 
 **Also install the latest development version from github (highly recommended):**
 
 ```{r eval=FALSE, echo=TRUE}
 # first, install the dependant packages (the stable version)
-if (!requireNamespace("BiocManager", quietly=TRUE))
-    install.packages("BiocManager")
-BiocManager::install(c("XGR","devtools"), siteRepos=c("http://cran.r-project.org"))
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("XGR","devtools"), siteRepos=c("http://cran.r-project.org"))
 
 # then, install the `Pi` package and its dependency (the latest version)
 library(devtools)
@@ -237,11 +235,7 @@ knitr::kable(df_obo[,c(3,2,1)], caption="", row.names=FALSE)
 
 - *[`xPierCross`](http://rawgit.com/hfang-bristol/Pi/master/inst/xPierCross.html)*: extracts priority matrix from a list of `dTarget`/`sTarget` objects. 
 
-- *[`xSNPeqtl`](http://rawgit.com/hfang-bristol/Pi/master/inst/xSNPeqtl.html)*: extracts eQTL-gene pairs given a list of SNPs.
-
 - *[`xSNP2eGenes`](http://rawgit.com/hfang-bristol/Pi/master/inst/xSNP2eGenes.html)*: defines eQTL genes given a list of SNPs.
-
-- *[`xSNPhic`](http://rawgit.com/hfang-bristol/Pi/master/inst/xSNPhic.html)*: extracts promoter capture HiC-gene pairs given a list of SNPs.
 
 - *[`xSNP2cGenes`](http://rawgit.com/hfang-bristol/Pi/master/inst/xSNP2cGenes.html)*: defines HiC genes given a list of SNPs.
 

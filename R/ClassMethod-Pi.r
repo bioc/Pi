@@ -18,7 +18,7 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' pNode(evidence, metag)
 #' }
@@ -100,7 +100,7 @@ print.pNode <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' eTarget(evidence, metag)
 #' }
@@ -143,7 +143,7 @@ print.eTarget <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' dTarget(priority, predictor, metag)
 #' }
@@ -199,7 +199,7 @@ print.dTarget <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' sTarget(priority, predictor, performance, importance, evidence)
 #' }
@@ -253,7 +253,7 @@ print.sTarget <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' cTarget(priority, predictor)
 #' }
@@ -299,7 +299,7 @@ print.cTarget <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' sGS(GSN, GSP, g)
 #' }
@@ -343,7 +343,7 @@ print.sGS <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' pPerf(PRS, AUROC, Fmax, ROC_perf, PR_perf, Pred_obj)
 #' }
@@ -388,7 +388,7 @@ print.pPerf <- function(x, ...) {
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' eGSEA(df_summary, leading, full, cross)
 #' }

@@ -27,8 +27,7 @@
 #'  \item{\code{gp_cv}: a ggplot object for the ROC curves from repeated cross-validation}
 #'  \item{\code{evidence}: an object of the class "eTarget", a list with following components "evidence" and "metag"}
 #' }
-#' @note It will depend on whether a package "caret" and its suggested packages have been installed. It can be installed via: \code{if (!requireNamespace("BiocManager", quietly=TRUE)); BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"), siteRepos=c("http://cran.r-project.org"))}.
-    install.packages("BiocManager"); BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"), siteRepos=c("http://cran.r-project.org"))}.
+#' @note It will depend on whether a package "caret" and its suggested packages have been installed. It can be installed via: \code{BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"))}.
 #' @export
 #' @include xMLcaret.r
 #' @examples
@@ -36,7 +35,7 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' sTarget <- xMLcaret(df_prediction, GSP, GSN, method="myrf")
 #' }

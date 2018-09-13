@@ -18,7 +18,8 @@ using density plot. It returns an object of class &quot;ggplot&quot;.
 
 <pre>
 xMLdensity(xTarget, displayBy = c("All", "GS", "GSN", "GSP", "NEW"),
-x.scale = c("sqrt", "normal"), font.family = "sans", signature = TRUE)
+x.scale = c("sqrt", "normal"), font.family = "sans",
+signature = TRUE)
 </pre>
 
 
@@ -81,7 +82,7 @@ used to draw this graph</p>
 library(Pi)
 
 ## End(Not run)
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 gp &lt;- xMLdensity(xTarget, displayBy="All")
 gp

@@ -16,7 +16,7 @@
 #' \dontrun{
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 # ls_ML <- list(GBM=fit_gbm, SVM=fit_svm, RDA=fit_rda, KNN=fit_knn, PLS=fit_pls, NNET=fit_nnet, RF=fit_myrf, CRF=fit_crf, GLM=fit_glm, BGLM=fit_bglm, BLR=fit_blr)
 # names(ls_ML) <- c("Gradient Boosting Machine (GBM)", "Support Vector Machine (SVM)", "Regularized Discriminant Analysis (RDA)", "K-Nearest Neighbor (KNN)", "Partial Least Squares (PLS)", "Neural Network (NNET)", "Random Forest (RF)", "Conditional Inference Random Forest (CIRF)", "Generalized Linear Model (GLM)", "Bayes Generalized Linear Model (BGLM)", "Boosted Logistic Regression (BLR)")

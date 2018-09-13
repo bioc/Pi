@@ -7,28 +7,29 @@
 xPierSNPsConsensus(data, include.LD = NA, LD.customised = NULL,
 LD.r2 = 0.8, significance.threshold = 5e-05, distance.max = 2e+05,
 decay.kernel = c("rapid", "slow", "linear"), decay.exponent = 2,
-GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"), GR.Gene = c("UCSC_knownGene",
-"UCSC_knownCanonical"), include.eQTL = c(NA, "JKscience_TS2A",
-"JKscience_TS2B", "JKscience_TS3A", "JKng_bcell", "JKng_mono",
-"JKnc_neutro",
-"JK_nk", "GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
+GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"),
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
+include.eQTL = c(NA, "JKscience_TS2A", "JKscience_TS2B",
+"JKscience_TS3A", "JKng_bcell", "JKng_mono", "JKnc_neutro", "JK_nk",
+"GTEx_V4_Adipose_Subcutaneous", "GTEx_V4_Artery_Aorta",
 "GTEx_V4_Artery_Tibial", "GTEx_V4_Esophagus_Mucosa",
 "GTEx_V4_Esophagus_Muscularis", "GTEx_V4_Heart_Left_Ventricle",
 "GTEx_V4_Lung", "GTEx_V4_Muscle_Skeletal", "GTEx_V4_Nerve_Tibial",
 "GTEx_V4_Skin_Sun_Exposed_Lower_leg", "GTEx_V4_Stomach",
-"GTEx_V4_Thyroid",
-"GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14", "eQTLdb_LPS2",
-"eQTLdb_LPS24", "eQTLdb_IFN"), eQTL.customised = NULL,
-cdf.function = c("empirical", "exponential"), scoring.scheme = c("max",
-"sum", "sequential"), network = c("STRING_highest", "STRING_high",
-"STRING_medium", "STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
-"PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
-"PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
-"PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
-"PCommonsDN_PhosphoSite", "PCommonsDN_CTD"), weighted = FALSE,
-network.customised = NULL, normalise = c("laplacian", "row", "column",
-"none"), restart = 0.75, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
+"GTEx_V4_Thyroid", "GTEx_V4_Whole_Blood", "eQTLdb_NK", "eQTLdb_CD14",
+"eQTLdb_LPS2", "eQTLdb_LPS24", "eQTLdb_IFN"),
+eQTL.customised = NULL, cdf.function = c("empirical", "exponential"),
+scoring.scheme = c("max", "sum", "sequential"),
+network = c("STRING_highest", "STRING_high", "STRING_medium",
+"STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
+"PCommonsDN_high",
+"PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
+"PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
+"PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
+"PCommonsDN_CTD"), weighted = FALSE, network.customised = NULL,
+normalise = c("laplacian", "row", "column", "none"), restart = 0.75,
+normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
+multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
@@ -197,12 +198,7 @@ output affinity matrix have the same quantiles}
 multicores is used. By default, it sets to true, but not necessarily
 does so. Partly because parallel backends available will be
 system-specific (now only Linux or Mac OS). Also, it will depend on
-whether these two packages "foreach" and "doMC" have been installed. It
-can be installed via:
-\code{if (!requireNamespace("BiocManager", quietly=TRUE));
-    install.packages("BiocManager");
-BiocManager::install(c("foreach","doMC"))}. If not yet installed, this option will
-be disabled}
+whether these two packages "foreach" and "doMC" have been installed}
 
 \item{multicores}{an integer to specify how many cores will be
 registered as the multicore parallel backend to the 'foreach' package.
@@ -261,7 +257,7 @@ none
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)

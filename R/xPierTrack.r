@@ -30,7 +30,7 @@
 #' library(Pi)
 #' }
 #'
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the SNPs with the significance info
 #' ## get lead SNPs reported in AS GWAS and their significance info (p-values)
@@ -51,7 +51,7 @@
 #' xPierTrack(pNode, priority.top=1000, nearby=20, RData.location=RData.location)
 #' }
 
-xPierTrack <- function(pNode, priority.top=NULL, target.query=NULL, window=1e6, nearby=NULL, query.highlight=TRUE, track.ideogram=TRUE, track.genomeaxis=TRUE, name.datatrack="5-star rating\n(Priority index)", name.annotrack="Targets", GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), SNPs=NULL, max.num.SNPs=50, GR.SNP=c("dbSNP_GWAS","dbSNP_Common"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
+xPierTrack <- function(pNode, priority.top=NULL, target.query=NULL, window=1e6, nearby=NULL, query.highlight=TRUE, track.ideogram=TRUE, track.genomeaxis=TRUE, name.datatrack="5-star rating\n(Priority index)", name.annotrack="Targets", GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), SNPs=NULL, max.num.SNPs=50, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
 {
 
     if(class(pNode) == "pNode"){

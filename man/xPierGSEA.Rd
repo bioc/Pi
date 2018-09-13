@@ -5,26 +5,23 @@
 \title{Function to prioritise pathways based on GSEA analysis of prioritised genes}
 \usage{
 xPierGSEA(pNode, priority.top = NULL, ontology = c("GOBP", "GOMF",
-"GOCC",
-"PS", "PS2", "SF", "Pfam", "DO", "HPPA", "HPMI", "HPCM", "HPMA", "MP",
-"EF",
-"MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP",
-"MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT",
-"MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF",
-"MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6p",
-"GTExV7",
-"CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug",
-"CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP",
-"CreedsGeneDN", "KEGG", "KEGGmetabolism", "KEGGgenetic",
-"KEGGenvironmental",
-"KEGGcellular", "KEGGorganismal", "KEGGdisease"),
-customised.genesets = NULL, size.range = c(10, 500),
-p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
-"hommel"),
-path.mode = c("all_paths", "shortest_paths", "all_shortest_paths"),
-weight = 1, seed = 825, nperm = 2000, fast = TRUE, verbose = TRUE,
-silent = FALSE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata")
+"GOCC", "PS", "PS2", "SF", "Pfam", "DO", "HPPA", "HPMI", "HPCM",
+"HPMA",
+"MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall",
+"MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA",
+"MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM",
+"MsigdbC5BP",
+"MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4",
+"GTExV6p", "GTExV7", "CreedsDisease", "CreedsDiseaseUP",
+"CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN",
+"CreedsGene", "CreedsGeneUP", "CreedsGeneDN", "KEGG",
+"KEGGmetabolism", "KEGGgenetic", "KEGGenvironmental", "KEGGcellular",
+"KEGGorganismal", "KEGGdisease"), customised.genesets = NULL,
+size.range = c(10, 500), p.adjust.method = c("BH", "BY",
+"bonferroni", "holm", "hochberg", "hommel"), path.mode = c("all_paths",
+"shortest_paths", "all_shortest_paths"), weight = 1, seed = 825,
+nperm = 2000, fast = TRUE, verbose = TRUE, silent = FALSE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget").
@@ -98,11 +95,7 @@ gene-term associations is realised}
 
 \item{fast}{logical to indicate whether to fast calculate GSEA
 resulting. By default, it sets to true, but not necessarily does so. It
-will depend on whether the package "fgsea" has been installed. It can
-be installed via: \code{if (!requireNamespace("BiocManager", quietly=TRUE));
-    install.packages("BiocManager");
-BiocManager::install(c("fgsea"))}. If not yet installed, this option will be
-disabled}
+will depend on whether the package "fgsea" has been installed}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true}
@@ -158,7 +151,7 @@ none
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase

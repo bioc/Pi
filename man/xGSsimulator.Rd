@@ -75,7 +75,7 @@ If multiple graphs are provided, they will be unionised for use.
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sGS <- xGSsimulator(GSP, population=NULL,
 network=c("STRING_medium","PCommonsUN_medium"),

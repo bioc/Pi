@@ -33,13 +33,12 @@ xPierAnno(data, list_pNode, network = c("STRING_highest",
 "KEGG_genetic", "KEGG_environmental", "KEGG_cellular",
 "KEGG_organismal",
 "KEGG_disease"), STRING.only = c(NA, "neighborhood_score",
-"fusion_score",
-"cooccurence_score", "coexpression_score", "experimental_score",
-"database_score", "textmining_score")[1], weighted = FALSE,
-network.customised = NULL, seeds.inclusive = TRUE,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.7,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
+"fusion_score", "cooccurence_score", "coexpression_score",
+"experimental_score", "database_score", "textmining_score")[1],
+weighted = FALSE, network.customised = NULL,
+seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
+"none"), restart = 0.7, normalise.affinity.matrix = c("none",
+"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
@@ -161,11 +160,7 @@ output affinity matrix have the same quantiles</p>
 multicores is used. By default, it sets to true, but not necessarily
 does so. Partly because parallel backends available will be
 system-specific (now only Linux or Mac OS). Also, it will depend on
-whether these two packages &quot;foreach&quot; and &quot;doMC&quot; have been installed. It
-can be installed via:
-<code>source("http://bioconductor.org/biocLite.R");
-biocLite(c("foreach","doMC"))</code>. If not yet installed, this option will
-be disabled</p>
+whether these two packages &quot;foreach&quot; and &quot;doMC&quot; have been installed</p>
 </td></tr>
 <tr valign="top"><td><code>multicores</code></td>
 <td>
@@ -234,7 +229,7 @@ library(Pi)
 
 ## End(Not run)
 
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase

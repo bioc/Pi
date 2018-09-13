@@ -34,7 +34,7 @@ cross.
 # Load the library
 library(Pi)
 }
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 eGSEA(df_summary, leading, full, cross)
 }

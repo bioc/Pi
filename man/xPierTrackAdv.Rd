@@ -9,7 +9,8 @@ window = 1e+06, nearby = NULL, query.highlight = TRUE,
 track.ideogram = TRUE, track.genomeaxis = TRUE,
 name.datatrack = "Priority index", name.annotrack = "Genes",
 GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), SNPs = NULL,
-GR.SNP = c("dbSNP_GWAS", "dbSNP_Common"), verbose = TRUE,
+GR.SNP = c("dbSNP_GWAS", "dbSNP_Common", "dbSNP_Single"),
+verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
 }
 \arguments{
@@ -104,7 +105,7 @@ none
 library(Pi)
 }
 
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
 ## get lead SNPs reported in AS GWAS and their significance info (p-values)

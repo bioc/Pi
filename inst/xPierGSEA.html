@@ -19,26 +19,23 @@ analysis (GSEA). It returns an object of class &quot;eGSEA&quot;.
 
 <pre>
 xPierGSEA(pNode, priority.top = NULL, ontology = c("GOBP", "GOMF",
-"GOCC",
-"PS", "PS2", "SF", "Pfam", "DO", "HPPA", "HPMI", "HPCM", "HPMA", "MP",
-"EF",
-"MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP",
-"MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT",
-"MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF",
-"MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6p",
-"GTExV7",
-"CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug",
-"CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP",
-"CreedsGeneDN", "KEGG", "KEGGmetabolism", "KEGGgenetic",
-"KEGGenvironmental",
-"KEGGcellular", "KEGGorganismal", "KEGGdisease"),
-customised.genesets = NULL, size.range = c(10, 500),
-p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
-"hommel"),
-path.mode = c("all_paths", "shortest_paths", "all_shortest_paths"),
-weight = 1, seed = 825, nperm = 2000, fast = TRUE, verbose = TRUE,
-silent = FALSE, RData.location =
-"http://galahad.well.ox.ac.uk/bigdata")
+"GOCC", "PS", "PS2", "SF", "Pfam", "DO", "HPPA", "HPMI", "HPCM",
+"HPMA",
+"MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall",
+"MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA",
+"MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM",
+"MsigdbC5BP",
+"MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4",
+"GTExV6p", "GTExV7", "CreedsDisease", "CreedsDiseaseUP",
+"CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN",
+"CreedsGene", "CreedsGeneUP", "CreedsGeneDN", "KEGG",
+"KEGGmetabolism", "KEGGgenetic", "KEGGenvironmental", "KEGGcellular",
+"KEGGorganismal", "KEGGdisease"), customised.genesets = NULL,
+size.range = c(10, 500), p.adjust.method = c("BH", "BY",
+"bonferroni", "holm", "hochberg", "hommel"), path.mode = c("all_paths",
+"shortest_paths", "all_shortest_paths"), weight = 1, seed = 825,
+nperm = 2000, fast = TRUE, verbose = TRUE, silent = FALSE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </pre>
 
 
@@ -138,10 +135,7 @@ gene-term associations is realised</p>
 <td>
 <p>logical to indicate whether to fast calculate GSEA
 resulting. By default, it sets to true, but not necessarily does so. It
-will depend on whether the package &quot;fgsea&quot; has been installed. It can
-be installed via: <code>source("http://bioconductor.org/biocLite.R");
-biocLite(c("fgsea"))</code>. If not yet installed, this option will be
-disabled</p>
+will depend on whether the package &quot;fgsea&quot; has been installed</p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -225,7 +219,7 @@ library(Pi)
 
 ## End(Not run)
 
-RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata_dev"
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase

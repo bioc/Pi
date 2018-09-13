@@ -42,13 +42,13 @@
 #' # Load the library
 #' library(Pi)
 #' }
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata_dev"
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' ## TNFRSF1A
 #' xVisEvidenceAdv(xTarget, nodes="TNFRSF1A", neighbor.order=1, neighbor.seed=TRUE, neighbor.top=NULL)
 #' }
 
-xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"), neighbor.order=1, neighbor.seed=TRUE, neighbor.top=NULL, largest.comp=TRUE, node.label.size=2, node.label.color='black', node.label.alpha=0.9, node.label.padding=0.5, node.label.arrow=0, node.label.force=0.1, node.shape=19, node.color.title='5-star\nrating', colormap='white-yellow-red', ncolors=64, zlim=c(0,5), node.size.range=5, title='', edge.color="orange", edge.color.alpha=0.5, edge.curve=0, edge.arrow.gap=0.025, pie.radius=NULL, pie.color='black', pie.color.alpha=1, pie.thick=0.1,...)
+xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"), neighbor.order=1, neighbor.seed=TRUE, neighbor.top=NULL, largest.comp=TRUE, node.label.size=2, node.label.color='black', node.label.alpha=0.9, node.label.padding=0.5, node.label.arrow=0, node.label.force=0.1, node.shape=19, node.color.title='Pi\nrating', colormap='white-yellow-red', ncolors=64, zlim=c(0,5), node.size.range=5, title='', edge.color="orange", edge.color.alpha=0.5, edge.curve=0, edge.arrow.gap=0.025, pie.radius=NULL, pie.color='black', pie.color.alpha=1, pie.thick=0.1,...)
 {
 
     node.info <- match.arg(node.info)
@@ -87,7 +87,7 @@ xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none
 		df_sub_2[df_sub_2>=1] <- 1
 		df_sub <- cbind(df_sub_1, df_sub_2)
 
-		gp <- xPieplot(df_sub, columns, colormap='ggplot2', pie.radius=pie.radius, pie.color=pie.color, pie.color.alpha=pie.color.alpha, pie.thick=pie.thick, legend.title='Seeds', gp=gp)
+		gp <- xPieplot(df_sub, columns, colormap='ggplot2', pie.radius=pie.radius, pie.color=pie.color, pie.color.alpha=pie.color.alpha, pie.thick=pie.thick, legend.title='Seed gene', gp=gp)
 	}
 	
     invisible(gp)
