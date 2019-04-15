@@ -95,8 +95,9 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
 		y <- (x - min(x,na.rm=TRUE)) / (max(x,na.rm=TRUE) - min(x,na.rm=TRUE))
 		pval <- 10^(-100*y)
 		
-    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
-    	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
+	}else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    	df_priority <- pNode$priority[, c("name","rank","rating")]
+    	df_priority$priority <- df_priority$rating
     	
     	network <- network[1]
 		if(!is.na(network)){
@@ -171,7 +172,7 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
 		}
 		nodes <- igraph::get.data.frame(subg, what="vertices")
 		nodes <- cbind(name=nodes$name, description=nodes$description, significance=nodes$significance, score=nodes$score, type=nodes$type, priority=priority[rownames(nodes)])
-		if(is.directed(subg)){
+		if(igraph::is.directed(subg)){
 			subnet <- igraph::graph.data.frame(d=relations, directed=TRUE, vertices=nodes)
 		}else{
 			subnet <- igraph::graph.data.frame(d=relations, directed=FALSE, vertices=nodes)

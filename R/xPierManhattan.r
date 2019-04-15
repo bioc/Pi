@@ -73,10 +73,9 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 
     if(class(pNode) == "pNode"){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
-    }else if(class(pNode) == "sTarget"){
-    	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
-    }else if(class(pNode) == "dTarget"){
-    	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]	
+    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    	df_priority <- pNode$priority[, c("name","rank","rating")]
+    	df_priority$priority <- df_priority$rating
     }else{
     	stop("The function must apply to a 'pNode' or 'sTarget' or 'dTarget' object.\n")
     }

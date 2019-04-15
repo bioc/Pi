@@ -93,7 +93,8 @@ xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=NA,
     if(class(pNode) == "pNode"){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
     }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
-    	df_priority <- pNode$priority[, c("pvalue","fdr","priority")]
+    	df_priority <- pNode$priority[, c("name","rank","rating")]
+    	df_priority$priority <- df_priority$rating
     }else{
     	stop("The function must apply to a 'pNode' or 'sTarget' or 'dTarget' object.\n")
     }

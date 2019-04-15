@@ -73,7 +73,8 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
     if(class(pNode) == "pNode"){
         df_priority <- pNode$priority[, c("seed","weight","priority","rank")]
     }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
-    	df_priority <- pNode$priority[, c("pvalue","fdr","priority","rank")]
+    	df_priority <- pNode$priority[, c("name","rank","rating")]
+    	df_priority$priority <- df_priority$rating
     }else if(class(pNode) == "data.frame"){
     	df_priority <- pNode[,c(1:2)]
     	colnames(df_priority) <- c("priority","rank")

@@ -122,15 +122,11 @@ RData files. See <code>xRDataLoader</code> for details</p>
 <li><p><code>model</code>: a list of models, results from per-fold train set
 </p>
 </li>
-<li><p><code>priority</code>: a data frame of nGene X 7 containing gene
+<li><p><code>priority</code>: a data frame of nGene X 5 containing gene
 priority information, where nGene is the number of genes in the input
-data frame, and the 7 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
-'NEW'), &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the priority scores),
-&quot;pvalue&quot; (the cross-fold aggregated p-value of being GSP, per-fold
-p-value converted from empirical cumulative distribution of the
-probability of being GSP), &quot;fdr&quot; (fdr adjusted from the aggregated
-p-value), &quot;priority&quot; (-log10(pvalue) but rescaled into the 5-star
-ratings), and &quot;description&quot; (gene description)
+data frame, and the 5 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
+'NEW'), &quot;name&quot; (gene names), &quot;rank&quot; (priority rank), &quot;rating&quot; (the
+5-star priority score/rating), and &quot;description&quot; (gene description)
 </p>
 </li>
 <li><p><code>predictor</code>: a data frame, which is the same as the input
@@ -198,6 +194,9 @@ where nPredictor is the number of predictors, two columns are &quot;ROC&quot;
 </li>
 <li><p><code>evidence</code>: an object of the class &quot;eTarget&quot;, a list with
 following components &quot;evidence&quot; and &quot;metag&quot;
+</p>
+</li>
+<li><p><code>list_pNode</code>: a list of &quot;pNode&quot; objects
 </p>
 </li></ul>
 

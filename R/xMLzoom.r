@@ -43,7 +43,7 @@ xMLzoom <- function(xTarget, top=20, top.label.type=c("box","text"), top.label.s
     }
 
 	priority <- xTarget$priority
-	df <- data.frame(Symbol=rownames(priority), GS=priority$GS, Score=priority$priority, stringsAsFactors=FALSE)
+	df <- data.frame(Symbol=rownames(priority), GS=priority$GS, Score=priority$rating, stringsAsFactors=FALSE)
     
     #GS_level<-c("GSN","GSP","NEW")
     GS_level <- sort(unique(df$GS))

@@ -49,7 +49,7 @@
 #' grid.arrange(grobs=ls_gp, ncol=2)
 #' }
 
-xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL, ncolors=64, xlab=NULL, title=NULL, subtitle=c('leading','enrichment','both','none'), clab='5-star\nrating', x.scale=c("normal","sqrt","log"), peak=TRUE, peak.color='red', leading=FALSE, leading.size=2, leading.color='black', leading.alpha=0.6, leading.padding=0.2, leading.arrow=0.01, leading.force=0.01, leading.query=NULL, leading.query.only=FALSE, leading.edge.only=FALSE, compact=FALSE, font.family="sans", signature=TRUE, ...)
+xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL, ncolors=64, xlab=NULL, title=NULL, subtitle=c('leading','enrichment','both','none'), clab='Pi rating', x.scale=c("normal","sqrt","log"), peak=TRUE, peak.color='red', leading=FALSE, leading.size=2, leading.color='black', leading.alpha=0.6, leading.padding=0.2, leading.arrow=0.01, leading.force=0.01, leading.query=NULL, leading.query.only=FALSE, leading.edge.only=FALSE, compact=FALSE, font.family="sans", signature=TRUE, ...)
 {
 	
 	x.scale <- match.arg(x.scale)
@@ -128,9 +128,15 @@ xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL,
 			}
 			
 			vec <- eGSEA$leading[[which.term]]
-			ind <- match(vec, df_genes$Rank)
-			df_genes <- df_genes[ind,]
-			df_genes$Symbol <- names(vec)
+			if(0){
+				# why this?
+				ind <- match(vec, df_genes$Rank)
+				df_genes <- df_genes[ind,]
+				df_genes$Symbol <- names(vec)
+			}else{
+				ind <- match(df_genes$Symbol, names(vec))
+				df_genes <- df_genes[!-is.na(ind),]
+			}
 			
 			df_genes_query <- NULL
 			df_genes_noquery <- NULL

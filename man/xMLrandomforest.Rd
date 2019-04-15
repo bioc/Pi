@@ -67,15 +67,11 @@ RData files. See \code{\link{xRDataLoader}} for details}
 an object of class "sTarget", a list with following components:
 \itemize{
 \item{\code{model}: a list of models, results from per-fold train set}
-\item{\code{priority}: a data frame of nGene X 7 containing gene
+\item{\code{priority}: a data frame of nGene X 5 containing gene
 priority information, where nGene is the number of genes in the input
-data frame, and the 7 columns are "GS" (either 'GSP', or 'GSN', or
-'NEW'), "name" (gene names), "rank" (ranks of the priority scores),
-"pvalue" (the cross-fold aggregated p-value of being GSP, per-fold
-p-value converted from empirical cumulative distribution of the
-probability of being GSP), "fdr" (fdr adjusted from the aggregated
-p-value), "priority" (-log10(pvalue) but rescaled into the 5-star
-ratings), and "description" (gene description)}
+data frame, and the 5 columns are "GS" (either 'GSP', or 'GSN', or
+'NEW'), "name" (gene names), "rank" (priority rank), "rating" (the
+5-star priority score/rating), and "description" (gene description)}
 \item{\code{predictor}: a data frame, which is the same as the input
 data frame but inserting an additional column 'GS' in the first column}
 \item{\code{pred2fold}: a list of data frame, results from per-fold
@@ -125,6 +121,7 @@ where nPredictor is the number of predictors, two columns are "ROC"
 (AUC values) and "Fmax" (F-max values)}
 \item{\code{evidence}: an object of the class "eTarget", a list with
 following components "evidence" and "metag"}
+\item{\code{list_pNode}: a list of "pNode" objects}
 }
 }
 \description{

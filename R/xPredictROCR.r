@@ -46,12 +46,12 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
     if (class(prediction) == "pNode" ){
         prediction <- prediction$priority[,c("name","priority")]
     }else if(class(prediction) == "sTarget"){
-    	prediction <- prediction$priority[, c("name","priority")]
+    	prediction <- prediction$priority[, c("name","rating")]
     }else if(class(prediction) == "dTarget"){
-    	prediction <- prediction$priority[, c("name","priority")]
+    	prediction <- prediction$priority[, c("name","rating")]
     }
 
-    res_ls <- split(x=as.numeric(prediction[,2]), f=prediction[,1])
+    res_ls <- split(x=as.numeric(prediction[,2]), f=as.character(prediction[,1]))
     pred <- unlist(lapply(res_ls, base::max))
     ####
     pred <- pred[!is.na(pred)]
@@ -62,7 +62,7 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
     }
 	
 	## GSP
-    gsp <- unique(GSP)
+    gsp <- as.character(unique(GSP))
 	### GSP but only predicted
     ind <- match(gsp, names(pred))
     gsp_predicted <- gsp[!is.na(ind)]
@@ -72,7 +72,7 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
     }
     
 	## GSN
-    gsn <- unique(GSN)
+    gsn <- as.character(unique(GSN))
 	### GSN but only predicted
     ind <- match(gsn, names(pred))
     gsn_predicted <- gsn[!is.na(ind)]
@@ -142,7 +142,7 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
         message(sprintf("In summary, Area under ROC: %.3f, and PR F-max: %.3f.", auroc, fmax), appendLF=TRUE)
     }
 	
-	df_PRS <- data.frame(Precision=prec, Recall=rec, Specificity=1-fpr)
+	df_PRS <- data.frame(Precision=prec, Recall=rec, Specificity=1-fpr, Accurancy=acc)
     
     Recall <- Precision <- Specificity <- NULL
     if(plot=='none'){

@@ -19,7 +19,7 @@ this functionality as the cross mode of the prioritisation.
 <h3>Usage</h3>
 
 <pre>
-xPierCross(list_xTarget, displayBy = c("priority", "rank", "pvalue",
+xPierCross(list_xTarget, displayBy = c("rating", "rank", "pvalue",
 "fdr"), combineBy = c("intersect", "union"), aggregateBy = c("none",
 "fishers", "logistic", "Ztransform", "orderStatistic"), verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
@@ -36,9 +36,9 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 </td></tr>
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
-<p>which priority will be extracted. It can be &quot;priority&quot;
-for priority score (by default), &quot;rank&quot; for priority rank, &quot;pvalue&quot; for
-priority p-value, &quot;fdr&quot; for priority fdr</p>
+<p>which priority will be extracted. It can be &quot;rating&quot;
+for priority score/rating (by default), &quot;rank&quot; for priority rank,
+&quot;pvalue&quot; for priority p-value, &quot;fdr&quot; for priority fdr</p>
 </td></tr>
 <tr valign="top"><td><code>combineBy</code></td>
 <td>
@@ -77,8 +77,8 @@ RData files. See <code>xRDataLoader</code> for details</p>
 <h3>Value</h3>
 
 <p>If aggregateBy is 'none' (by default), a data frame containing priority
-matrix, with each column/disease for either priority score, or priorty
-rank or priority p-value.
+matrix, with each column/disease for either priority score/rating, or
+priorty rank or priority p-value.
 If aggregateBy is not 'none', an object of the class &quot;cTarget&quot;, a list
 with following components:
 </p>

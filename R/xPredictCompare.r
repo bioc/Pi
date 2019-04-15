@@ -196,7 +196,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 	}
 	
 	if(signature){
-		caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("XGR"))
+		caption <- paste("Created by xPredictROCR from XGR version", utils ::packageVersion("XGR"))
 		p <- p + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
 	}
 	

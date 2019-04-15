@@ -6,7 +6,7 @@
 \usage{
 xMLdotplot(sTarget, displayBy = c("importance2fold", "roc2fold",
 "fmax2fold", "importance_accurancy", "importance_gini", "ROC", "Fmax"),
-font.family = "sans", signature = TRUE)
+ML.included = T, font.family = "sans", signature = TRUE)
 }
 \arguments{
 \item{sTarget}{an object of class "sTarget"}
@@ -18,6 +18,8 @@ Precision-Recall curve) or overall statistics ("importance_accurancy"
 for predictor importance measured by accuracy decrease,
 "importance_gini" for predictor importance measured by Gini decrease,
 "ROC" for AUC in ROC, "Fmax" for F-max in Precision-Recall curve)}
+
+\item{ML.included}{logical to indicate whether to use ML results}
 
 \item{font.family}{the font family for texts}
 

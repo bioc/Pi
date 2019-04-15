@@ -128,12 +128,11 @@ RData files. See <code>xRDataLoader</code> for details</p>
 cross-validation
 </p>
 </li>
-<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
-priority information, where nGene is the number of genes in the input
-data frame, and the 6 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or
-'Putative'), &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the priority
-scores), &quot;priority&quot; (5-star priority score), and &quot;description&quot; (gene
-description)
+<li><p><code>priority</code>: a data frame of n X 5 containing gene priority
+information, where n is the number of genes in the input data frame,
+and the 5 columns are &quot;GS&quot; (either 'GSP', or 'GSN', or 'Putative'),
+&quot;name&quot; (gene names), &quot;rank&quot; (priority rank), &quot;rating&quot; (5-star priority
+score/rating), and &quot;description&quot; (gene description)
 </p>
 </li>
 <li><p><code>predictor</code>: a data frame, which is the same as the input
@@ -165,6 +164,9 @@ cross-validation
 </li>
 <li><p><code>evidence</code>: an object of the class &quot;eTarget&quot;, a list with
 following components &quot;evidence&quot; and &quot;metag&quot;
+</p>
+</li>
+<li><p><code>list_pNode</code>: a list of &quot;pNode&quot; objects
 </p>
 </li></ul>
 

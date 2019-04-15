@@ -1,8 +1,8 @@
-#' Function to prepare genetic predictors given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)
+#' Function to prepare genetic predictors given GWAS summary data with eGenes identified through ABF
 #'
-#' \code{xPierSNPsAdv} is supposed to prepare genetic predictors given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values). Internally it calls \code{\link{xPierSNPs}} to prepare the distance predictor, the eQTL predictors (if required) and the HiC predictors (if required). It returns a list of class "pNode" objects.
+#' \code{xPierSNPsAdvABF} is supposed to prepare genetic predictors given GWAS summary data with eGenes identified through ABF. Internally it calls \code{\link{xPierSNPs}} to prepare the distance predictor and the HiC predictors (if required), and \code{\link{xPierABF}} to prepare the eQTL predictors (if required). It returns a list of class "pNode" objects.
 #'
-#' @param data a named input vector containing the sinificance level for nodes (dbSNP). For this named vector, the element names are dbSNP ID (or in the format such as 'chr16:28525386'), the element values for the significance level (measured as p-value or fdr). Alternatively, it can be a matrix or data frame with two columns: 1st column for dbSNP, 2nd column for the significance level
+#' @param data a data frame storing GWAS summary data with following required columns 'snp', 'p' (p-value), 'effect' (the effect allele assessed), 'other' (other allele), 'b' (effect size for the allele assessed; log(odds ratio) for a case-control study), 'se' (standard error), 'suggestive' (logical, and those false only to define nGene/cGene; all used to define eGene)
 #' @param include.LD additional SNPs in LD with Lead SNPs are also included. By default, it is 'NA' to disable this option. Otherwise, LD SNPs will be included based on one or more of 5 super-populations from 1000 Genomics Project data (phase 3). They are "AFR", "AMR", "EAS", "EUR", and "SAS". Explanations for population code can be found at \url{http://www.1000genomes.org/faq/which-populations-are-part-your-study}
 #' @param LD.customised a user-input matrix or data frame with 3 columns: 1st column for Lead SNPs, 2nd column for LD SNPs, and 3rd for LD r2 value. It is designed to allow the user analysing their pre-calculated LD info. This customisation (if provided) has the high priority over built-in LD SNPs
 #' @param LD.r2 the LD r2 value. By default, it is 0.8, meaning that SNPs in LD (r2>=0.8) with input SNPs will be considered as LD SNPs. It can be any value from 0.8 to 1
@@ -14,8 +14,7 @@
 #' @param GR.SNP the genomic regions of SNPs. By default, it is 'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS SNPs and their LD SNPs (hg19). It can be 'dbSNP_Common', that is, Common SNPs from dbSNP (version 146) plus GWAS SNPs and their LD SNPs (hg19). Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to dbSNP IDs. Then, tell "GR.SNP" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
 #' @param GR.Gene the genomic regions of genes. By default, it is 'UCSC_knownGene', that is, UCSC known genes (together with genomic locations) based on human genome assembly hg19. It can be 'UCSC_knownCanonical', that is, UCSC known canonical genes (together with genomic locations) based on human genome assembly hg19. Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to Gene Symbols. Then, tell "GR.Gene" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
 #' @param include.TAD TAD boundary regions are also included. By default, it is 'none' to disable this option. Otherwise, inclusion of a TAD dataset to pre-filter SNP-nGene pairs (i.e. only those within a TAD region will be kept). TAD datasets can be one of "GM12878"  (lymphoblast), "IMR90" (fibroblast), "MSC" (mesenchymal stem cell) ,"TRO" (trophoblasts-like cell), "H1" (embryonic stem cell), "MES" (mesendoderm) and "NPC" (neural progenitor cell). Explanations can be found at \url{http://dx.doi.org/10.1016/j.celrep.2016.10.061}
-#' @param include.eQTL the eQTL supported currently. By default, it is 'NA' to disable this option. Pre-built eQTL datasets are detailed in \code{\link{xDefineEQTL}}
-#' @param eQTL.customised a user-input matrix or data frame with 4 columns: 1st column for SNPs/eQTLs, 2nd column for Genes, 3rd for eQTL mapping significance level (p-values or FDR), and 4th for contexts (required even though only one context is input). Alternatively, it can be a file containing these 4 columns. It is designed to allow the user analysing their eQTL data. This customisation (if provided) will populate built-in eQTL data
+#' @param include.eQTL the context-specific eQTL summary data supported currently. Contexts include "Bcell", "Blood", "CD14", "CD4", "CD8", "IFN", "LPS24", "LPS2", "Monocyte", "Neutrophil", "NK", "shared_CD14", "shared_IFN", "shared_LPS24", "shared_LPS2"
 #' @param include.HiC genes linked to input SNPs are also included. By default, it is 'NA' to disable this option. Otherwise, those genes linked to SNPs will be included according to Promoter Capture HiC (PCHiC) datasets. Pre-built HiC datasets are detailed in \code{\link{xDefineHIC}}
 #' @param cdf.function a character specifying a Cumulative Distribution Function (cdf). It can be one of 'exponential' based on exponential cdf, 'empirical' for empirical cdf
 #' @param scoring.scheme the method used to calculate seed gene scores under a set of SNPs. It can be one of "sum" for adding up, "max" for the maximum, and "sequential" for the sequential weighting. The sequential weighting is done via: \eqn{\sum_{i=1}{\frac{R_{i}}{i}}}, where \eqn{R_{i}} is the \eqn{i^{th}} rank (in a descreasing order)
@@ -32,6 +31,7 @@
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param verbose.details logical to indicate whether the detailed messages from being-called functions will be displayed in the screen. By default, it sets to FALSE enabling messages 
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param ... additional parameters used in xPierABF ("prior.eqtl", "prior.gwas", "prior.both", "cutoff.H4", "cutoff.pgwas")
 #' @return
 #' A list of class "pNode" objects, each object having a list with following components:
 #' \itemize{
@@ -45,8 +45,8 @@
 #' }
 #' @note This function calls \code{\link{xPierSNPs}} in a loop way generating the distance predictor, the eQTL predictors (if required) and the HiC predictors (if required).
 #' @export
-#' @seealso \code{\link{xPierSNPs}}, \code{\link{xPierMatrix}}
-#' @include xPierSNPsAdv.r
+#' @seealso \code{\link{xPierABF}}, \code{\link{xPierSNPs}}, \code{\link{xPierMatrix}}
+#' @include xPierSNPsAdvABF.r
 #' @examples
 #' \dontrun{
 #' # Load the library
@@ -55,17 +55,13 @@
 #'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
-#' # a) provide the SNPs with the significance info
-#' data(ImmunoBase)
-#' gr <- ImmunoBase$AS$variants
-#' AS <- as.data.frame(GenomicRanges::mcols(gr)[, c('Variant','Pvalue')])
+#' data <- utils::read.delim(file="summary_gwas.RA.txt", header=T, row.names=NULL, stringsAsFactors=F)
 #'
 #' # b) perform priority analysis
-#' ls_pNode <- xPierSNPsAdv(data=AS, include.TAD='GM12878', include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location)
-#' #ls_pNode <- xPierSNPsAdv(data=AS, include.TAD='GM12878', include.eQTL="JKng_mono", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location, eQTL.customised='eQTL.customised.Artery.txt')
+#' ls_pNode <- xPierSNPsAdvABF(data=AS, include.TAD='GM12878', include.eQTL="Blood", include.HiC='Monocytes', network="PCommonsUN_medium", restart=0.7, RData.location=RData.location)
 #' }
 
-xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, significance.threshold=5e-5, score.cap=10, distance.max=2000, decay.kernel=c("slow","constant","linear","rapid"), decay.exponent=2, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), include.TAD=c("none","GM12878","IMR90","MSC","TRO","H1","MES","NPC"), include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=c("empirical","exponential"), scoring.scheme=c("max","sum","sequential"), network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, verbose.details=FALSE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierSNPsAdvABF <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, significance.threshold=5e-5, score.cap=10, distance.max=2000, decay.kernel=c("slow","constant","linear","rapid"), decay.exponent=2, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), include.TAD=c("none","GM12878","IMR90","MSC","TRO","H1","MES","NPC"), include.eQTL=c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD4","CD8","Blood","Monocyte","shared_CD14","shared_LPS2","shared_LPS24","shared_IFN"), include.HiC=NA, cdf.function=c("empirical","exponential"), scoring.scheme=c("max","sum","sequential"), network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, verbose.details=FALSE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
 {
 
     startT <- Sys.time()
@@ -83,6 +79,11 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
     normalise <- match.arg(normalise)
     normalise.affinity.matrix <- match.arg(normalise.affinity.matrix)
     
+    #############################
+    suggestive <- NULL
+    data_significant <- subset(data, !suggestive)
+    #############################
+        
     ## force verbose.details to be FALSE if verbose is FALSE
     if(verbose==FALSE){
     	verbose.details <- FALSE
@@ -93,7 +94,7 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 		message(sprintf("Preparing the distance predictor (%s) ...", as.character(now)), appendLF=TRUE)
 	}
 	relative.importance <- c(1,0,0)
-    pNode_distance <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.TAD=include.TAD, include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
+    pNode_distance <- xPierSNPs(data=data_significant, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.TAD=include.TAD, include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
     ls_pNode_distance <- list(pNode_distance)
     names(ls_pNode_distance) <- paste('nGene_', distance.max, '_', decay.kernel, sep='')
     
@@ -106,74 +107,34 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 		names(include.eQTLs) <- include.eQTLs
 		ls_pNode_eQTL <- lapply(include.eQTLs, function(x){
 			if(verbose){
-				now <- Sys.time()
-				message(sprintf("Preparing the eQTL predictor '%s' (%s) ...", x, as.character(now)), appendLF=TRUE)
+				startT <- Sys.time()
+				message(sprintf("Preparing the eQTL predictor '%s' through ABF (%s) ...", x, as.character(startT)), appendLF=TRUE)
 			}
-			relative.importance <- c(0,1,0)
-			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=x, eQTL.customised=NULL, include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
+			suppressMessages(pNode <- xPierABF(data=data, eqtl=x, network=network, STRING.only=STRING.only, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose, RData.location=RData.location, ...))
 			if(verbose & is.null(pNode)){
 				message(sprintf("\tNote: this predictor '%s' is NULL", x), appendLF=TRUE)
+			}
+			if(verbose){
+				endT <- Sys.time()
+				runTime <- as.numeric(difftime(strptime(endT, "%Y-%m-%d %H:%M:%S"), strptime(startT, "%Y-%m-%d %H:%M:%S"), units="secs"))
+				message(paste(c("Runtime in total is: ",runTime," secs\n"), collapse=""), appendLF=TRUE)
 			}
 			return(pNode)
 		})
 		names(ls_pNode_eQTL) <- paste('eGene_', names(ls_pNode_eQTL), sep='')
     }
-    
-    ################################
-    ################################
-    ls_pNode_eQTL_customised <- NULL
-    df_SGS_customised <- NULL
-    if(!is.null(eQTL.customised)){
-    
-		if(is.vector(eQTL.customised)){
-			# assume a file
-			df <- utils::read.delim(file=eQTL.customised, header=TRUE, row.names=NULL, stringsAsFactors=FALSE)
-		}else if(is.matrix(eQTL.customised) | is.data.frame(eQTL.customised)){
-			df <- eQTL.customised
-		}
-		
-		if(!is.null(df)){
-			colnames(df) <- c("SNP", "Gene", "Sig", "Context")
-			SGS_customised <- df
-			#SGS_customised <- cbind(df, Context=rep('Customised',nrow(df)))
-			
-			############################
-			# remove Gene if NA
-			# remove SNP if NA
-			df_SGS_customised <- SGS_customised[!is.na(SGS_customised[,1]) & !is.na(SGS_customised[,2]),]
-			############################
-		}
-    }
-    if(!is.null(df_SGS_customised)){
-		ls_df <- split(x=df_SGS_customised, f=df_SGS_customised$Context)
-		ls_pNode_eQTL_customised <- lapply(1:length(ls_df), function(i){
-			if(verbose){
-				now <- Sys.time()
-				message(sprintf("Preparing the customised eQTL predictor '%s' (%s) ...", names(ls_df)[i], as.character(now)), appendLF=TRUE)
-			}
-			relative.importance <- c(0,1,0)
-			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=NA, eQTL.customised=ls_df[[i]], include.HiC=NA, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
-			if(verbose & is.null(pNode)){
-				message(sprintf("\tNote: this predictor '%s' is NULL", names(ls_df)[i]), appendLF=TRUE)
-			}
-			return(pNode)
-		})
-		names(ls_pNode_eQTL_customised) <- paste('eGene_', names(ls_df), sep='')
-    }
-    ls_pNode_eQTL <- c(ls_pNode_eQTL, ls_pNode_eQTL_customised)
-    ################################
-    ################################
+
+    ####################################################################################
     
     include.HiCs <- include.HiC[!is.na(include.HiC)]
     if(length(include.HiCs)>0){
 		names(include.HiCs) <- include.HiCs
 		ls_pNode_HiC <- lapply(include.HiCs, function(x){
 			if(verbose){
-				now <- Sys.time()
-				message(sprintf("Preparing the HiC predictor '%s' (%s) ...", x, as.character(now)), appendLF=TRUE)
+				message(sprintf("Preparing the HiC predictor '%s' (%s) ...", x, as.character(Sys.time())), appendLF=TRUE)
 			}
 			relative.importance <- c(0,0,1)
-			pNode <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=NA, eQTL.customised=NULL, include.HiC=x, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
+			pNode <- xPierSNPs(data=data_significant, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=NA, eQTL.customised=NULL, include.HiC=x, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose.details, RData.location=RData.location)
 			if(verbose & is.null(pNode)){
 				message(sprintf("\tNote: this predictor '%s' has NULL", x), appendLF=TRUE)
 			}
@@ -183,11 +144,7 @@ xPierSNPsAdv <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, sig
 	}else{
 		ls_pNode_HiC <- NULL
 	}
-    
-    ##########################################################################################
-    ## prioritisation equally
-    #relative.importance <- c(1/3,1/3,1/3)
-    #pNode_all <- xPierSNPs(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.eQTL=include.eQTLs, eQTL.customised=NULL, include.HiC=include.HiCs, cdf.function=cdf.function, relative.importance=relative.importance, scoring.scheme=scoring.scheme, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose, RData.location=RData.location)
+
     ##########################################################################################
     ls_pNode <- c(ls_pNode_distance, ls_pNode_eQTL, ls_pNode_HiC)
     

@@ -14,9 +14,9 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 \item{list_pNode}{a list of "pNode" objects or a "pNode" object}
 
 \item{displayBy}{which priority will be extracted. It can be "score"
-for priority score (by default), "rank" for priority rank, "weight" for
-seed weight, "pvalue" for priority p-value, "evidence" for the evidence
-(seed info)}
+for priority score/rating (by default), "rank" for priority rank,
+"weight" for seed weight, "pvalue" for priority p-value, "evidence" for
+the evidence (seed info)}
 
 \item{combineBy}{how to resolve nodes/targets from a list of "pNode"
 objects. It can be "intersect" for intersecting nodes (by default),
@@ -47,9 +47,9 @@ with following components:
 \itemize{
 \item{\code{evidence}: a data frame of nGene X 6 containing gene
 evidence information, where nGene is the number of genes, and the 7
-columns are seed info including "Overall" for the number of different
-types of seeds, followed by details on individual type of seeds (that
-is, "OMIM", "Phenotype", "Function", "nearbyGenes", "eQTL", "HiC")}
+columns are seed info including "Overall" for the total number of
+different types of seeds, followed by details on individual type of
+seeds (that is, "dGene", "pGene", "fGene", "nGene", "eGene", "cGene")}
 \item{\code{metag}: an "igraph" object}
 }
 Otherwise (if displayBy is not 'evidence'), if aggregateBy is 'none'
@@ -58,21 +58,19 @@ column/predictor for either priority score, or priorty rank or priority
 p-value. If aggregateBy is not 'none', an object of the class
 "dTarget", a list with following components:
 \itemize{
-\item{\code{priority}: a data frame of nGene X 6 containing gene
-priority (aggregated) information, where nGene is the number of genes,
-and the 6 columns are "name" (gene names), "rank" (ranks of the
-priority scores), "pvalue" (the aggregated p-value, converted from
-empirical cumulative distribution of the probability of being GSP),
-"fdr" (fdr adjusted from the aggregated p-value), "priority"
-(-log10(pvalue) but rescaled into the 5-star ratings), "description"
-(gene description) and seed info including "Overall" for the number of
-different types of seeds, followed by details on individual type of
-seeds (that is, "OMIM", "Phenotype", "Function", "nearbyGenes", "eQTL",
-"HiC")}
+\item{\code{priority}: a data frame of n X 4+7 containing gene priority
+(aggregated) information, where n is the number of genes, and the 4
+columns are "name" (gene names), "rank" (ranks of the priority scores),
+"rating" (the 5-star score/rating), "description" (gene description),
+and 7 seed info columns including "seed" (whether or not seed genes),
+"nGene" (nearby genes), "cGene" (conformation genes), "eGene" (eQTL
+gens), "dGene" (disease genes), "pGene" (phenotype genes), and "fGene"
+(function genes)}
 \item{\code{predictor}: a data frame containing predictor matrix, with
-each column/predictor for either priority score, or priorty rank or
-priority p-value}
+each column/predictor for either priority score/rating, or priorty rank
+or priority p-value}
 \item{\code{metag}: an "igraph" object}
+\item{\code{list_pNode}: a list of "pNode" objects}
 }
 }
 \description{

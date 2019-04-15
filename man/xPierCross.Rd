@@ -4,7 +4,7 @@
 \alias{xPierCross}
 \title{Function to extract priority matrix from a list of dTarget/sTarget objects}
 \usage{
-xPierCross(list_xTarget, displayBy = c("priority", "rank", "pvalue",
+xPierCross(list_xTarget, displayBy = c("rating", "rank", "pvalue",
 "fdr"), combineBy = c("intersect", "union"), aggregateBy = c("none",
 "fishers", "logistic", "Ztransform", "orderStatistic"), verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata")
@@ -13,9 +13,9 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 \item{list_xTarget}{a list of "dTarget"/"sTarget" objects or a
 "dTarget"/"sTarget" object}
 
-\item{displayBy}{which priority will be extracted. It can be "priority"
-for priority score (by default), "rank" for priority rank, "pvalue" for
-priority p-value, "fdr" for priority fdr}
+\item{displayBy}{which priority will be extracted. It can be "rating"
+for priority score/rating (by default), "rank" for priority rank,
+"pvalue" for priority p-value, "fdr" for priority fdr}
 
 \item{combineBy}{how to resolve nodes/targets from a list of
 "dTarget"/"sTarget" objects. It can be "intersect" for intersecting
@@ -42,8 +42,8 @@ RData files. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 If aggregateBy is 'none' (by default), a data frame containing priority
-matrix, with each column/disease for either priority score, or priorty
-rank or priority p-value.
+matrix, with each column/disease for either priority score/rating, or
+priorty rank or priority p-value.
 If aggregateBy is not 'none', an object of the class "cTarget", a list
 with following components:
 \itemize{

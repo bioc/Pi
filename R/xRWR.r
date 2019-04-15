@@ -17,7 +17,6 @@
 #' }
 #' @note The input graph will treat as an unweighted graph if there is no 'weight' edge attribute associated with
 #' @export
-#' @import MASS
 #' @importFrom Matrix Diagonal rowSums colSums Matrix t
 #' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame
 #' @importFrom GenomeInfoDb seqlevels

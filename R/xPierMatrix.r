@@ -3,7 +3,7 @@
 #' \code{xPierMatrix} is supposed to extract priority or evidence matrix from a list of pNode objects. Also supported is the aggregation of priority matrix (similar to the meta-analysis) generating the priority results; we view this functionality as the discovery mode of the prioritisation.
 #'
 #' @param list_pNode a list of "pNode" objects or a "pNode" object
-#' @param displayBy which priority will be extracted. It can be "score" for priority score (by default), "rank" for priority rank, "weight" for seed weight, "pvalue" for priority p-value, "evidence" for the evidence (seed info)
+#' @param displayBy which priority will be extracted. It can be "score" for priority score/rating (by default), "rank" for priority rank, "weight" for seed weight, "pvalue" for priority p-value, "evidence" for the evidence (seed info)
 #' @param combineBy how to resolve nodes/targets from a list of "pNode" objects. It can be "intersect" for intersecting nodes (by default), "union" for unionising nodes
 #' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
@@ -11,14 +11,15 @@
 #' @return
 #' If displayBy is 'evidence', an object of the class "eTarget", a list with following components:
 #' \itemize{
-#'  \item{\code{evidence}: a data frame of nGene X 6 containing gene evidence information, where nGene is the number of genes, and the 7 columns are seed info including "Overall" for the number of different types of seeds, followed by details on individual type of seeds (that is, "OMIM", "Phenotype", "Function", "nearbyGenes", "eQTL", "HiC")}
+#'  \item{\code{evidence}: a data frame of nGene X 6 containing gene evidence information, where nGene is the number of genes, and the 7 columns are seed info including "Overall" for the total number of different types of seeds, followed by details on individual type of seeds (that is, "dGene", "pGene", "fGene", "nGene", "eGene", "cGene")}
 #'  \item{\code{metag}: an "igraph" object}
 #' }
 #' Otherwise (if displayBy is not 'evidence'), if aggregateBy is 'none' (by default), a data frame containing priority matrix, with each column/predictor for either priority score, or priorty rank or priority p-value. If aggregateBy is not 'none', an object of the class "dTarget", a list with following components:
 #' \itemize{
-#'  \item{\code{priority}: a data frame of nGene X 6 containing gene priority (aggregated) information, where nGene is the number of genes, and the 6 columns are "name" (gene names), "rank" (ranks of the priority scores), "pvalue" (the aggregated p-value, converted from empirical cumulative distribution of the probability of being GSP), "fdr" (fdr adjusted from the aggregated p-value), "priority" (-log10(pvalue) but rescaled into the 5-star ratings), "description" (gene description) and seed info including "Overall" for the number of different types of seeds, followed by details on individual type of seeds (that is, "OMIM", "Phenotype", "Function", "nearbyGenes", "eQTL", "HiC")}
-#'  \item{\code{predictor}: a data frame containing predictor matrix, with each column/predictor for either priority score, or priorty rank or priority p-value}
+#'  \item{\code{priority}: a data frame of n X 4+7 containing gene priority (aggregated) information, where n is the number of genes, and the 4 columns are "name" (gene names), "rank" (ranks of the priority scores), "rating" (the 5-star score/rating), "description" (gene description), and 7 seed info columns including "seed" (whether or not seed genes), "nGene" (nearby genes), "cGene" (conformation genes), "eGene" (eQTL gens), "dGene" (disease genes), "pGene" (phenotype genes), and "fGene" (function genes)}
+#'  \item{\code{predictor}: a data frame containing predictor matrix, with each column/predictor for either priority score/rating, or priorty rank or priority p-value}
 #'  \item{\code{metag}: an "igraph" object}
+#'  \item{\code{list_pNode}: a list of "pNode" objects}
 #' }
 #' @note none
 #' @export
@@ -80,7 +81,6 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 		############
 		## seed info
 		predictor_names <- names(list_pNode)
-		predictor_names <- gsub('^Annotation_', '', predictor_names)
 		predictor_names <- gsub('_.*', '', predictor_names)
 		ls_df <- lapply(1:length(list_pNode), function(i){
 			pNode <- list_pNode[[i]]
@@ -169,15 +169,15 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			## adjp
 			df_adjp <- stats::p.adjust(df_ap, method="BH")
 			######
-			## priority: first log10-transformed ap and then being rescaled into the [0,5] range
-			priority <- -log10(df_ap)
+			## rating: first log10-transformed ap and then being rescaled into the [0,5] range
+			rating <- -log10(df_ap)
 			####
-			priority <- sqrt(priority)
+			rating <- sqrt(rating)
 			####
-			priority <- 5 * (priority - min(priority))/(max(priority) - min(priority))
+			rating <- 5 * (rating - min(rating))/(max(rating) - min(rating))
 			
 			## df_priority
-			df_priority <- data.frame(name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, priority=priority, stringsAsFactors=FALSE)
+			df_priority <- data.frame(name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, rating=rating, stringsAsFactors=FALSE)
 			### add description
 			df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, RData.location=RData.location)$description
 			###
@@ -217,9 +217,14 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			overall <- apply(mat_evidence!=0, 1, sum)
 			
 			## return dTarget
-			dTarget <- list(priority  = cbind(df_priority,Overall=overall, mat_evidence),
+			#priority <- cbind(df_priority,Overall=overall, mat_evidence)
+			#priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,c("nGene","cGene","eGene","dGene","pGene","fGene")], stringsAsFactors=F)
+			ind <- match(c("nGene","cGene","eGene","dGene","pGene","fGene"), colnames(mat_evidence))
+			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=F)
+			dTarget <- list(priority  = priority,
 							predictor = df_predictor,
-							metag	  = metag
+							metag	  = metag,
+							list_pNode  = list_pNode
 						 )
 			class(dTarget) <- "dTarget"
 			

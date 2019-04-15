@@ -69,20 +69,38 @@ library(Pi)
 RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
 ## Not run: 
 old_names &lt;- colnames(sTarget$predictor)[-c(1,2)]
-new_names &lt;- c('Annotation_disease genes (dGenes)',
-'Annotation_phenotype genes (pGenes)', 'Annotation_function genes
-(fGenes)', 'nearbyGenes_nearby genes (nGenes)', 'eQTL_eQTL: resting
-state (CD14+)', 'eQTL_eQTL: activating state (CD14+ by LPS2h)',
-'eQTL_eQTL: activating state (CD14+ by LPS24h)', 'eQTL_eQTL: activating
-state (CD14+ by IFN24h)', 'eQTL_eQTL: B cells', 'eQTL_eQTL: monocytes',
-'eQTL_eQTL: CD4+ T cells', 'eQTL_eQTL: CD8+ T cells', 'eQTL_eQTL:
-neutrophils', 'eQTL_eQTL: NK cells','eQTL_eQTL: peripheral blood',
-'HiC_Hi-C: monocytes', 'HiC_Hi-C: macrophages (M0)', 'HiC_Hi-C:
-macrophages (M1)', 'HiC_Hi-C: macrophages (M2)', 'HiC_Hi-C:
-neutrophils', 'HiC_Hi-C: CD4+ T cells (naive)', 'HiC_Hi-C: CD4+ T cells
-(total)', 'HiC_Hi-C: CD8+ T cells (naive)', 'HiC_Hi-C: CD8+ T cells
-(total)', 'HiC_Hi-C: B cells (naive)', 'HiC_Hi-C: B cells (total)')
-sTarget_rename &lt;- xMLrename(sTarget, old_names, new_names)
+old_names_1 &lt;- c('nGene_20000_constant', 'eGene_CD14', 'eGene_LPS2',
+'eGene_LPS24', 'eGene_IFN', 'eGene_Bcell', 'eGene_CD4', 'eGene_CD8',
+'eGene_Neutrophil', 'eGene_NK', 'eGene_Blood', 'cGene_Monocytes',
+'cGene_Macrophages_M0', 'cGene_Macrophages_M1', 'cGene_Macrophages_M2',
+'cGene_Neutrophils', 'cGene_Naive_CD4_T_cells',
+'cGene_Total_CD4_T_cells', 'cGene_Naive_CD8_T_cells',
+'cGene_Total_CD8_T_cells', 'cGene_Naive_B_cells',
+'cGene_Total_B_cells', 'dGene', 'pGene', 'fGene')
+old_names_2 &lt;- c('nGene_20000_constant', 'eGene_Pi_eQTL_CD14',
+'eGene_Pi_eQTL_LPS2', 'eGene_Pi_eQTL_LPS24', 'eGene_Pi_eQTL_IFN',
+'eGene_Pi_eQTL_Bcell', 'eGene_Pi_eQTL_CD4', 'eGene_Pi_eQTL_CD8',
+'eGene_Pi_eQTL_Neutrophil', 'eGene_Pi_eQTL_NK', 'eGene_Pi_eQTL_Blood',
+'cGene_Monocytes', 'cGene_Macrophages_M0', 'cGene_Macrophages_M1',
+'cGene_Macrophages_M2', 'cGene_Neutrophils', 'cGene_Naive_CD4_T_cells',
+'cGene_Total_CD4_T_cells', 'cGene_Naive_CD8_T_cells',
+'cGene_Total_CD8_T_cells', 'cGene_Naive_B_cells',
+'cGene_Total_B_cells', 'dGene', 'pGene', 'fGene')
+new_names &lt;- c('nearbyGenes_nGene: nearby genes', 'eQTL_eGene: resting
+state (CD14+)', 'eQTL_eGene: activating state (CD14+ by LPS2h)',
+'eQTL_eGene: activating state (CD14+ by LPS24h)', 'eQTL_eGene:
+activating state (CD14+ by IFN24h)', 'eQTL_eGene: B cells',
+'eQTL_eGene: CD4+ T cells', 'eQTL_eGene: CD8+ T cells', 'eQTL_eGene:
+neutrophils', 'eQTL_eGene: NK cells','eQTL_eGene: peripheral blood',
+'HiC_cGene: monocytes', 'HiC_cGene: macrophages (M0)', 'HiC_cGene:
+macrophages (M1)', 'HiC_cGene: macrophages (M2)', 'HiC_cGene:
+neutrophils', 'HiC_cGene: CD4+ T cells (naive)', 'HiC_cGene: CD4+ T
+cells (total)', 'HiC_cGene: CD8+ T cells (naive)', 'HiC_cGene: CD8+ T
+cells (total)', 'HiC_cGene: B cells (naive)', 'HiC_cGene: B cells
+(total)', 'Annotation_dGene: disease genes', 'Annotation_pGene:
+phenotype genes', 'Annotation_fGene: function genes')
+sTarget_renamed &lt;- xMLrename(sTarget, old_names_1, new_names)
+sTarget_renamed &lt;- xMLrename(sTarget_renamed, old_names_2, new_names)
 
 ## End(Not run)
 </pre>

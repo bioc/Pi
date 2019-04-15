@@ -167,6 +167,7 @@ print.dTarget <- function(x, ...) {
 	}
 	cat(sprintf("  $predictor: a data frame of %d rows X %d columns", dim(x$predictor)[1],dim(x$predictor)[2]), "\n", sep="")
 	cat(sprintf("  $priority: a data frame of %d rows X %d columns", dim(x$priority)[1],dim(x$priority)[2]), "\n", sep="")
+	cat(sprintf("  $list_pNode: a list of %d 'pNode' objects", length(x$list_pNode)), "\n", sep="")
 	if(!is.null(x$pPerf)){
 		cat(sprintf("  $pPerf: an object of the class 'pPerf'"), "\n", sep="")
 	}
@@ -223,6 +224,7 @@ print.sTarget <- function(x, ...) {
 	cat(sprintf("  $performance: a data frame of %d rows X %d columns", dim(x$performance)[1],dim(x$performance)[2]), "\n", sep="")
 	cat(sprintf("  $importance: a data frame of %d rows X %d columns", dim(x$importance)[1],dim(x$importance)[2]), "\n", sep="")
 	cat(sprintf("  $evidence: an object of the class 'eTarget'"), "\n", sep="")
+	cat(sprintf("  $list_pNode: a list of %d 'pNode' objects", length(x$list_pNode)), "\n", sep="")
 	cat("\n--------------------------------------------------\n")
 	cat("$priority:\n")
 	print(x$priority[1:2,], row.names=FALSE)

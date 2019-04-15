@@ -38,9 +38,9 @@ RData.location = "http://galahad.well.ox.ac.uk/bigdata")
 <tr valign="top"><td><code>displayBy</code></td>
 <td>
 <p>which priority will be extracted. It can be &quot;score&quot;
-for priority score (by default), &quot;rank&quot; for priority rank, &quot;weight&quot; for
-seed weight, &quot;pvalue&quot; for priority p-value, &quot;evidence&quot; for the evidence
-(seed info)</p>
+for priority score/rating (by default), &quot;rank&quot; for priority rank,
+&quot;weight&quot; for seed weight, &quot;pvalue&quot; for priority p-value, &quot;evidence&quot; for
+the evidence (seed info)</p>
 </td></tr>
 <tr valign="top"><td><code>combineBy</code></td>
 <td>
@@ -85,9 +85,9 @@ with following components:
 <ul>
 <li><p><code>evidence</code>: a data frame of nGene X 6 containing gene
 evidence information, where nGene is the number of genes, and the 7
-columns are seed info including &quot;Overall&quot; for the number of different
-types of seeds, followed by details on individual type of seeds (that
-is, &quot;OMIM&quot;, &quot;Phenotype&quot;, &quot;Function&quot;, &quot;nearbyGenes&quot;, &quot;eQTL&quot;, &quot;HiC&quot;)
+columns are seed info including &quot;Overall&quot; for the total number of
+different types of seeds, followed by details on individual type of
+seeds (that is, &quot;dGene&quot;, &quot;pGene&quot;, &quot;fGene&quot;, &quot;nGene&quot;, &quot;eGene&quot;, &quot;cGene&quot;)
 </p>
 </li>
 <li><p><code>metag</code>: an &quot;igraph&quot; object
@@ -102,25 +102,25 @@ p-value. If aggregateBy is not 'none', an object of the class
 </p>
 
 <ul>
-<li><p><code>priority</code>: a data frame of nGene X 6 containing gene
-priority (aggregated) information, where nGene is the number of genes,
-and the 6 columns are &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the
-priority scores), &quot;pvalue&quot; (the aggregated p-value, converted from
-empirical cumulative distribution of the probability of being GSP),
-&quot;fdr&quot; (fdr adjusted from the aggregated p-value), &quot;priority&quot;
-(-log10(pvalue) but rescaled into the 5-star ratings), &quot;description&quot;
-(gene description) and seed info including &quot;Overall&quot; for the number of
-different types of seeds, followed by details on individual type of
-seeds (that is, &quot;OMIM&quot;, &quot;Phenotype&quot;, &quot;Function&quot;, &quot;nearbyGenes&quot;, &quot;eQTL&quot;,
-&quot;HiC&quot;)
+<li><p><code>priority</code>: a data frame of n X 4+7 containing gene priority
+(aggregated) information, where n is the number of genes, and the 4
+columns are &quot;name&quot; (gene names), &quot;rank&quot; (ranks of the priority scores),
+&quot;rating&quot; (the 5-star score/rating), &quot;description&quot; (gene description),
+and 7 seed info columns including &quot;seed&quot; (whether or not seed genes),
+&quot;nGene&quot; (nearby genes), &quot;cGene&quot; (conformation genes), &quot;eGene&quot; (eQTL
+gens), &quot;dGene&quot; (disease genes), &quot;pGene&quot; (phenotype genes), and &quot;fGene&quot;
+(function genes)
 </p>
 </li>
 <li><p><code>predictor</code>: a data frame containing predictor matrix, with
-each column/predictor for either priority score, or priorty rank or
-priority p-value
+each column/predictor for either priority score/rating, or priorty rank
+or priority p-value
 </p>
 </li>
 <li><p><code>metag</code>: an &quot;igraph&quot; object
+</p>
+</li>
+<li><p><code>list_pNode</code>: a list of &quot;pNode&quot; objects
 </p>
 </li></ul>
 

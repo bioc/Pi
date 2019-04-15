@@ -104,6 +104,7 @@ xMLfeatureplot <- function(df_predictor, GSP, GSN, displayBy=c("boxplot","ROC","
 		if(displayBy=='ROC'){
 			df <- data.frame(Val=df_performance[,1], stringsAsFactors=FALSE)
 			rownames(df) <- rownames(df_performance)
+			df$Val <- ifelse(df$Val>=0.5, df$Val, 1-df$Val)
 			xlab <- "AUC\n(a measure of ROC)"
 		}else if(displayBy=='Fmax'){
 			df <- data.frame(Val=df_performance[,2], stringsAsFactors=FALSE)

@@ -74,12 +74,11 @@ an object of class "sTarget", a list with following components:
 \item{\code{model}: an object of class "train" as a best model}
 \item{\code{ls_model}: a list of best models from repeated
 cross-validation}
-\item{\code{priority}: a data frame of nGene X 6 containing gene
-priority information, where nGene is the number of genes in the input
-data frame, and the 6 columns are "GS" (either 'GSP', or 'GSN', or
-'Putative'), "name" (gene names), "rank" (ranks of the priority
-scores), "priority" (5-star priority score), and "description" (gene
-description)}
+\item{\code{priority}: a data frame of n X 5 containing gene priority
+information, where n is the number of genes in the input data frame,
+and the 5 columns are "GS" (either 'GSP', or 'GSN', or 'Putative'),
+"name" (gene names), "rank" (priority rank), "rating" (5-star priority
+score/rating), and "description" (gene description)}
 \item{\code{predictor}: a data frame, which is the same as the input
 data frame but inserting two additional columns ('GS' in the first
 column, 'name' in the second column)}
@@ -97,6 +96,7 @@ predictor importance info}
 cross-validation}
 \item{\code{evidence}: an object of the class "eTarget", a list with
 following components "evidence" and "metag"}
+\item{\code{list_pNode}: a list of "pNode" objects}
 }
 }
 \description{

@@ -5,6 +5,7 @@
 #' @param sTarget an object of class "sTarget"
 #' @param displayBy which statistics will be used for displaying. It can be either statistics across folds ("importance2fold" for predictor importance, "roc2fold" for AUC in ROC, "fmax2fold" for F-max in Precision-Recall curve) or overall statistics ("importance_accurancy" for predictor importance measured by accuracy decrease, "importance_gini" for predictor importance measured by Gini decrease, "ROC" for AUC in ROC, "Fmax" for F-max in Precision-Recall curve)
 #' @param font.family the font family for texts
+#' @param ML.included logical to indicate whether to use ML results
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE showing which function is used to draw this graph
 #' @return an object of class "ggplot"
 #' @note none
@@ -22,7 +23,7 @@
 #' gp
 #' }
 
-xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2fold","importance_accurancy","importance_gini","ROC","Fmax"), font.family="sans", signature=TRUE) 
+xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2fold","importance_accurancy","importance_gini","ROC","Fmax"), ML.included=T, font.family="sans", signature=TRUE) 
 {
     
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -54,10 +55,14 @@ xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2f
     }else if(displayBy=='ROC'){
     	#### replace with roc2fold for Supervised_randomforest
     	Val <- sTarget$performance[,1]
-    	Val[1] <- sTarget$roc2fold[1,1]
+    	if(ML.included){
+    		Val[1] <- sTarget$roc2fold[1,1]
+    	}else{
+    		Val <- Val[-1]
+    	}
     	############
     	df <- data.frame(Val=Val, stringsAsFactors=FALSE)
-    	rownames(df) <- rownames(sTarget$performance)
+    	#rownames(df) <- rownames(sTarget$performance)
     	xlab <- "AUC\n(a measure of ROC)"
     }else if(displayBy=='Fmax'){
     	#### replace with fmax2fold for Supervised_randomforest

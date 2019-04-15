@@ -47,15 +47,17 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
 
     if(class(xTarget) == "dTarget"){
     	if(is.null(xTarget$pPerf)){
-    		df_evidence <- xTarget$priority[, 7:ncol(xTarget$priority)]
+    		df_evidence <- xTarget$priority[, 5:ncol(xTarget$priority)]
     	}else{
-    		df_evidence <- xTarget$priority[, 8:ncol(xTarget$priority)]
+    		df_evidence <- xTarget$priority[, 6:ncol(xTarget$priority)]
     	}
-        df_priority <- xTarget$priority[, c("rank","priority")]
+        df_priority <- xTarget$priority[, c("rank","rating")]
+        df_priority$priority <- df_priority$rating
 		
     }else if(class(xTarget) == "sTarget"){
         df_evidence <- as.data.frame(xTarget$evidence$evidence)
-        df_priority <- xTarget$priority[, c("rank","priority")]
+        df_priority <- xTarget$priority[, c("rank","rating")]
+        df_priority$priority <- df_priority$rating
 		
     }else if(class(xTarget) == "eTarget"){
         df_evidence <- as.data.frame(xTarget$evidence)
@@ -101,7 +103,7 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
 	neighbors <- names(unlist(neighs.out))
 	if(neighbor.seed){
 		# restrict to seeds
-		ind <- neighbors %in% rownames(df_evidence)[df_evidence[,1]>0]
+		ind <- neighbors %in% rownames(df_evidence)[df_evidence$seed=='Y']
 		neighbors <- neighbors[ind]
 	}
 	if(!is.null(neighbor.top)){
@@ -150,12 +152,14 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
 	pie.color <- xColormap(colormap)(ncol(df_val)-1)
 	## legend text
 	legend.text <- colnames(df_val)[-1]
-	legend.text[grep('OMIM|disease',legend.text,ignore.case=TRUE)] <- "dGene"
-	legend.text[grep('Phenotype',legend.text,ignore.case=TRUE)] <- "pGene"
-	legend.text[grep('Function',legend.text,ignore.case=TRUE)] <- "fGene"
-	legend.text[grep('nearbyGenes',legend.text,ignore.case=TRUE)] <- "nGene"
-	legend.text[grep('eQTL',legend.text,ignore.case=TRUE)] <- "eGene"
-	legend.text[grep('HiC|Hi-C',legend.text,ignore.case=TRUE)] <- "cGene"
+	if(0){
+		legend.text[grep('OMIM|disease',legend.text,ignore.case=TRUE)] <- "dGene"
+		legend.text[grep('Phenotype',legend.text,ignore.case=TRUE)] <- "pGene"
+		legend.text[grep('Function',legend.text,ignore.case=TRUE)] <- "fGene"
+		legend.text[grep('nearbyGenes',legend.text,ignore.case=TRUE)] <- "nGene"
+		legend.text[grep('eQTL',legend.text,ignore.case=TRUE)] <- "eGene"
+		legend.text[grep('HiC|Hi-C',legend.text,ignore.case=TRUE)] <- "cGene"
+	}
 	## vertex size
 	if(is.null(vertex.size)){
 		vertex.size <- igraph::degree(subg)

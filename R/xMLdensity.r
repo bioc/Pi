@@ -41,7 +41,7 @@ xMLdensity <- function(xTarget, displayBy=c("All","GS","GSN","GSP","NEW"), x.sca
     }
 
 	priority <- xTarget$priority
-	df <- data.frame(GS=priority$GS, Score=priority$priority, stringsAsFactors=FALSE)
+	df <- data.frame(GS=priority$GS, Score=priority$rating, stringsAsFactors=FALSE)
     
     #GS_level<-c("GSN","GSP","NEW")
     GS_level <- sort(unique(df$GS))
