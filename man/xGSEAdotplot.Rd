@@ -5,9 +5,9 @@
 \title{Function to visualise GSEA results using dot plot}
 \usage{
 xGSEAdotplot(eGSEA, top = 1, colormap = "lightblue-darkblue",
-zlim = NULL, ncolors = 64, xlab = NULL, title = NULL,
-subtitle = c("leading", "enrichment", "both", "none"),
-clab = "Pi rating", x.scale = c("normal", "sqrt", "log"),
+zlim = NULL, ncolors = 64, xlab = NULL, title = c("name",
+"setID", "none"), subtitle = c("leading", "enrichment", "both",
+"none"), clab = "Pi rating", x.scale = c("normal", "sqrt", "log"),
 peak = TRUE, peak.color = "red", leading = FALSE,
 leading.size = 2, leading.color = "black", leading.alpha = 0.6,
 leading.padding = 0.2, leading.arrow = 0.01, leading.force = 0.01,

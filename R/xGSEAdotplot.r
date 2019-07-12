@@ -49,10 +49,11 @@
 #' grid.arrange(grobs=ls_gp, ncol=2)
 #' }
 
-xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL, ncolors=64, xlab=NULL, title=NULL, subtitle=c('leading','enrichment','both','none'), clab='Pi rating', x.scale=c("normal","sqrt","log"), peak=TRUE, peak.color='red', leading=FALSE, leading.size=2, leading.color='black', leading.alpha=0.6, leading.padding=0.2, leading.arrow=0.01, leading.force=0.01, leading.query=NULL, leading.query.only=FALSE, leading.edge.only=FALSE, compact=FALSE, font.family="sans", signature=TRUE, ...)
+xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL, ncolors=64, xlab=NULL, title=c('name','setID','none'), subtitle=c('leading','enrichment','both','none'), clab='Pi rating', x.scale=c("normal","sqrt","log"), peak=TRUE, peak.color='red', leading=FALSE, leading.size=2, leading.color='black', leading.alpha=0.6, leading.padding=0.2, leading.arrow=0.01, leading.force=0.01, leading.query=NULL, leading.query.only=FALSE, leading.edge.only=FALSE, compact=FALSE, font.family="sans", signature=TRUE, ...)
 {
 	
 	x.scale <- match.arg(x.scale)
+	title <- match.arg(title)
 	subtitle <- match.arg(subtitle)
 	
     if(class(eGSEA) != "eGSEA"){
@@ -113,6 +114,7 @@ xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL,
 				
 		bp <- ggplot(df_full, aes(x=Rank, y=RES, colour=Score))
 		bp <- bp + geom_point(size=0.5)
+		bp <- bp + geom_hline(yintercept=0, color="grey")
 		bp <- bp + geom_segment(data=subset(df_full,Hits>=1), aes(xend=Rank, yend=0), size=0.4)
 		if(is.null(zlim)){
 			zlim[1] <- min(df_full$Score)
@@ -186,6 +188,14 @@ xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL,
 		bp <- bp + xlab(xlab) + ylab("Running enrichment score")
 
 		## title
+		if(title=='none'){
+			title <- NA
+		}else if(title=='name'){
+			title <- paste0(df_summary[which.term,"name"], " (n=", nAnno, ")")
+		}else if(title=='setID'){
+			title <- paste0(df_summary[which.term,"setID"], " (n=", nAnno, ")")
+		}
+		
 		if(is.null(title)){
 			title <- paste0(df_summary[which.term,"name"], " (n=", nAnno, ")")
 		}

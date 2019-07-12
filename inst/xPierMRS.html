@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate multi-trait rating score from a list of...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xPierMRS"><tr><td>xPierMRS</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to calculate multi-trait rating score from a list of dTarget/sTarget objects</h2>
+
+<h3>Description</h3>
+
+<p><code>xPierMRS</code> is supposed to calculate multi-trait rating score (MRS)
+from a list of dTarget/sTarget objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xPierMRS(list_xTarget, cutoff.rank = 150, verbose = T)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>list_xTarget</code></td>
+<td>
+<p>a list of &quot;dTarget&quot;/&quot;sTarget&quot; objects</p>
+</td></tr>
+<tr valign="top"><td><code>cutoff.rank</code></td>
+<td>
+<p>the rank cutoff. By default it is 150</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical to indicate whether the messages will be
+displayed in the screen. By default, it sets to true for display</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a data frame containing columns 'Target', 'MRS', 'rating' (in the form
+of &quot;rating.trait_names&quot;) and 'rank' (in the form of
+&quot;rank.trait_names&quot;).
+</p>
+
+
+<h3>Note</h3>
+
+<p>none
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xPierCross</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Load the library
+library(Pi)
+
+## End(Not run)
+RData.location &lt;- "http://galahad.well.ox.ac.uk/bigdata"
+## Not run: 
+df_MRS &lt;- xPierMRS(ls_xTarget)
+
+## End(Not run)
+</pre>
+
+
+</body></html>

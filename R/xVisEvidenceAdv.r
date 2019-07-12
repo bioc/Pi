@@ -3,7 +3,7 @@
 #' \code{xVisEvidenceAdv} is supposed to visualise evidence and priority scores for prioritised genes in a gene network. It returns an object of class "ggplot". 
 #'
 #' @param xTarget an object of class "dTarget", "sTarget" or "eTarget"
-#' @param g an object of class "igraph". If NA, the 'metag' will be used, which is part of the input object "xTarget"
+#' @param g an object of class "igraph". If NA, the 'metag' will be used, which is part of the input object "xTarget". If provided, it must have a node attribute called 'priority'
 #' @param nodes which node genes are in query. If NULL, the top gene will be queried
 #' @param node.info tells the additional information used to label nodes. It can be one of "none" (only gene labeling), "smart" for (by default) using three pieces of information (if any): genes, 5-star ratings, and associated ranks (marked by an @ icon)
 #' @param neighbor.order an integer giving the order of the neighborhood. By default, it is 1-order neighborhood

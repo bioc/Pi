@@ -20,7 +20,8 @@ pie.color.alpha = 1, pie.thick = 0.1, ...)
 \item{xTarget}{an object of class "dTarget", "sTarget" or "eTarget"}
 
 \item{g}{an object of class "igraph". If NA, the 'metag' will be used,
-which is part of the input object "xTarget"}
+which is part of the input object "xTarget". If provided, it must have
+a node attribute called 'priority'}
 
 \item{nodes}{which node genes are in query. If NULL, the top gene will
 be queried}
