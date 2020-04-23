@@ -11,12 +11,9 @@
 #' @return an object of class "ggplot" for AUC and F-max, and an object of class "trellis" for boxplot
 #' @note none
 #' @export
+#' @seealso \code{\link{xPredictROCR}}, \code{\link{xPredictCompare}}
 #' @include xMLfeatureplot.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' gp <- xMLfeatureplot(df_predictor, GSP, GSN, displayBy="ROC")

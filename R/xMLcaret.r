@@ -13,6 +13,7 @@
 #' @param aggregateBy the aggregate method used to aggregate results from repeated cross validataion. It can be either "none" for no aggregration (meaning the best model based on all data used for cross validation is used), or "orderStatistic" for the method based on the order statistics of p-values, or "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'Ztransform' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to TRUE for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return 
 #' an object of class "sTarget", a list with following components:
 #' \itemize{
@@ -30,18 +31,15 @@
 #' }
 #' @note It will depend on whether a package "caret" and its suggested packages have been installed. It can be installed via: \code{BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"))}.
 #' @export
+#' @seealso \code{\link{xPierMatrix}}, \code{\link{xPredictROCR}}, \code{\link{xPredictCompare}}, \code{\link{xSparseMatrix}}, \code{\link{xSymbol2GeneID}}
 #' @include xMLcaret.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' sTarget <- xMLcaret(df_prediction, GSP, GSN, method="myrf")
 #' }
 
-xMLcaret <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, method=c("gbm","svmRadial","rda","knn","pls","nnet","rf","myrf","cforest","glmnet","glm","bayesglm","LogitBoost","xgbLinear","xgbTree"), nfold=3, nrepeat=10, seed=825, aggregateBy=c("none","logistic","Ztransform","fishers","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xMLcaret <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, method=c("gbm","svmRadial","rda","knn","pls","nnet","rf","myrf","cforest","glmnet","glm","bayesglm","LogitBoost","xgbLinear","xgbTree"), nfold=3, nrepeat=10, seed=825, aggregateBy=c("none","logistic","Ztransform","fishers","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 	
     startT <- Sys.time()
@@ -55,12 +53,12 @@ xMLcaret <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, method=c("gbm
     method <- match.arg(method)
     aggregateBy <- match.arg(aggregateBy)
 	
-	if(class(list_pNode)=="list" & is.null(df_predictor)){
-		df_predictor <- xPierMatrix(list_pNode, displayBy="score", combineBy="union", aggregateBy="none", RData.location=RData.location)
+	if(is(list_pNode,"list") & is.null(df_predictor)){
+		df_predictor <- xPierMatrix(list_pNode, displayBy="score", combineBy="union", aggregateBy="none", RData.location=RData.location, guid=guid)
 		
 		###########
 		## evidence
-		eTarget <- xPierMatrix(list_pNode, displayBy="evidence", combineBy="union", aggregateBy="none", verbose=FALSE, RData.location=RData.location)
+		eTarget <- xPierMatrix(list_pNode, displayBy="evidence", combineBy="union", aggregateBy="none", verbose=FALSE, RData.location=RData.location, guid=guid)
 		###########
 				
 	}else if(!is.null(df_predictor)){
@@ -862,7 +860,7 @@ xMLcaret <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, method=c("gbm
 	output_gs[output_gs=='1'] <- 'GSP'
 	df_priority <- data.frame(GS=output_gs, name=names(vec_priority), rank=vec_rank, rating=vec_priority, stringsAsFactors=FALSE)
 	### add description
-	df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location)$description
+	df_priority$description <- xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location, guid=guid)$description
 	###
 	
 	### df_predictor_gs

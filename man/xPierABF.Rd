@@ -4,26 +4,44 @@
 \alias{xPierABF}
 \title{Function to prioritise genes based on seed eGenes identified through ABF integrating GWAS and eQTL summary data}
 \usage{
-xPierABF(data, eqtl = c("CD14", "LPS2", "LPS24", "IFN", "Bcell", "NK",
-"Neutrophil", "CD4", "CD8", "Blood", "Monocyte", "shared_CD14",
-"shared_LPS2", "shared_LPS24", "shared_IFN"), prior.eqtl = 1e-04,
-prior.gwas = 1e-04, prior.both = 1e-05, cutoff.H4 = 0.8,
-cutoff.pgwas = 1e-05, network = c("STRING_highest", "STRING_high",
-"STRING_medium", "STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
-"PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
-"PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
+xPierABF(
+data,
+eqtl = c("CD14", "LPS2", "LPS24", "IFN", "Bcell", "NK", "Neutrophil",
+"CD4", "CD8",
+"Blood", "Monocyte", "shared_CD14", "shared_LPS2", "shared_LPS24",
+"shared_IFN"),
+prior.eqtl = 1e-04,
+prior.gwas = 1e-04,
+prior.both = 1e-05,
+cutoff.H4 = 0.8,
+cutoff.pgwas = 1e-05,
+network = c("STRING_highest", "STRING_high", "STRING_medium",
+"STRING_low",
+"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"PCommonsDN_medium",
+"PCommonsDN_Reactome", "PCommonsDN_KEGG", "PCommonsDN_HumanCyc",
+"PCommonsDN_PID",
 "PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
 "PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
-"KEGG_genetic", "KEGG_environmental", "KEGG_cellular",
-"KEGG_organismal",
-"KEGG_disease"), STRING.only = c(NA, "neighborhood_score",
-"fusion_score", "cooccurence_score", "coexpression_score",
-"experimental_score", "database_score", "textmining_score")[1],
-weighted = FALSE, network.customised = NULL,
-seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
-"none"), restart = 0.7, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"KEGG_genetic",
+"KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
+"KEGG_disease"),
+STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score",
+"coexpression_score", "experimental_score", "database_score",
+"textmining_score")[1],
+weighted = FALSE,
+network.customised = NULL,
+seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"),
+restart = 0.7,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{data}{a data frame storing GWAS summary data with following
@@ -147,6 +165,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "pNode", a list with following components:
@@ -181,18 +202,17 @@ The input graph will treat as an unweighted graph if there is no
 'weight' edge attribute associated with
 }
 \examples{
-# Load the library
-library(Pi)
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
-data <- utils::read.delim(file="summary_gwas.RA.txt", header=T,
-row.names=NULL, stringsAsFactors=F)
+data <- utils::read.delim(file="summary_gwas.RA.txt", header=TRUE,
+row.names=NULL, stringsAsFactors=FALSE)
 pNode_abf <- xPierABF(data, eqtl="Blood", network="STRING_high",
 restart=0.7, RData.location=RData.location)
 write.table(pNode_abf$priority, file="Genes_priority.ABF.txt",
-sep="\\t", row.names=FALSE)
+sep="\t", row.names=FALSE)
 }
 }
 \seealso{
+\code{\link{xRDataLoader}}, \code{\link{xMEabf}},
 \code{\link{xPierGenes}}
 }

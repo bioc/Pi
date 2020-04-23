@@ -1,15 +1,15 @@
 citEntry(entry="Article",
-    author = "Hai Fang, ULTRA-DD Consortium, Julian C Knight",
-    title = "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene and Pathway Level",
-    journal = "R package version 1.11.1",
-    volume = "",
-    issue = "",
+    author = "Hai Fang, et al",
+    title = "A genetics-led approach defines the drug target landscape of 30 immune-related traits",
+    journal = "Nature Genetics",
+    volume = "51",
+    issue = "7",
     year = "2019", 
-    pages = "",
-    url = "http://pi314.r-forge.r-project.org",
-    doi = "",
+    pages = "1082-1091",
+    url = "http://www.nature.com/articles/s41588-019-0456-1",
+    doi = "10.1038/s41588-019-0456-1",
     textVersion = paste(
-                "Fang, H., ULTRA-DD Consortium, Knight, J.C.",
-                "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene and Pathway Level.",
-                "http://pi314.r-forge.r-project.org")
+    	"Fang, H., et al",
+        "Pi: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene and Pathway Level.",
+        "Nature Genetics, 51:7, 2019. http://www.nature.com/articles/s41588-019-0456-1")
 )

@@ -4,16 +4,28 @@
 \alias{xPierPathways}
 \title{Function to prioritise pathways based on enrichment analysis of top prioritised genes}
 \usage{
-xPierPathways(pNode, priority.top = 100, background = NULL,
-ontology = NA, size.range = c(10, 2000), min.overlap = 3,
-which.distance = NULL, test = c("hypergeo", "fisher", "binomial"),
-background.annotatable.only = NULL, p.tail = c("one-tail",
-"two-tails"), p.adjust.method = c("BH", "BY", "bonferroni", "holm",
-"hochberg", "hommel"), ontology.algorithm = c("none", "pc", "elim",
-"lea"), elim.pvalue = 0.01, lea.depth = 2,
+xPierPathways(
+pNode,
+priority.top = 100,
+background = NULL,
+ontology = NA,
+size.range = c(10, 2000),
+min.overlap = 3,
+which.distance = NULL,
+test = c("hypergeo", "fisher", "binomial"),
+background.annotatable.only = NULL,
+p.tail = c("one-tail", "two-tails"),
+p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
+"hommel"),
+ontology.algorithm = c("none", "pc", "elim", "lea"),
+elim.pvalue = 0.01,
+lea.depth = 2,
 path.mode = c("all_paths", "shortest_paths", "all_shortest_paths"),
-true.path.rule = FALSE, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+true.path.rule = FALSE,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
@@ -107,6 +119,9 @@ displayed in the screen. By default, it sets to false for no display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "eTerm", a list with following components:
@@ -164,11 +179,6 @@ maximum of both p-values in these two calculations.}
 }
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
@@ -195,10 +205,10 @@ xEnrichViewer(eTerm)
 res <- xEnrichViewer(eTerm, top_num=length(eTerm$adjp), sortBy="adjp",
 details=TRUE)
 output <- data.frame(term=rownames(res), res)
-utils::write.table(output, file="Pathways_priority.txt", sep="\\t",
+utils::write.table(output, file="Pathways_priority.txt", sep="\t",
 row.names=FALSE)
 }
 }
 \seealso{
-\code{\link{xRDataLoader}}, \code{\link{xEnricher}}
+\code{\link{xEnricherGenes}}
 }

@@ -9,7 +9,7 @@
 #' an object of class "eGSEA", after redundant terms being removed.
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierGSEA}}
+#' @seealso \code{\link{xGSEAconciser}}
 #' @include xGSEAconciser.r
 #' @examples
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
@@ -20,7 +20,7 @@
 xGSEAconciser <- function(eGSEA, cutoff=c(0.9,0.5), verbose=TRUE) 
 {
         
-    if(class(eGSEA) == "eGSEA" ){
+    if(is(eGSEA,"eGSEA")){
 		
 		cross <- eGSEA$cross
 		

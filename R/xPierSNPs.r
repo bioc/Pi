@@ -32,6 +32,7 @@
 #' @param multicores an integer to specify how many cores will be registered as the multicore parallel backend to the 'foreach' package. If NULL, it will use a half of cores available in a user's computer. This option only works when parallel computation is enabled
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' an object of class "pNode", a list with following components:
 #' \itemize{
@@ -53,14 +54,9 @@
 #' \item{vi) \code{\link{xPierGenes}} used to prioritise genes using an input graph and a list of seed genes and their scores from v). The priority score is the affinity score estimated by Random Walk with Restart (RWR), measured as the affinity of all nodes in the graph to the seeds.}
 #' }
 #' @export
-#' @seealso \code{\link{xSNPscores}}, \code{\link{xSNP2nGenes}}, \code{\link{xSNP2eGenes}}, \code{\link{xSNP2cGenes}}, \code{\link{xSparseMatrix}}, \code{\link{xSM2DF}}, \code{\link{xPier}}, \code{\link{xPierGenes}}, \code{\link{xPierPathways}}
+#' @seealso \code{\link{xSNPscores}}, \code{\link{xSNP2nGenes}}, \code{\link{xSNP2eGenes}}, \code{\link{xSNP2cGenes}}, \code{\link{xSparseMatrix}}, \code{\link{xSM2DF}}, \code{\link{xPierGenes}}, \code{\link{xSM2DF}}, \code{\link{xDefineEQTL}}, \code{\link{xDefineHIC}}
 #' @include xPierSNPs.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #'
 #' \dontrun{
@@ -82,7 +78,7 @@
 #' #dev.off()
 #' }
 
-xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, significance.threshold=5e-5, score.cap=10, distance.max=2000, decay.kernel=c("slow","constant","linear","rapid"), decay.exponent=2, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), include.TAD=c("none","GM12878","IMR90","MSC","TRO","H1","MES","NPC"), include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=c("empirical","exponential"), relative.importance=c(1/3,1/3,1/3), scoring.scheme=c("max","sum","sequential"), network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, significance.threshold=5e-5, score.cap=10, distance.max=2000, decay.kernel=c("slow","constant","linear","rapid"), decay.exponent=2, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), include.TAD=c("none","GM12878","IMR90","MSC","TRO","H1","MES","NPC"), include.eQTL=NA, eQTL.customised=NULL, include.HiC=NA, cdf.function=c("empirical","exponential"), relative.importance=c(1/3,1/3,1/3), scoring.scheme=c("max","sum","sequential"), network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
     startT <- Sys.time()
@@ -110,7 +106,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
         message(sprintf("#######################################################", appendLF=TRUE))
     }
     
-	df_SNP <- xSNPscores(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, verbose=verbose, RData.location=RData.location)
+	df_SNP <- xSNPscores(data=data, include.LD=include.LD, LD.customised=LD.customised, LD.r2=LD.r2, significance.threshold=significance.threshold, score.cap=score.cap, verbose=verbose, RData.location=RData.location, guid=guid)
 	
 	if(verbose){
         now <- Sys.time()
@@ -130,7 +126,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
     
     
     if(relative.importance[1] != 0){
-		df_nGenes <- xSNP2nGenes(data=df_SNP$SNP, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.TAD=include.TAD, verbose=verbose, RData.location=RData.location)
+		df_nGenes <- xSNP2nGenes(data=df_SNP$SNP, distance.max=distance.max, decay.kernel=decay.kernel, decay.exponent=decay.exponent, GR.SNP=GR.SNP, GR.Gene=GR.Gene, include.TAD=include.TAD, verbose=verbose, RData.location=RData.location, guid=guid)
 		if(include.TAD!='none'){
 			TAD <- NULL
 			df_nGenes <- base::subset(df_nGenes, TAD!='Excluded')
@@ -160,7 +156,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
     }
     
     if(relative.importance[2] != 0){
-		df_eGenes <- xSNP2eGenes(data=df_SNP$SNP, include.eQTL=include.eQTL, eQTL.customised=eQTL.customised, cdf.function=cdf.function, plot=FALSE, verbose=verbose, RData.location=RData.location)
+		df_eGenes <- xSNP2eGenes(data=df_SNP$SNP, include.eQTL=include.eQTL, eQTL.customised=eQTL.customised, cdf.function=cdf.function, plot=FALSE, verbose=verbose, RData.location=RData.location, guid=guid)
 	}else{
 		df_eGenes <- NULL
 		
@@ -188,7 +184,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
     }
     
     if(relative.importance[3] != 0){
-		df_cGenes <- xSNP2cGenes(data=df_SNP$SNP, entity="SNP", include.HiC=include.HiC, GR.SNP=GR.SNP, cdf.function=cdf.function, plot=FALSE, verbose=verbose, RData.location=RData.location)
+		df_cGenes <- xSNP2cGenes(data=df_SNP$SNP, entity="SNP", include.HiC=include.HiC, GR.SNP=GR.SNP, cdf.function=cdf.function, plot=FALSE, verbose=verbose, RData.location=RData.location, guid=guid)
 	}else{
 		df_cGenes <- NULL
 		
@@ -303,7 +299,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
         message(sprintf("#######################################################", appendLF=TRUE))
     }
     
-	pNode <- suppressMessages(xPierGenes(data=seeds.genes, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose, RData.location=RData.location))
+	pNode <- suppressMessages(xPierGenes(data=seeds.genes, network=network, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose, RData.location=RData.location, guid=guid))
 	
 	if(verbose){
         now <- Sys.time()
@@ -352,7 +348,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
     if(is.null(df_eGenes)){
     	eGenes <- NULL
     }else{
-		eGenes <- xDefineEQTL(data=df_SNP$SNP, include.eQTL=include.eQTL, eQTL.customised=eQTL.customised, verbose=FALSE, RData.location=RData.location)
+		eGenes <- xDefineEQTL(data=df_SNP$SNP, include.eQTL=include.eQTL, eQTL.customised=eQTL.customised, verbose=FALSE, RData.location=RData.location, guid=guid)
 		ind <- match(eGenes$SNP, df_SNP$SNP)
 		eGenes$SNP_Flag <- df_SNP$Flag[ind]
 	}
@@ -360,7 +356,7 @@ xPierSNPs <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signif
     if(is.null(df_cGenes)){
     	cGenes <- NULL
     }else{
-		cGenes <- xDefineHIC(data=df_SNP$SNP, entity="SNP", include.HiC=include.HiC, GR.SNP=GR.SNP, verbose=FALSE, RData.location=RData.location)
+		cGenes <- xDefineHIC(data=df_SNP$SNP, entity="SNP", include.HiC=include.HiC, GR.SNP=GR.SNP, verbose=FALSE, RData.location=RData.location, guid=guid)
 		cGenes <- cGenes$df
 		ind <- match(cGenes$SNP, df_SNP$SNP)
 		cGenes$SNP_Flag <- df_SNP$Flag[ind]

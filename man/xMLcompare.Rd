@@ -4,8 +4,13 @@
 \alias{xMLcompare}
 \title{Function to visualise cross-validation performance against tuning parameters}
 \usage{
-xMLcompare(list_ML, metric = c("ROC", "Sens", "Spec"), xlab = NA,
-xlimits = c(0.5, 1), font.family = "sans")
+xMLcompare(
+list_ML,
+metric = c("ROC", "Sens", "Spec"),
+xlab = NA,
+xlimits = c(0.5, 1),
+font.family = "sans"
+)
 }
 \arguments{
 \item{list_ML}{a list of class "train" or "train.formula" objects
@@ -31,9 +36,6 @@ against tuning parameters.
 none
 }
 \examples{
-\dontrun{
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 gp <- xMLcompare(ls_ML, xlimits=c(0.5,1))

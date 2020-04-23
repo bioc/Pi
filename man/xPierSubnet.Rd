@@ -4,23 +4,35 @@
 \alias{xPierSubnet}
 \title{Function to identify a gene network from top prioritised genes}
 \usage{
-xPierSubnet(pNode, priority.quantile = 0.1, network = c(NA,
-"STRING_highest", "STRING_high", "STRING_medium", "STRING_low",
+xPierSubnet(
+pNode,
+priority.quantile = 0.1,
+network = c(NA, "STRING_highest", "STRING_high", "STRING_medium",
+"STRING_low",
 "PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
-"PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
-"PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
-"PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD", "KEGG", "KEGG_metabolism", "KEGG_genetic",
+"PCommonsDN_medium",
+"PCommonsDN_Reactome", "PCommonsDN_KEGG", "PCommonsDN_HumanCyc",
+"PCommonsDN_PID",
+"PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
+"PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
+"KEGG_genetic",
 "KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
-"KEGG_disease",
-"REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
-"cooccurence_score", "coexpression_score", "experimental_score",
-"database_score", "textmining_score")[1], network.customised = NULL,
-subnet.significance = 0.01, subnet.size = NULL,
-test.permutation = FALSE, num.permutation = 100,
-respect = c("none", "degree"), aggregateBy = c("Ztransform",
-"fishers", "logistic", "orderStatistic"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"KEGG_disease", "REACTOME"),
+STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score",
+"coexpression_score", "experimental_score", "database_score",
+"textmining_score")[1],
+network.customised = NULL,
+subnet.significance = 0.01,
+subnet.size = NULL,
+test.permutation = FALSE,
+num.permutation = 100,
+respect = c("none", "degree"),
+aggregateBy = c("Ztransform", "fishers", "logistic", "orderStatistic"),
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
@@ -125,6 +137,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 a subgraph with a maximum score, an object of class "igraph". It has
@@ -153,11 +168,6 @@ chance of identifying such a gene network enriched with top prioritised
 genes is much higher.
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
@@ -181,10 +191,10 @@ RData.location=RData.location)
 
 # d) save subnet results to the files called 'subnet_edges.txt' and 'subnet_nodes.txt'
 output <- igraph::get.data.frame(subnet, what="edges")
-utils::write.table(output, file="subnet_edges.txt", sep="\\t",
+utils::write.table(output, file="subnet_edges.txt", sep="\t",
 row.names=FALSE)
 output <- igraph::get.data.frame(subnet, what="vertices")
-utils::write.table(output, file="subnet_nodes.txt", sep="\\t",
+utils::write.table(output, file="subnet_nodes.txt", sep="\t",
 row.names=FALSE)
 
 # e) visualise the identified subnet

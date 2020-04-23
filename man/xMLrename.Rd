@@ -25,10 +25,6 @@ learning. It returns an object of class "sTarget".
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 old_names <- colnames(sTarget$predictor)[-c(1,2)]
@@ -67,5 +63,5 @@ sTarget_renamed <- xMLrename(sTarget_renamed, old_names_2, new_names)
 }
 }
 \seealso{
-\code{\link{xMLrandomforest}}
+\code{\link{xMLrename}}
 }

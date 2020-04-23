@@ -4,35 +4,57 @@
 \alias{xPierSNPsAdvABF}
 \title{Function to prepare genetic predictors given GWAS summary data with eGenes identified through ABF}
 \usage{
-xPierSNPsAdvABF(data, include.LD = NA, LD.customised = NULL,
-LD.r2 = 0.8, significance.threshold = 5e-05, score.cap = 10,
-distance.max = 2000, decay.kernel = c("slow", "constant", "linear",
-"rapid"), decay.exponent = 2, GR.SNP = c("dbSNP_GWAS",
-"dbSNP_Common", "dbSNP_Single"), GR.Gene = c("UCSC_knownGene",
-"UCSC_knownCanonical"), include.TAD = c("none", "GM12878", "IMR90",
-"MSC", "TRO", "H1", "MES", "NPC"), include.eQTL = c("CD14", "LPS2",
-"LPS24", "IFN", "Bcell", "NK", "Neutrophil", "CD4", "CD8", "Blood",
-"Monocyte", "shared_CD14", "shared_LPS2", "shared_LPS24",
+xPierSNPsAdvABF(
+data,
+include.LD = NA,
+LD.customised = NULL,
+LD.r2 = 0.8,
+significance.threshold = 5e-05,
+score.cap = 10,
+distance.max = 2000,
+decay.kernel = c("slow", "constant", "linear", "rapid"),
+decay.exponent = 2,
+GR.SNP = c("dbSNP_GWAS", "dbSNP_Common", "dbSNP_Single"),
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
+include.TAD = c("none", "GM12878", "IMR90", "MSC", "TRO", "H1", "MES",
+"NPC"),
+include.eQTL = c("CD14", "LPS2", "LPS24", "IFN", "Bcell", "NK",
+"Neutrophil", "CD4",
+"CD8", "Blood", "Monocyte", "shared_CD14", "shared_LPS2",
+"shared_LPS24",
 "shared_IFN"),
-include.HiC = NA, cdf.function = c("empirical", "exponential"),
+include.HiC = NA,
+cdf.function = c("empirical", "exponential"),
 scoring.scheme = c("max", "sum", "sequential"),
 network = c("STRING_highest", "STRING_high", "STRING_medium",
-"STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
-"PCommonsDN_high",
-"PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
-"PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
-"PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD", "KEGG", "KEGG_metabolism", "KEGG_genetic",
+"STRING_low",
+"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"PCommonsDN_medium",
+"PCommonsDN_Reactome", "PCommonsDN_KEGG", "PCommonsDN_HumanCyc",
+"PCommonsDN_PID",
+"PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
+"PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
+"KEGG_genetic",
 "KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
-"KEGG_disease",
-"REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
-"cooccurence_score", "coexpression_score", "experimental_score",
-"database_score", "textmining_score")[1], weighted = FALSE,
-network.customised = NULL, seeds.inclusive = TRUE,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.7,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE, verbose.details = FALSE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
+"KEGG_disease", "REACTOME"),
+STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score",
+"coexpression_score", "experimental_score", "database_score",
+"textmining_score")[1],
+weighted = FALSE,
+network.customised = NULL,
+seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"),
+restart = 0.7,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE,
+verbose.details = FALSE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL,
+...
+)
 }
 \arguments{
 \item{data}{a data frame storing GWAS summary data with following
@@ -240,6 +262,9 @@ By default, it sets to FALSE enabling messages}
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
 
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
+
 \item{...}{additional parameters used in xPierABF ("prior.eqtl",
 "prior.gwas", "prior.both", "cutoff.H4", "cutoff.pgwas")}
 }
@@ -285,11 +310,6 @@ the distance predictor, the eQTL predictors (if required) and the HiC
 predictors (if required).
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 data <- utils::read.delim(file="summary_gwas.RA.txt", header=T,
@@ -303,6 +323,6 @@ RData.location=RData.location)
 }
 }
 \seealso{
-\code{\link{xPierABF}}, \code{\link{xPierSNPs}},
-\code{\link{xPierMatrix}}
+\code{\link{xPierSNPs}}, \code{\link{xPierABF}},
+\code{\link{xPierSNPs}}
 }

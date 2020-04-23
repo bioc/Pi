@@ -8,13 +8,9 @@
 #' @return an object of class "sTarget"
 #' @note none
 #' @export
-#' @seealso \code{\link{xMLrandomforest}}
+#' @seealso \code{\link{xMLrename}}
 #' @include xMLrename.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' old_names <- colnames(sTarget$predictor)[-c(1,2)]
@@ -28,7 +24,7 @@
 xMLrename <- function(sTarget, old_names, new_names) 
 {
     
-    if(class(sTarget) != "sTarget"){
+    if(!is(sTarget,"sTarget")){
     	stop("The function must apply to a 'sTarget' object.\n")
     }
     sTarget_renamed <- sTarget

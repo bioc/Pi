@@ -4,14 +4,25 @@
 \alias{xPierTrackAdv}
 \title{Function to visualise a list of prioritised genes using advanced track plot}
 \usage{
-xPierTrackAdv(pNode, priority.top = NULL, targets.query = NULL,
-window = 1e+06, nearby = NULL, query.highlight = TRUE,
-track.ideogram = TRUE, track.genomeaxis = TRUE,
-name.datatrack = "Priority index", name.annotrack = "Genes",
-GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"), SNPs = NULL,
+xPierTrackAdv(
+pNode,
+priority.top = NULL,
+targets.query = NULL,
+window = 1e+06,
+nearby = NULL,
+query.highlight = TRUE,
+track.ideogram = TRUE,
+track.genomeaxis = TRUE,
+name.datatrack = "Priority index",
+name.annotrack = "Genes",
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
+SNPs = NULL,
 GR.SNP = c("dbSNP_GWAS", "dbSNP_Common", "dbSNP_Single"),
 verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL,
+...
+)
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
@@ -80,6 +91,9 @@ displayed in the screen. By default, it sets to false for no display}
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
 
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
+
 \item{...}{additional graphic parameters. For example, the parameter
 "strip" allows the panel title is hided (FALSE), shown (TRUE) or
 without the background (lattice::strip.custom(bg="transparent")); the
@@ -100,11 +114,6 @@ gene.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
@@ -131,5 +140,5 @@ RData.location=RData.location)
 }
 }
 \seealso{
-\code{\link{xMLrandomforest}}
+\code{\link{xRDataLoader}}
 }

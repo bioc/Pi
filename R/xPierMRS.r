@@ -12,19 +12,15 @@
 #' @seealso \code{\link{xPierCross}}
 #' @include xPierMRS.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' df_MRS <- xPierMRS(ls_xTarget)
 #' }
 
-xPierMRS <- function(list_xTarget, cutoff.rank=150, verbose=T)
+xPierMRS <- function(list_xTarget, cutoff.rank=150, verbose=TRUE)
 {
     
-   	if(class(list_xTarget)=="list"){
+   	if(is(list_xTarget,"list")){
 		## Remove null elements in a list
 		list_xTarget <- base::Filter(base::Negate(is.null), list_xTarget)
 		if(length(list_xTarget)==0){
@@ -44,14 +40,14 @@ xPierMRS <- function(list_xTarget, cutoff.rank=150, verbose=T)
 	df <- df_rank[ind,]
 	df[df>cutoff.rank] <- NA
 	ntop <- apply(df, 1, function(x) sum(!is.na(x)))
-	mrank <- apply(df, 1, function(x) median(x,na.rm=T))
+	mrank <- apply(df, 1, function(x) median(x,na.rm=TRUE))
 	n <- ncol(df)
 	mrs <- (ntop+1-(mrank-1)/cutoff.rank)/(n+1)
-	mrs <- sort(mrs, decreasing=T)
+	mrs <- sort(mrs, decreasing=TRUE)
 	
 	## df_output
 	ind <- match(names(mrs), rownames(df_rating))
-	df_MRS <- data.frame(Target=names(mrs), MRS=mrs, rating=df_rating[ind,], rank=df_rank[ind,], stringsAsFactors=F)
+	df_MRS <- data.frame(Target=names(mrs), MRS=mrs, rating=df_rating[ind,], rank=df_rank[ind,], stringsAsFactors=FALSE)
 
 	if(verbose){
 		message(sprintf("A total of %d genes used for MRS calculation (based on rank cutoff %d and %d traits", nrow(df_MRS), cutoff.rank, ncol(df_rank)), appendLF=TRUE)

@@ -4,10 +4,18 @@
 \alias{xCorrelation}
 \title{Function to calculate and visualise correlation}
 \usage{
-xCorrelation(df, list_vec, method = c("pearson", "spearman"),
-p.type = c("nominal", "empirical"), seed = 825, nperm = 2000,
+xCorrelation(
+df,
+list_vec,
+method = c("pearson", "spearman"),
+p.type = c("nominal", "empirical"),
+seed = 825,
+nperm = 2000,
 p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
-"hommel"), plot = FALSE, plot.smooth = c(NA, "lm", "loess"))
+"hommel"),
+plot = FALSE,
+plot.smooth = c(NA, "lm", "loess")
+)
 }
 \arguments{
 \item{df}{a data frame with two columns ('name' and 'value')}
@@ -64,11 +72,6 @@ between a data frame and a named vector (or a list of named vectors).
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(XGR)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the seed nodes/genes with the weight info

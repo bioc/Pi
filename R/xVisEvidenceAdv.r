@@ -35,13 +35,9 @@
 #' @return
 #' a ggplot object.
 #' @export
-#' @seealso \code{\link{xVisEvidence}}
+#' @seealso \code{\link{xVisEvidence}}, \code{\link{xGGnetwork}}, \code{\link{xPieplot}}
 #' @include xVisEvidenceAdv.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' ## TNFRSF1A
@@ -55,7 +51,7 @@ xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none
 	
 	subg <- xVisEvidence(xTarget=xTarget, g=g, nodes=nodes, node.info=node.info, neighbor.order=neighbor.order, neighbor.seed=neighbor.seed, neighbor.top=neighbor.top, largest.comp=largest.comp, show=FALSE)
 	
-	if(class(subg)!='igraph'){
+	if(!is(subg,'igraph')){
 		return(NULL)
 	}
 	if(ecount(subg)<=1){
@@ -69,7 +65,7 @@ xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none
 	V(subg)$ycoord <- glayout[,2]
 	
 	#################
-	gp <- xGGnetwork(g=subg, node.label='vertex.label', node.label.size=node.label.size, node.label.color=node.label.color, node.label.alpha=node.label.alpha, node.label.padding=node.label.padding, node.label.arrow=node.label.arrow, node.label.force=node.label.force, node.shape=node.shape, node.xcoord='xcoord', node.ycoord='ycoord', node.color='rating', node.color.title=node.color.title, colormap=colormap, ncolors=ncolors, zlim=zlim, node.size.range=node.size.range, title=title, edge.color=edge.color, edge.color.alpha=edge.color.alpha, edge.curve=edge.curve, edge.arrow.gap=edge.arrow.gap,...)
+	gp <- xGGnetwork(g=subg, node.label='vertex.label', node.label.size=node.label.size, node.label.color=node.label.color, node.label.alpha=node.label.alpha, node.label.padding=node.label.padding, node.label.arrow=node.label.arrow, node.label.force=node.label.force, node.shape=node.shape, node.xcoord='xcoord', node.ycoord='ycoord', node.color='priority', node.color.title=node.color.title, colormap=colormap, ncolors=ncolors, zlim=zlim, node.size.range=node.size.range, title=title, edge.color=edge.color, edge.color.alpha=edge.color.alpha, edge.curve=edge.curve, edge.arrow.gap=edge.arrow.gap,...)
     #################
 
 	df <- gp$data_nodes

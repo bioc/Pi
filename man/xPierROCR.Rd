@@ -55,13 +55,12 @@ F-measure: the maximum of a harmonic mean between precision and recall
 along PR curve
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 dTarget <- xPierROCR(dTarget, GSP, GSN)
 gp <- xPredictCompare(dTarget$pPerf)
 }
+}
+\seealso{
+\code{\link{xPierROCR}}
 }

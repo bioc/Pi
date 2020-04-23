@@ -38,5 +38,5 @@ eGSEA_concise <- xGSEAconciser(eGSEA)
 }
 }
 \seealso{
-\code{\link{xPierGSEA}}
+\code{\link{xGSEAconciser}}
 }

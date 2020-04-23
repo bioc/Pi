@@ -4,11 +4,23 @@
 \alias{xMLrandomforest}
 \title{Function to integrate predictor matrix in a supervised manner via machine learning algorithm random forest.}
 \usage{
-xMLrandomforest(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
-nfold = 3, nrepeat = 10, seed = 825, mtry = NULL, ntree = 1000,
+xMLrandomforest(
+list_pNode = NULL,
+df_predictor = NULL,
+GSP,
+GSN,
+nfold = 3,
+nrepeat = 10,
+seed = 825,
+mtry = NULL,
+ntree = 1000,
 fold.aggregateBy = c("logistic", "Ztransform", "fishers",
-"orderStatistic"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
+"orderStatistic"),
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL,
+...
+)
 }
 \arguments{
 \item{list_pNode}{a list of "pNode" objects or a "pNode" object}
@@ -59,6 +71,9 @@ displayed in the screen. By default, it sets to TRUE for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 
 \item{...}{additional parameters. Please refer to
 'randomForest::randomForest' for the complete list.}
@@ -136,12 +151,13 @@ it. It returns an object of class 'sTarget'.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sTarget <- xMLrandomforest(df_prediction, GSP, GSN)
 }
+}
+\seealso{
+\code{\link{xPierMatrix}}, \code{\link{xSparseMatrix}},
+\code{\link{xPredictROCR}}, \code{\link{xPredictCompare}},
+\code{\link{xSymbol2GeneID}}
 }

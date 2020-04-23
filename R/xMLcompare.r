@@ -13,9 +13,6 @@
 #' @seealso \code{\link{xMLcompare}}
 #' @include xMLcompare.r
 #' @examples
-#' \dontrun{
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 # ls_ML <- list(GBM=fit_gbm, SVM=fit_svm, RDA=fit_rda, KNN=fit_knn, PLS=fit_pls, NNET=fit_nnet, RF=fit_myrf, CRF=fit_crf, GLM=fit_glm, BGLM=fit_bglm, BLR=fit_blr)
@@ -29,9 +26,9 @@ xMLcompare <-function(list_ML, metric=c("ROC","Sens","Spec"), xlab=NA, xlimits=c
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     metric <- match.arg(metric)
 
-    if(all(class(list_ML) %in% c("train","train.formula"))){
+    if(is(list_ML,"train")){
     	list_ML <- list(list_ML)
-    }else if(class(list_ML)=="list"){
+    }else if(is(list_ML,"list")){
 		## Remove null elements in a list
 		list_ML <- base::Filter(base::Negate(is.null), list_ML)
 		if(length(list_ML)==0){

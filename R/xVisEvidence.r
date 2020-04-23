@@ -3,7 +3,7 @@
 #' \code{xVisEvidence} is supposed to visualise evidence for prioritised genes in a gene network. It returns an object of class "igraph". 
 #'
 #' @param xTarget an object of class "dTarget", "sTarget" or "eTarget"
-#' @param g an object of class "igraph". If NA, the 'metag' will be used, which is part of the input object "xTarget"
+#' @param g an object of class "igraph". If NA, the 'metag' will be used, which is part of the input object "xTarget". If provided, it must have a node attribute called 'priority'
 #' @param nodes which node genes are in query. If NULL, the top gene will be queried
 #' @param node.info tells the additional information used to label nodes. It can be one of "none" (only gene labeling), "smart" for (by default) using three pieces of information (if any): genes, 5-star ratings, and associated ranks (marked by an @ icon)
 #' @param neighbor.order an integer giving the order of the neighborhood. By default, it is 1-order neighborhood
@@ -25,13 +25,9 @@
 #' @return
 #' a subgraph, an object of class "igraph".
 #' @export
-#' @seealso \code{\link{xPierMatrix}}
+#' @seealso \code{\link{xColormap}}
 #' @include xVisEvidence.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' ## TNFRSF1A
@@ -45,7 +41,7 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
 
     node.info <- match.arg(node.info)
 
-    if(class(xTarget) == "dTarget"){
+    if(is(xTarget,"dTarget")){
     	if(is.null(xTarget$pPerf)){
     		df_evidence <- xTarget$priority[, 5:ncol(xTarget$priority)]
     	}else{
@@ -54,12 +50,12 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
         df_priority <- xTarget$priority[, c("rank","rating")]
         df_priority$priority <- df_priority$rating
 		
-    }else if(class(xTarget) == "sTarget"){
+    }else if(is(xTarget,"sTarget")){
         df_evidence <- as.data.frame(xTarget$evidence$evidence)
         df_priority <- xTarget$priority[, c("rank","rating")]
         df_priority$priority <- df_priority$rating
 		
-    }else if(class(xTarget) == "eTarget"){
+    }else if(is(xTarget,"eTarget")){
         df_evidence <- as.data.frame(xTarget$evidence)
         # here, sorted by the number of seed gene types
         df_priority <- df_evidence[order(df_evidence[,1],decreasing=TRUE),]
@@ -70,18 +66,18 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
     	stop("The function must apply to a 'dTarget' or 'sTarget' or 'eTarget' object.\n")
     }
 	
-	if(class(g) == "igraph"){
+	if(is(g,"igraph")){
 		g <- g
 	}else{
-		if(class(xTarget) == "dTarget" | class(xTarget) == "eTarget"){
+		if(is(xTarget,"dTarget") | is(xTarget,"eTarget")){
 			g <- xTarget$metag
-		}else if(class(xTarget) == "sTarget"){
+		}else if(is(xTarget,"sTarget")){
 			g <- xTarget$evidence$metag
 		}
 		
 		V(g)$priority <- df_priority[V(g)$name, 'priority']
 	}
-	if(class(g)!='igraph'){
+	if(!is(g,'igraph')){
 		stop("The input 'g' must be provided!\n")
 	}
 	
@@ -137,7 +133,7 @@ xVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none"),
 	
 	## vertex.label
 	vertex.label <- V(subg)$name
-	if(class(xTarget) != "eTarget"){
+	if(!is(xTarget,"eTarget")){
 		ind <- match(vertex.label, rownames(df_priority))
 		df_nodes <- df_priority[ind, ]
 		if(node.info=='smart'){

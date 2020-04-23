@@ -4,11 +4,16 @@
 \alias{xPierMatrix}
 \title{Function to extract priority or evidence matrix from a list of pNode objects}
 \usage{
-xPierMatrix(list_pNode, displayBy = c("score", "rank", "weight",
-"pvalue", "evidence"), combineBy = c("union", "intersect"),
+xPierMatrix(
+list_pNode,
+displayBy = c("score", "rank", "weight", "pvalue", "evidence"),
+combineBy = c("union", "intersect"),
 aggregateBy = c("none", "fishers", "logistic", "Ztransform",
-"orderStatistic"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"orderStatistic"),
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{list_pNode}{a list of "pNode" objects or a "pNode" object}
@@ -40,6 +45,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 If displayBy is 'evidence', an object of the class "eTarget", a list
@@ -84,10 +92,6 @@ prioritisation.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # get predictor matrix for targets
@@ -100,5 +104,5 @@ aggregateBy="fishers")
 }
 }
 \seealso{
-\code{\link{xPierSNPsAdv}}
+\code{\link{xSparseMatrix}}, \code{\link{xSymbol2GeneID}}
 }

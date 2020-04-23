@@ -4,9 +4,15 @@
 \alias{xMLdotplot}
 \title{Function to visualise machine learning results using dot plot}
 \usage{
-xMLdotplot(sTarget, displayBy = c("importance2fold", "roc2fold",
-"fmax2fold", "importance_accurancy", "importance_gini", "ROC", "Fmax"),
-ML.included = T, font.family = "sans", signature = TRUE)
+xMLdotplot(
+sTarget,
+displayBy = c("importance2fold", "roc2fold", "fmax2fold",
+"importance_accurancy",
+"importance_gini", "ROC", "Fmax"),
+ML.included = TRUE,
+font.family = "sans",
+signature = TRUE
+)
 }
 \arguments{
 \item{sTarget}{an object of class "sTarget"}
@@ -38,10 +44,6 @@ using dot plot. It returns an object of class "ggplot".
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 gp <- xMLdotplot(sTarget, displayBy="importance_accurancy")
@@ -49,5 +51,5 @@ gp
 }
 }
 \seealso{
-\code{\link{xMLrandomforest}}
+\code{\link{xMLdotplot}}
 }

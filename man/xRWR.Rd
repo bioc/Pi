@@ -4,10 +4,16 @@
 \alias{xRWR}
 \title{Function to implement Random Walk with Restart (RWR) on the input graph}
 \usage{
-xRWR(g, normalise = c("laplacian", "row", "column", "none"),
-setSeeds = NULL, restart = 0.75,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE)
+xRWR(
+g,
+normalise = c("laplacian", "row", "column", "none"),
+setSeeds = NULL,
+restart = 0.75,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE
+)
 }
 \arguments{
 \item{g}{an object of class "igraph" or "graphNEL"}
@@ -122,5 +128,5 @@ PTmatrix
 }
 }
 \seealso{
-\code{\link{xPier}}
+\code{\link{xCheckParallel}}
 }

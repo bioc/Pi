@@ -13,6 +13,7 @@
 #' @param lower.limits vector of lower limits for each coefficient (by default, '-Inf'; all should be non-positive). A single value provided will apply to every coefficient
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to TRUE for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @param ... additional parameters. Please refer to 'glmnet::cv.glmnet' for the complete list.
 #' @return 
 #' an object of class "pTarget", a list with following components:
@@ -29,18 +30,15 @@
 #' }
 #' @note none
 #' @export
+#' @seealso \code{\link{xPredictROCR}}, \code{\link{xPredictCompare}}, \code{\link{xSymbol2GeneID}}
 #' @include xMLglmnet.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' pTarget <- xMLglmnet(df_prediction, GSP, GSN)
 #' }
 
-xMLglmnet <- function(df_predictor, GSP, GSN, family=c("binomial","gaussian"), type.measure=c("auc","mse"), nfold=3, alphas=seq(0,1,0.1), standardize=TRUE, lower.limits=-Inf, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
+xMLglmnet <- function(df_predictor, GSP, GSN, family=c("binomial","gaussian"), type.measure=c("auc","mse"), nfold=3, alphas=seq(0,1,0.1), standardize=TRUE, lower.limits=-Inf, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL, ...)
 {
 	
     startT <- Sys.time()
@@ -189,7 +187,7 @@ xMLglmnet <- function(df_predictor, GSP, GSN, family=c("binomial","gaussian"), t
 	output_gs[output_gs=='1'] <- 'GSP'
 	df_priority <- data.frame(GS=output_gs, name=names(vec_priority), rank=vec_rank, priority=vec_priority, stringsAsFactors=FALSE)
 	### add description
-	df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location)$description
+	df_priority$description <- xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location, guid=guid)$description
 	###
 	
 	### df_predictor_gs

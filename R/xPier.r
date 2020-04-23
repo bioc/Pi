@@ -19,15 +19,9 @@
 #' }
 #' @note The input graph will treat as an unweighted graph if there is no 'weight' edge attribute associated with
 #' @export
-#' @seealso \code{\link{xRDataLoader}}, \code{\link{xRWR}}, \code{\link{xPierSNPs}}, \code{\link{xPierGenes}}, \code{\link{xPierPathways}}
+#' @seealso \code{\link{xRWR}}
 #' @include xPier.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' # a) provide the input nodes/genes with the significance info
 #' sig <- rbeta(500, shape1=0.5, shape2=1)
 #' \dontrun{
@@ -90,7 +84,7 @@ xPier <- function(seeds, g, seeds.inclusive=TRUE, normalise=c("laplacian","row",
 		setSeeds <- data.frame(scores)
 	}
     
-    if(class(g)=="igraph"){
+    if(is(g,"igraph")){
     	ig <- g
     
 		if(verbose){

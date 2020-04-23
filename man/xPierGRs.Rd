@@ -4,30 +4,46 @@
 \alias{xPierGRs}
 \title{Function to prioritise genes given a list of genomic regions}
 \usage{
-xPierGRs(data, significance.threshold = NULL, score.cap = NULL,
+xPierGRs(
+data,
+significance.threshold = NULL,
+score.cap = NULL,
 build.conversion = c(NA, "hg38.to.hg19", "hg18.to.hg19"),
 crosslink = c("genehancer", "PCHiC_combined", "GTEx_V6p_combined",
-"nearby"), crosslink.customised = NULL, cdf.function = c("original",
-"empirical"), scoring.scheme = c("max", "sum", "sequential"),
-nearby.distance.max = 50000, nearby.decay.kernel = c("rapid", "slow",
-"linear", "constant"), nearby.decay.exponent = 2,
+"nearby"),
+crosslink.customised = NULL,
+cdf.function = c("original", "empirical"),
+scoring.scheme = c("max", "sum", "sequential"),
+nearby.distance.max = 50000,
+nearby.decay.kernel = c("rapid", "slow", "linear", "constant"),
+nearby.decay.exponent = 2,
 network = c("STRING_highest", "STRING_high", "STRING_medium",
-"STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
-"PCommonsDN_high",
-"PCommonsDN_medium", "PCommonsDN_Reactome", "PCommonsDN_KEGG",
-"PCommonsDN_HumanCyc", "PCommonsDN_PID", "PCommonsDN_PANTHER",
-"PCommonsDN_ReconX", "PCommonsDN_TRANSFAC", "PCommonsDN_PhosphoSite",
-"PCommonsDN_CTD", "KEGG", "KEGG_metabolism", "KEGG_genetic",
+"STRING_low",
+"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"PCommonsDN_medium",
+"PCommonsDN_Reactome", "PCommonsDN_KEGG", "PCommonsDN_HumanCyc",
+"PCommonsDN_PID",
+"PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
+"PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
+"KEGG_genetic",
 "KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
-"KEGG_disease",
-"REACTOME"), STRING.only = c(NA, "neighborhood_score", "fusion_score",
-"cooccurence_score", "coexpression_score", "experimental_score",
-"database_score", "textmining_score")[1], weighted = FALSE,
-network.customised = NULL, seeds.inclusive = TRUE,
-normalise = c("laplacian", "row", "column", "none"), restart = 0.7,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"KEGG_disease", "REACTOME"),
+STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score",
+"coexpression_score", "experimental_score", "database_score",
+"textmining_score")[1],
+weighted = FALSE,
+network.customised = NULL,
+seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"),
+restart = 0.7,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{data}{a named input vector containing the significance level for
@@ -188,6 +204,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "pNode", a list with following components:
@@ -215,11 +234,6 @@ score. Parallel computing is also supported for Linux-like or Windows
 operating systems. It returns an object of class "pNode".
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 
 \dontrun{
@@ -235,7 +249,7 @@ pNode <- xPierGRs(data=data, crosslink="PCHiC_combined",
 network="STRING_highest", restart=0.7, RData.location=RData.location)
 
 # c) save to the file called 'GRs_priority.txt'
-write.table(pNode$priority, file="GRs_priority.txt", sep="\\t",
+write.table(pNode$priority, file="GRs_priority.txt", sep="\t",
 row.names=FALSE)
 
 # d) manhattan plot
@@ -247,5 +261,5 @@ print(mp)
 }
 }
 \seealso{
-\code{\link{xPierGenes}}
+\code{\link{xGR2xGeneScores}}, \code{\link{xPierGenes}}
 }

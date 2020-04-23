@@ -4,32 +4,53 @@
 \alias{xPierSNPs}
 \title{Function to prioritise genes given a list of seed SNPs together with the significance level (e.g. GWAS reported p-values)}
 \usage{
-xPierSNPs(data, include.LD = NA, LD.customised = NULL, LD.r2 = 0.8,
-significance.threshold = 5e-05, score.cap = 10,
-distance.max = 2000, decay.kernel = c("slow", "constant", "linear",
-"rapid"), decay.exponent = 2, GR.SNP = c("dbSNP_GWAS",
-"dbSNP_Common", "dbSNP_Single"), GR.Gene = c("UCSC_knownGene",
-"UCSC_knownCanonical"), include.TAD = c("none", "GM12878", "IMR90",
-"MSC", "TRO", "H1", "MES", "NPC"), include.eQTL = NA,
-eQTL.customised = NULL, include.HiC = NA,
+xPierSNPs(
+data,
+include.LD = NA,
+LD.customised = NULL,
+LD.r2 = 0.8,
+significance.threshold = 5e-05,
+score.cap = 10,
+distance.max = 2000,
+decay.kernel = c("slow", "constant", "linear", "rapid"),
+decay.exponent = 2,
+GR.SNP = c("dbSNP_GWAS", "dbSNP_Common", "dbSNP_Single"),
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
+include.TAD = c("none", "GM12878", "IMR90", "MSC", "TRO", "H1", "MES",
+"NPC"),
+include.eQTL = NA,
+eQTL.customised = NULL,
+include.HiC = NA,
 cdf.function = c("empirical", "exponential"),
-relative.importance = c(1/3, 1/3, 1/3), scoring.scheme = c("max",
-"sum", "sequential"), network = c("STRING_highest", "STRING_high",
-"STRING_medium", "STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
-"PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
-"PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
+relative.importance = c(1/3, 1/3, 1/3),
+scoring.scheme = c("max", "sum", "sequential"),
+network = c("STRING_highest", "STRING_high", "STRING_medium",
+"STRING_low",
+"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"PCommonsDN_medium",
+"PCommonsDN_Reactome", "PCommonsDN_KEGG", "PCommonsDN_HumanCyc",
+"PCommonsDN_PID",
 "PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
 "PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
-"KEGG_genetic", "KEGG_environmental", "KEGG_cellular",
-"KEGG_organismal",
-"KEGG_disease", "REACTOME"), STRING.only = c(NA, "neighborhood_score",
-"fusion_score", "cooccurence_score", "coexpression_score",
-"experimental_score", "database_score", "textmining_score")[1],
-weighted = FALSE, network.customised = NULL,
-seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
-"none"), restart = 0.7, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"KEGG_genetic",
+"KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
+"KEGG_disease", "REACTOME"),
+STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score",
+"coexpression_score", "experimental_score", "database_score",
+"textmining_score")[1],
+weighted = FALSE,
+network.customised = NULL,
+seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"),
+restart = 0.7,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{data}{a named input vector containing the sinificance level for
@@ -247,6 +268,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "pNode", a list with following components:
@@ -307,11 +331,6 @@ the seeds.}
 }
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 
 \dontrun{
@@ -327,7 +346,7 @@ network="PCommonsUN_medium", restart=0.7,
 RData.location=RData.location)
 
 # c) save to the file called 'SNPs_priority.txt'
-write.table(pNode$priority, file="SNPs_priority.txt", sep="\\t",
+write.table(pNode$priority, file="SNPs_priority.txt", sep="\t",
 row.names=FALSE)
 
 # d) manhattan plot
@@ -341,6 +360,7 @@ print(mp)
 \seealso{
 \code{\link{xSNPscores}}, \code{\link{xSNP2nGenes}},
 \code{\link{xSNP2eGenes}}, \code{\link{xSNP2cGenes}},
-\code{\link{xSparseMatrix}}, \code{\link{xSM2DF}}, \code{\link{xPier}},
-\code{\link{xPierGenes}}, \code{\link{xPierPathways}}
+\code{\link{xSparseMatrix}}, \code{\link{xSM2DF}},
+\code{\link{xPierGenes}}, \code{\link{xSM2DF}},
+\code{\link{xDefineEQTL}}, \code{\link{xDefineHIC}}
 }

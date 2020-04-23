@@ -9,13 +9,9 @@
 #' a data frame of nPair X 5 containing Gene-SNP pair info per context, where the 6 columns are "Gene" (seed genes), "SNP" (dbSNP), "Score" (an SNP's genetic influential score on a seed gene), "Context" (predictors), "Flag" (indicative of Lead SNPs or LD SNPs), and "Pval" (the SNP p-value)
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierSNPsAdv}}
+#' @seealso \code{\link{xPierEvidence}}
 #' @include xPierEvidence.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' df_Gene2SNP <- xPierEvidence(ls_pNode)
@@ -24,13 +20,13 @@
 xPierEvidence <- function(list_pNode, target.query=NULL, verbose=TRUE)
 {
     
-   	if(any(class(list_pNode) %in% c("pNode"))){
+   	if(is(list_pNode,"pNode")){
 		if(is.null(list_pNode$Gene2SNP)){
 			return(NULL)
 		}else{
 			list_pNode <- list(list_pNode)
 		}
-	}else if(class(list_pNode)=="list"){
+	}else if(is(list_pNode,"list")){
 		######
 		## check pNode has a componenet called 'Gene2SNP'
 		list_pNode <- lapply(list_pNode, function(pNode){

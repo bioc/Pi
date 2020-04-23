@@ -26,12 +26,9 @@
 #' AUC: the area under ROC
 #' F-measure: the maximum of a harmonic mean between precision and recall along PR curve
 #' @export
+#' @seealso \code{\link{xPredictROCR}}
 #' @include xPredictROCR.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' pPerf <- xPredictROCR(prediction, GSP, GSN)
@@ -43,11 +40,11 @@ xPredictROCR <- function(prediction, GSP, GSN, rescale=TRUE, plot=c("none","ROC"
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     plot <- match.arg(plot)
 
-    if (class(prediction) == "pNode" ){
+    if (is(prediction,"pNode")){
         prediction <- prediction$priority[,c("name","priority")]
-    }else if(class(prediction) == "sTarget"){
+    }else if(is(prediction,"sTarget")){
     	prediction <- prediction$priority[, c("name","rating")]
-    }else if(class(prediction) == "dTarget"){
+    }else if(is(prediction,"dTarget")){
     	prediction <- prediction$priority[, c("name","rating")]
     }
 

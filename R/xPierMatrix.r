@@ -8,6 +8,7 @@
 #' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' If displayBy is 'evidence', an object of the class "eTarget", a list with following components:
 #' \itemize{
@@ -23,13 +24,9 @@
 #' }
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierSNPsAdv}}
+#' @seealso \code{\link{xSparseMatrix}}, \code{\link{xSymbol2GeneID}}
 #' @include xPierMatrix.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # get predictor matrix for targets
@@ -40,16 +37,16 @@
 #' dTarget <- xPierMatrix(ls_pNode, displayBy="pvalue", aggregateBy="fishers")
 #' }
 
-xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
     displayBy <- match.arg(displayBy)
     combineBy <- match.arg(combineBy)
     aggregateBy <- match.arg(aggregateBy) 
     
-   	if(any(class(list_pNode) %in% c("pNode"))){
+   	if(is(list_pNode,"pNode")){
 		list_pNode <- list(list_pNode)
-	}else if(class(list_pNode)=="list"){
+	}else if(is(list_pNode,"list")){
 		## Remove null elements in a list
 		list_pNode <- base::Filter(base::Negate(is.null), list_pNode)
 		if(length(list_pNode)==0){
@@ -179,7 +176,7 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			## df_priority
 			df_priority <- data.frame(name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, rating=rating, stringsAsFactors=FALSE)
 			### add description
-			df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, RData.location=RData.location)$description
+			df_priority$description <- xSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, RData.location=RData.location, guid=guid)$description
 			###
 			
 			## df_predictor
@@ -218,9 +215,9 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			
 			## return dTarget
 			#priority <- cbind(df_priority,Overall=overall, mat_evidence)
-			#priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,c("nGene","cGene","eGene","dGene","pGene","fGene")], stringsAsFactors=F)
+			#priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,c("nGene","cGene","eGene","dGene","pGene","fGene")], stringsAsFactors=FALSE)
 			ind <- match(c("nGene","cGene","eGene","dGene","pGene","fGene"), colnames(mat_evidence))
-			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=F)
+			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
 			dTarget <- list(priority  = priority,
 							predictor = df_predictor,
 							metag	  = metag,

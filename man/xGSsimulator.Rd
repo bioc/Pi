@@ -4,11 +4,18 @@
 \alias{xGSsimulator}
 \title{Function to simulate gold standard negatives (GSN) given gold standard positives (GSP) and a gene network}
 \usage{
-xGSsimulator(GSP, population = NULL, network = c("STRING_medium",
-"STRING_low", "STRING_high", "STRING_highest", "PCommonsUN_high",
-"PCommonsUN_medium")[c(1, 6)], network.customised = NULL,
-neighbor.order = 1, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+xGSsimulator(
+GSP,
+population = NULL,
+network = c("STRING_medium", "STRING_low", "STRING_high",
+"STRING_highest",
+"PCommonsUN_high", "PCommonsUN_medium")[c(1, 6)],
+network.customised = NULL,
+neighbor.order = 1,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{GSP}{a vector containing Gold Standard Positives (GSP)}
@@ -51,6 +58,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 a list with following components:
@@ -71,10 +81,6 @@ default) neighbors in the gene network.
 If multiple graphs are provided, they will be unionised for use.
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sGS <- xGSsimulator(GSP, population=NULL,
@@ -83,6 +89,5 @@ RData.location=RData.location)
 }
 }
 \seealso{
-\code{\link{xRDataLoader}}, \code{\link{xPredictROCR}},
-\code{\link{xMLrandomforest}}
+\code{\link{xDefineNet}}
 }

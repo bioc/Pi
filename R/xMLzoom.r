@@ -13,13 +13,9 @@
 #' @return an object of class "ggplot"
 #' @note none
 #' @export
-#' @seealso \code{\link{xMLrandomforest}}
+#' @seealso \code{\link{xColormap}}
 #' @include xMLzoom.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' gp <- xMLzoom(sTarget)
@@ -32,12 +28,12 @@ xMLzoom <- function(xTarget, top=20, top.label.type=c("box","text"), top.label.s
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     top.label.type <- match.arg(top.label.type)
 
-    if(class(xTarget) == "dTarget"){
+    if(is(xTarget,"dTarget")){
     	if(is.null(xTarget$pPerf)){
     		stop("The function must apply to a 'dTarget' object with the component 'pPerf'.\n")
     	}
     }else{
-		if(class(xTarget) != "sTarget"){
+		if(!is(xTarget,"sTarget")){
 			stop("The function must apply to a 'sTarget' object.\n")
 		}
     }

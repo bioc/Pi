@@ -10,14 +10,11 @@
 #' @return an object of class "ggplot" appended with 'mat' (the matrix colored by 'b_ABF') and 'df' (a data frame with columns 'priority','code','context','mode','ProbeID','Symbol','gene_cse','snps','snp_cse','A1','A2','b_GWAS','b_eQTL','b_ABF','p_GWAS','p_eQTL','pp_ABF','direction_GWAS','direction_eQTL','direction_ABF').
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierABFheatmap}}
+#' @seealso \code{\link{xSparseMatrix}}, \code{\link{xHeatmap}}, \code{\link{xSparseMatrix}}
 #' @include xPierABFheatmap.r
 #' @examples
+#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' RData.location <- "http://galahad.well.ox.ac.uk/bigdata/"
-#' 
 #' gp <- xPierABFheatmap(data, dTarget)
 #' }
 
@@ -26,7 +23,7 @@ xPierABFheatmap <- function(data, xTarget, type=c('Gene','Gene_SNP'), colormap='
     type <- match.arg(type)
     
     ## df_evidence
-    if(class(xTarget) == "sTarget" | class(xTarget) == "dTarget"){
+    if(is(xTarget,"sTarget") | is(xTarget,"dTarget")){
     
     	if(any(names(xTarget) %in% 'list_pNode')){
 			list_pNode <- xTarget$list_pNode
@@ -37,7 +34,7 @@ xPierABFheatmap <- function(data, xTarget, type=c('Gene','Gene_SNP'), colormap='
 			df_evidence <- do.call(rbind, ls_df)
 		
 			## df_gene_priority: extract priority
-			df_gene_priority <- data.frame(gene=xTarget$priority$name, priority=xTarget$priority$rating, stringsAsFactors=F)
+			df_gene_priority <- data.frame(gene=xTarget$priority$name, priority=xTarget$priority$rating, stringsAsFactors=FALSE)
 			ind <- match(df_gene_priority$gene, data)
 			if(sum(!is.na(ind))>0){
 				df_gene_priority <- df_gene_priority[!is.na(ind),]
@@ -47,12 +44,12 @@ xPierABFheatmap <- function(data, xTarget, type=c('Gene','Gene_SNP'), colormap='
 			return(NULL)
 		}
 		
-    }else if(class(xTarget) == "data.frame"){
+    }else if(is(xTarget,"data.frame")){
     
     	df_evidence <- xTarget[,c('context','mode','probeID','Symbol','gene_cse','snps','snp_cse','A1','A2','b_GWAS','b_eQTL','b_ABF','p_GWAS','p_eQTL','pp_ABF','H4')]
     	
 		## df_gene_priority: always priority=1
-		df_gene_priority <- data.frame(gene=data, priority=1, stringsAsFactors=F)
+		df_gene_priority <- data.frame(gene=data, priority=1, stringsAsFactors=FALSE)
     	
     }else{
     	return(NULL)
@@ -131,7 +128,7 @@ xPierABFheatmap <- function(data, xTarget, type=c('Gene','Gene_SNP'), colormap='
 		default.Context <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD4","CD8","Blood","Monocyte","shared_CD14","shared_LPS2","shared_LPS24","shared_IFN")
 		ind <- match(default.Context, unique(df$context))
 		columns <- default.Context[!is.na(ind)]
-		mat <- as.matrix(xSparseMatrix(df[,c('code','context','b_ABF')], rows=unique(df$code), columns=columns, verbose=F))
+		mat <- as.matrix(xSparseMatrix(df[,c('code','context','b_ABF')], rows=unique(df$code), columns=columns, verbose=FALSE))
 		mat[mat==0] <- NA
 		gp <- xHeatmap(mat, reorder="none", colormap=colormap, ncolors=64, zlim=zlim, legend.title="Effect", barwidth=0.4, x.rotate=60, shape=19, size=2, x.text.size=7, y.text.size=6, legend.text.size=5, legend.title.size=7, na.color='transparent', barheight=max(3,min(5,nrow(mat))))
 		## append 'mat'
@@ -152,7 +149,7 @@ xPierABFheatmap <- function(data, xTarget, type=c('Gene','Gene_SNP'), colormap='
 		default.Context <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD4","CD8","Blood","Monocyte","shared_CD14","shared_LPS2","shared_LPS24","shared_IFN")
 		ind <- match(default.Context, unique(df$context))
 		columns <- default.Context[!is.na(ind)]
-		mat <- as.matrix(xSparseMatrix(df[,c('Symbol','context','b_ABF')], rows=unique(df$Symbol), columns=columns, verbose=F))
+		mat <- as.matrix(xSparseMatrix(df[,c('Symbol','context','b_ABF')], rows=unique(df$Symbol), columns=columns, verbose=FALSE))
 		mat[mat==0] <- NA
 		gp <- xHeatmap(mat, reorder="none", colormap=colormap, ncolors=64, zlim=zlim, legend.title="Effect", barwidth=0.4, x.rotate=60, shape=19, size=2, x.text.size=7, y.text.size=6, legend.text.size=5, legend.title.size=7, na.color='transparent', barheight=max(3,min(5,nrow(mat))))
 		## append 'mat'

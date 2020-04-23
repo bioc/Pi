@@ -14,6 +14,7 @@
 #' @param fold.aggregateBy the aggregate method used to aggregate results from k-fold cross validataion. It can be either "orderStatistic" for the method based on the order statistics of p-values, or "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'Ztransform' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to TRUE for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @param ... additional parameters. Please refer to 'randomForest::randomForest' for the complete list.
 #' @return 
 #' an object of class "sTarget", a list with following components:
@@ -33,18 +34,15 @@
 #' }
 #' @note none
 #' @export
+#' @seealso \code{\link{xPierMatrix}}, \code{\link{xSparseMatrix}}, \code{\link{xPredictROCR}}, \code{\link{xPredictCompare}}, \code{\link{xSymbol2GeneID}}
 #' @include xMLrandomforest.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' sTarget <- xMLrandomforest(df_prediction, GSP, GSN)
 #' }
 
-xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=3, nrepeat=10, seed=825, mtry=NULL, ntree=1000, fold.aggregateBy=c("logistic","Ztransform","fishers","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
+xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=3, nrepeat=10, seed=825, mtry=NULL, ntree=1000, fold.aggregateBy=c("logistic","Ztransform","fishers","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL, ...)
 {
 	
     startT <- Sys.time()
@@ -56,12 +54,12 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 	
     fold.aggregateBy <- match.arg(fold.aggregateBy)
 	
-	if(class(list_pNode)=="list" & is.null(df_predictor)){
-		df_predictor <- xPierMatrix(list_pNode, displayBy="score", combineBy="union", aggregateBy="none", RData.location=RData.location)
+	if(is(list_pNode,"list") & is.null(df_predictor)){
+		df_predictor <- xPierMatrix(list_pNode, displayBy="score", combineBy="union", aggregateBy="none", RData.location=RData.location, guid=guid)
 		
 		###########
 		## evidence
-		eTarget <- xPierMatrix(list_pNode, displayBy="evidence", combineBy="union", aggregateBy="none", verbose=FALSE, RData.location=RData.location)
+		eTarget <- xPierMatrix(list_pNode, displayBy="evidence", combineBy="union", aggregateBy="none", verbose=FALSE, RData.location=RData.location, guid=guid)
 		###########
 				
 	}else if(!is.null(df_predictor)){
@@ -405,7 +403,7 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 	output_gs[output_gs=='1'] <- 'GSP'
 	df_priority <- data.frame(GS=output_gs, name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, rating=rating, stringsAsFactors=FALSE)
 	### add description
-	df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location)$description
+	df_priority$description <- xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location, guid=guid)$description
 	###
 	
 	### df_predictor_gs df_full_gs
@@ -457,7 +455,7 @@ xMLrandomforest <- function(list_pNode=NULL, df_predictor=NULL, GSP, GSN, nfold=
 		eTarget$evidence <- eTarget$evidence[ind,]
 	}
 	
-	priority <- data.frame(df_priority[,c("GS","name","rank","rating","description")], stringsAsFactors=F)
+	priority <- data.frame(df_priority[,c("GS","name","rank","rating","description")], stringsAsFactors=FALSE)
 	
     sTarget <- list(ls_model = ls_model,
     				priority = priority,

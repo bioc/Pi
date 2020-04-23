@@ -20,6 +20,7 @@
 #' @param true.path.rule logical to indicate whether the true-path rule should be applied to propagate annotations. By default, it sets to false
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to false for no display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return 
 #' an object of class "eTerm", a list with following components:
 #' \itemize{
@@ -42,14 +43,9 @@
 #' \item{"Notes": the order of the number of significant terms is: "none" > "lea" > "elim" > "pc".}
 #' }
 #' @export
-#' @seealso \code{\link{xRDataLoader}}, \code{\link{xEnricher}}
+#' @seealso \code{\link{xEnricherGenes}}
 #' @include xPierPathways.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the SNPs with the significance info
@@ -75,7 +71,7 @@
 #' utils::write.table(output, file="Pathways_priority.txt", sep="\t", row.names=FALSE)
 #' }
 
-xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=NA, size.range=c(10,2000), min.overlap=3, which.distance=NULL, test=c("hypergeo","fisher","binomial"), background.annotatable.only=NULL, p.tail=c("one-tail","two-tails"), p.adjust.method=c("BH", "BY", "bonferroni", "holm", "hochberg", "hommel"), ontology.algorithm=c("none","pc","elim","lea"), elim.pvalue=1e-2, lea.depth=2, path.mode=c("all_paths","shortest_paths","all_shortest_paths"), true.path.rule=FALSE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=NA, size.range=c(10,2000), min.overlap=3, which.distance=NULL, test=c("hypergeo","fisher","binomial"), background.annotatable.only=NULL, p.tail=c("one-tail","two-tails"), p.adjust.method=c("BH", "BY", "bonferroni", "holm", "hochberg", "hommel"), ontology.algorithm=c("none","pc","elim","lea"), elim.pvalue=1e-2, lea.depth=2, path.mode=c("all_paths","shortest_paths","all_shortest_paths"), true.path.rule=FALSE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
     startT <- Sys.time()
     message(paste(c("Start at ",as.character(startT)), collapse=""), appendLF=TRUE)
@@ -90,9 +86,9 @@ xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=NA,
     path.mode <- match.arg(path.mode)
     p.tail <- match.arg(p.tail)
     
-    if(class(pNode) == "pNode"){
+    if(is(pNode,"pNode")){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
-    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	df_priority <- pNode$priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
     }else{
@@ -119,7 +115,7 @@ xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=NA,
         message(sprintf("#######################################################", appendLF=TRUE))
     }
     
-	eTerm <- xEnricherGenes(data=data, background=background, ontology=ontology, size.range=size.range, min.overlap=min.overlap, which.distance=which.distance, test=test, background.annotatable.only=background.annotatable.only, p.tail=p.tail, p.adjust.method=p.adjust.method, ontology.algorithm=ontology.algorithm, elim.pvalue=elim.pvalue, lea.depth=lea.depth, path.mode=path.mode, true.path.rule=true.path.rule, verbose=verbose, RData.location=RData.location)
+	eTerm <- xEnricherGenes(data=data, background=background, ontology=ontology, size.range=size.range, min.overlap=min.overlap, which.distance=which.distance, test=test, background.annotatable.only=background.annotatable.only, p.tail=p.tail, p.adjust.method=p.adjust.method, ontology.algorithm=ontology.algorithm, elim.pvalue=elim.pvalue, lea.depth=lea.depth, path.mode=path.mode, true.path.rule=true.path.rule, verbose=verbose, RData.location=RData.location, guid=guid)
 	
 	if(verbose){
         now <- Sys.time()

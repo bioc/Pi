@@ -9,6 +9,7 @@
 #' @param neighbor.order an integer giving the order of the neighborhood. By default, it is 1-order neighborhood
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' a list with following components:
 #' \itemize{
@@ -18,26 +19,22 @@
 #' }
 #' @note If multiple graphs are provided, they will be unionised for use.
 #' @export
-#' @seealso \code{\link{xRDataLoader}}, \code{\link{xPredictROCR}}, \code{\link{xMLrandomforest}}
+#' @seealso \code{\link{xDefineNet}}
 #' @include xGSsimulator.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' sGS <- xGSsimulator(GSP, population=NULL, network=c("STRING_medium","PCommonsUN_medium"), RData.location=RData.location)
 #' }
 
-xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING_low","STRING_high","STRING_highest","PCommonsUN_high","PCommonsUN_medium")[c(1,6)], network.customised=NULL, neighbor.order=1, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING_low","STRING_high","STRING_highest","PCommonsUN_high","PCommonsUN_medium")[c(1,6)], network.customised=NULL, neighbor.order=1, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
     if(is.null(GSP)){
         stop("The input GSP must be not NULL.\n")
     }
     
-    if(!is.null(network.customised) && class(network.customised)=="igraph"){
+    if(!is.null(network.customised) && is(network.customised,"igraph")){
 		if(verbose){
 			now <- Sys.time()
 			message(sprintf("Load the customised network (%s) ...", as.character(now)), appendLF=TRUE)
@@ -58,7 +55,7 @@ xGSsimulator <- function(GSP, population=NULL, network=c("STRING_medium","STRING
 					message(sprintf("Load the network %s (%s) ...", x, as.character(now)), appendLF=TRUE)
 				}
 				
-				g <- XGR::xDefineNet(network=x, weighted=FALSE, verbose=FALSE, RData.location=RData.location)
+				g <- xDefineNet(network=x, weighted=FALSE, verbose=FALSE, RData.location=RData.location, guid=guid)
 				
 				### delete description
 				if(!is.null(igraph::vertex_attr(g, "description"))){

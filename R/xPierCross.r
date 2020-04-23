@@ -8,6 +8,7 @@
 #' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' If aggregateBy is 'none' (by default), a data frame containing priority matrix, with each column/disease for either priority score/rating, or priorty rank or priority p-value.
 #' If aggregateBy is not 'none', an object of the class "cTarget", a list with following components:
@@ -17,28 +18,24 @@
 #' }
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierMatrix}}
+#' @seealso \code{\link{xSymbol2GeneID}}
 #' @include xPierCross.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' df_score <- xPierCross(ls_xTarget)
 #' }
 
-xPierCross <- function(list_xTarget, displayBy=c("rating","rank","pvalue","fdr"), combineBy=c('intersect','union'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierCross <- function(list_xTarget, displayBy=c("rating","rank","pvalue","fdr"), combineBy=c('intersect','union'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
     displayBy <- match.arg(displayBy)
     combineBy <- match.arg(combineBy)
     aggregateBy <- match.arg(aggregateBy) 
     
-   	if(any(class(list_xTarget) %in% c("dTarget","sTarget"))){
+   	if(is(list_xTarget,"dTarget") | is(list_xTarget,"sTarget")){
 		list_xTarget <- list(list_xTarget)
-	}else if(class(list_xTarget)=="list"){
+	}else if(is(list_xTarget,"list")){
 		## Remove null elements in a list
 		list_xTarget <- base::Filter(base::Negate(is.null), list_xTarget)
 		if(length(list_xTarget)==0){
@@ -106,7 +103,7 @@ xPierCross <- function(list_xTarget, displayBy=c("rating","rank","pvalue","fdr")
 			## df_priority
 			df_priority <- data.frame(name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, priority=priority, stringsAsFactors=FALSE)
 			### add description
-			df_priority$description <- XGR::xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location)$description
+			df_priority$description <- xSymbol2GeneID(df_priority$name, details=TRUE, RData.location=RData.location, guid=guid)$description
 			###
 			
 			## df_disease

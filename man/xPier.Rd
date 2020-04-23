@@ -4,10 +4,17 @@
 \alias{xPier}
 \title{Function to do prioritisation through random walk techniques}
 \usage{
-xPier(seeds, g, seeds.inclusive = TRUE, normalise = c("laplacian",
-"row", "column", "none"), restart = 0.7,
-normalise.affinity.matrix = c("none", "quantile"), parallel = TRUE,
-multicores = NULL, verbose = TRUE)
+xPier(
+seeds,
+g,
+seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"),
+restart = 0.7,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE
+)
 }
 \arguments{
 \item{seeds}{a named input vector containing a list of seed nodes. For
@@ -82,12 +89,6 @@ The input graph will treat as an unweighted graph if there is no
 'weight' edge attribute associated with
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 # a) provide the input nodes/genes with the significance info
 sig <- rbeta(500, shape1=0.5, shape2=1)
 \dontrun{
@@ -105,7 +106,5 @@ pNode <- xPier(seeds=data, g=g, restart=0.75)
 }
 }
 \seealso{
-\code{\link{xRDataLoader}}, \code{\link{xRWR}},
-\code{\link{xPierSNPs}}, \code{\link{xPierGenes}},
-\code{\link{xPierPathways}}
+\code{\link{xRWR}}
 }

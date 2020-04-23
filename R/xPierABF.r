@@ -21,6 +21,7 @@
 #' @param multicores an integer to specify how many cores will be registered as the multicore parallel backend to the 'foreach' package. If NULL, it will use a half of cores available in a user's computer. This option only works when parallel computation is enabled
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' an object of class "pNode", a list with following components:
 #' \itemize{
@@ -31,19 +32,17 @@
 #' }
 #' @note The input graph will treat as an unweighted graph if there is no 'weight' edge attribute associated with
 #' @export
-#' @seealso \code{\link{xPierGenes}}
+#' @seealso \code{\link{xRDataLoader}}, \code{\link{xMEabf}}, \code{\link{xPierGenes}}
 #' @include xPierABF.r
 #' @examples
-#' # Load the library
-#' library(Pi)
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
-#' data <- utils::read.delim(file="summary_gwas.RA.txt", header=T, row.names=NULL, stringsAsFactors=F)
+#' data <- utils::read.delim(file="summary_gwas.RA.txt", header=TRUE, row.names=NULL, stringsAsFactors=FALSE)
 #' pNode_abf <- xPierABF(data, eqtl="Blood", network="STRING_high", restart=0.7, RData.location=RData.location)
 #' write.table(pNode_abf$priority, file="Genes_priority.ABF.txt", sep="\t", row.names=FALSE)
 #' }
 
-xPierABF <- function(data, eqtl=c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD4","CD8","Blood","Monocyte","shared_CD14","shared_LPS2","shared_LPS24","shared_IFN"), prior.eqtl=1e-4, prior.gwas=1e-4, prior.both=1e-5, cutoff.H4=0.8, cutoff.pgwas=1e-5, network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD","KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierABF <- function(data, eqtl=c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD4","CD8","Blood","Monocyte","shared_CD14","shared_LPS2","shared_LPS24","shared_IFN"), prior.eqtl=1e-4, prior.gwas=1e-4, prior.both=1e-5, cutoff.H4=0.8, cutoff.pgwas=1e-5, network=c("STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD","KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], weighted=FALSE, network.customised=NULL, seeds.inclusive=TRUE, normalise=c("laplacian","row","column","none"), restart=0.7, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
     startT <- Sys.time()
@@ -66,7 +65,7 @@ xPierABF <- function(data, eqtl=c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neut
 	###########################	
 	# summary GWAS
 	###########################
-	if(class(data)=='data.frame'){
+	if(is(data,'data.frame')){
 		if(all(c('snp','effect','other','b','p','se') %in% colnames(data))){
 			#summary_gwas <- data[,c("snp","effect","other","b","p","se")] %>% dplyr::filter(!is.na(se), se!=0, b!=0, effect!='', other!='')
 			summary_gwas <- data %>% dplyr::filter(!is.na(se), se!=0, b!=0, effect!='', other!='') %>% dplyr::arrange(p)
@@ -89,12 +88,12 @@ xPierABF <- function(data, eqtl=c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neut
 names(vec_N_eqtl) <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD4","CD8","Blood","Monocyte","shared_CD14","shared_LPS2","shared_LPS24","shared_IFN")
 	N_eqtl <- vec_N_eqtl[eqtl]
 	if(0){
-		JK_cohort_xMEdb <- xRDataLoader('JK_cohort_xMEdb', verbose=F, RData.location=RData.location)
+		JK_cohort_xMEdb <- xRDataLoader('JK_cohort_xMEdb', verbose=FALSE, RData.location=RData.location, guid=guid)
 		## summary_eqtl: extracted 
 		ind <- match(JK_cohort_xMEdb$context, eqtl)
 		summary_eqtl <- JK_cohort_xMEdb[!is.na(ind), ]
 	}else{
-		summary_eqtl <- xRDataLoader(paste0('JK_cohort_xMEdb_',eqtl), verbose=F, RData.location=RData.location)
+		summary_eqtl <- xRDataLoader(paste0('JK_cohort_xMEdb_',eqtl), verbose=FALSE, RData.location=RData.location, guid=guid)
 	}
 	
 	##########################
@@ -112,9 +111,9 @@ names(vec_N_eqtl) <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD
 		
 		if(verbose){
 			if(i %% 1000 == 0){
-				message(sprintf("Analysing %d (%d) (%s)", i, length(ls_gene), as.character(Sys.time())), appendLF=T)
+				message(sprintf("Analysing %d (%d) (%s)", i, length(ls_gene), as.character(Sys.time())), appendLF=TRUE)
 			}
-			message(sprintf("Analysing %d (%d) (%s)", i, length(ls_gene), as.character(Sys.time())), appendLF=T)
+			message(sprintf("Analysing %d (%d) (%s)", i, length(ls_gene), as.character(Sys.time())), appendLF=TRUE)
 		}
 		
 		df_output <- NULL
@@ -149,7 +148,7 @@ names(vec_N_eqtl) <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD
 				gwas.summary <- list(beta=df_gwas$b_corrected, varbeta=df_gwas$se^2, type="cc", snp=df_gwas$snp)
 		
 				## Bayesian colocalisation analysis through ABF
-				res <- XGR::xMEabf(eqtl.summary, gwas.summary, prior.eqtl=prior.eqtl, prior.gwas=prior.gwas, prior.both=prior.both)
+				res <- xMEabf(eqtl.summary, gwas.summary, prior.eqtl=prior.eqtl, prior.gwas=prior.gwas, prior.both=prior.both)
 				
 				## post-processing to obtain df_output
 				df_res <- res$results
@@ -188,7 +187,7 @@ names(vec_N_eqtl) <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD
 	##############
 	## df_evidence
 	df_evidence <- df %>% dplyr::arrange(-H4, p_GWAS, p_eQTL)
-	#utils::write.table(df_evidence, file="df_output_ABF.txt", row.names=F, col.names=T, quote=F, sep="\t")
+	#utils::write.table(df_evidence, file="df_output_ABF.txt", row.names=FALSE, col.names=TRUE, quote=FALSE, sep="\t")
 	##############
 	
 	## Keep the top SNP (with the highest H4, the most significant p_GWAS and p_eQTL) per Symbol
@@ -201,7 +200,7 @@ names(vec_N_eqtl) <- c("CD14","LPS2","LPS24","IFN","Bcell","NK","Neutrophil","CD
 	## the seed gene (eGene) weighted by pp_ABF
 	data_subset <- df[,c("Symbol","pp_ABF")]
 	if(nrow(data_subset)!=0){
-		pNode <- suppressMessages(xPierGenes(data=data_subset, network=network, STRING.only=STRING.only, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose, RData.location=RData.location))
+		pNode <- suppressMessages(xPierGenes(data=data_subset, network=network, STRING.only=STRING.only, weighted=weighted, network.customised=network.customised, seeds.inclusive=seeds.inclusive, normalise=normalise, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose, RData.location=RData.location, guid=guid))
 		
 		pNode$evidence <- df_evidence
     }

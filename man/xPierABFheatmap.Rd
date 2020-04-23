@@ -4,8 +4,13 @@
 \alias{xPierABFheatmap}
 \title{Function to visualise ABF evidence using heatmap}
 \usage{
-xPierABFheatmap(data, xTarget, type = c("Gene", "Gene_SNP"),
-colormap = "steelblue-lightyellow-orange", zlim = c(-0.5, 0.5))
+xPierABFheatmap(
+data,
+xTarget,
+type = c("Gene", "Gene_SNP"),
+colormap = "steelblue-lightyellow-orange",
+zlim = c(-0.5, 0.5)
+)
 }
 \arguments{
 \item{data}{an input vector containing gene symbols}
@@ -45,14 +50,12 @@ heatmap. It returns an object of class "ggplot".
 none
 }
 \examples{
+RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
-# Load the library
-library(Pi)
-RData.location <- "http://galahad.well.ox.ac.uk/bigdata/"
-
 gp <- xPierABFheatmap(data, dTarget)
 }
 }
 \seealso{
-\code{\link{xPierABFheatmap}}
+\code{\link{xSparseMatrix}}, \code{\link{xHeatmap}},
+\code{\link{xSparseMatrix}}
 }

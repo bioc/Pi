@@ -4,7 +4,7 @@
 \alias{xPierMRS}
 \title{Function to calculate multi-trait rating score from a list of dTarget/sTarget objects}
 \usage{
-xPierMRS(list_xTarget, cutoff.rank = 150, verbose = T)
+xPierMRS(list_xTarget, cutoff.rank = 150, verbose = TRUE)
 }
 \arguments{
 \item{list_xTarget}{a list of "dTarget"/"sTarget" objects}
@@ -27,10 +27,6 @@ from a list of dTarget/sTarget objects.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 df_MRS <- xPierMRS(ls_xTarget)

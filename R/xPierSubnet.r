@@ -15,6 +15,7 @@
 #' @param aggregateBy the aggregate method used to aggregate edge confidence p-values. It can be either "orderStatistic" for the method based on the order statistics of p-values, or "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'Ztransform' and 'logistic' are preferred here
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' a subgraph with a maximum score, an object of class "igraph". It has ndoe attributes: signficance, score, type, priority (part of the "pNode" object). If permutation test is enabled, it also has a graph attribute (combinedP) and an edge attribute (edgeConfidence)
 #' @note The priority score will be first scaled to the range x=[0 100] and then is converted to pvalue-like significant level: 10^(-x). Next, \code{\link{xSubneterGenes}} is used to identify a maximum-scoring gene subnetwork that contains as many highly prioritised genes as possible but a few lowly prioritised genes as linkers. An iterative procedure of scanning different priority thresholds is also used to identify the network with a desired number of nodes/genes. Notably, the preferential use of the same network as used in gene-level prioritisation is due to the fact that gene-level affinity/priority scores are smoothly distributed over the network after being walked. In other words, the chance of identifying such a gene network enriched with top prioritised genes is much higher.
@@ -22,11 +23,6 @@
 #' @seealso \code{\link{xSubneterGenes}}
 #' @include xPierSubnet.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the SNPs with the significance info
@@ -61,7 +57,7 @@
 #' xCircos(g=subnet, entity="Gene", RData.location=RData.location)
 #' }
 
-xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, test.permutation=FALSE, num.permutation=100, respect=c("none","degree"), aggregateBy=c("Ztransform","fishers","logistic","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highest","STRING_high","STRING_medium","STRING_low","PCommonsUN_high","PCommonsUN_medium","PCommonsDN_high","PCommonsDN_medium","PCommonsDN_Reactome","PCommonsDN_KEGG","PCommonsDN_HumanCyc","PCommonsDN_PID","PCommonsDN_PANTHER","PCommonsDN_ReconX","PCommonsDN_TRANSFAC","PCommonsDN_PhosphoSite","PCommonsDN_CTD", "KEGG","KEGG_metabolism","KEGG_genetic","KEGG_environmental","KEGG_cellular","KEGG_organismal","KEGG_disease","REACTOME"), STRING.only=c(NA,"neighborhood_score","fusion_score","cooccurence_score","coexpression_score","experimental_score","database_score","textmining_score")[1], network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, test.permutation=FALSE, num.permutation=100, respect=c("none","degree"), aggregateBy=c("Ztransform","fishers","logistic","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
     startT <- Sys.time()
@@ -75,7 +71,7 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
     respect <- match.arg(respect)
     aggregateBy <- match.arg(aggregateBy)
     
-    if(class(pNode) == "pNode"){
+    if(is(pNode,"pNode")){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
         
 		network <- network[1]
@@ -95,7 +91,7 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
 		y <- (x - min(x,na.rm=TRUE)) / (max(x,na.rm=TRUE) - min(x,na.rm=TRUE))
 		pval <- 10^(-100*y)
 		
-	}else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+	}else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	df_priority <- pNode$priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
     	
@@ -159,13 +155,13 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
     }
     
     if(is.na(network)){
-    	subg <- xSubneterGenes(data=pval, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, test.permutation=test.permutation, num.permutation=num.permutation, respect=respect, aggregateBy=aggregateBy, verbose=verbose, RData.location=RData.location)
+    	subg <- xSubneterGenes(data=pval, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, test.permutation=test.permutation, num.permutation=num.permutation, respect=respect, aggregateBy=aggregateBy, verbose=verbose, RData.location=RData.location, guid=guid)
     }else{
-    	subg <- xSubneterGenes(data=pval, network=network, STRING.only=STRING.only, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, test.permutation=test.permutation, num.permutation=num.permutation, respect=respect, aggregateBy=aggregateBy, verbose=verbose, RData.location=RData.location)
+    	subg <- xSubneterGenes(data=pval, network=network, STRING.only=STRING.only, network.customised=network.customised, seed.genes=TRUE, subnet.significance=subnet.significance, subnet.size=subnet.size, test.permutation=test.permutation, num.permutation=num.permutation, respect=respect, aggregateBy=aggregateBy, verbose=verbose, RData.location=RData.location, guid=guid)
 	}
 	
 	# extract relevant info
-	if(ecount(subg)>0 && class(subg)=="igraph"){
+	if(ecount(subg)>0 && is(subg,"igraph")){
 		relations <- igraph::get.data.frame(subg, what="edges")[,c(1,2)]
 		if(!is.null(subg$combinedP)){
 			relations$edgeConfidence <- igraph::get.data.frame(subg, what="edges")[,"edgeConfidence"]

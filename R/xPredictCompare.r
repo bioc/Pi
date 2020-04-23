@@ -13,14 +13,9 @@
 #' @return an object of class "ggplot" or NULL (if all input pPerf objects are NULL)
 #' @note none
 #' @export
-#' @seealso \code{\link{xPredictROCR}}
+#' @seealso \code{\link{xPredictCompare}}
 #' @include xPredictCompare.r
 #' @examples
-#' # Load the library
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' bp <- xPredictCompare(ls_pPerf, displayBy="ROC")
@@ -35,9 +30,9 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
     displayBy <- match.arg(displayBy)
     type <- match.arg(type)
     
-   	if(any(class(list_pPerf) %in% c("gg","ggplot","pPerf"))){
+   	if(is(list_pPerf,"ggplot") | is(list_pPerf,"pPerf")){
 		list_pPerf <- list(list_pPerf)
-	}else if(class(list_pPerf)=="list"){
+	}else if(is(list_pPerf,"list")){
 		## Remove null elements in a list
 		list_pPerf <- base::Filter(base::Negate(is.null), list_pPerf)
 		if(length(list_pPerf)==0){
@@ -196,7 +191,7 @@ xPredictCompare <- function(list_pPerf, displayBy=c("ROC","PR"), type=c("curve",
 	}
 	
 	if(signature){
-		caption <- paste("Created by xPredictROCR from XGR version", utils ::packageVersion("XGR"))
+		caption <- paste("Created by xPredictROCR from Pi version", utils ::packageVersion("Pi"))
 		p <- p + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
 	}
 	

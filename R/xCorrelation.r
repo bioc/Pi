@@ -23,11 +23,6 @@
 #' @seealso \code{\link{xCorrelation}}
 #' @include xCorrelation.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(XGR)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the seed nodes/genes with the weight info
@@ -53,7 +48,7 @@ xCorrelation <- function(df, list_vec, method=c("pearson","spearman"), p.type=c(
     p.adjust.method <- match.arg(p.adjust.method)
     plot.smooth <- match.arg(plot.smooth)
     
-    if(class(df) == "data.frame"){
+    if(is(df,"data.frame")){
     	df_priority <- df[,c(1:2)]
     	colnames(df_priority) <- c("name","priority")
     }else{
@@ -65,14 +60,14 @@ xCorrelation <- function(df, list_vec, method=c("pearson","spearman"), p.type=c(
     	return(NULL)
     }
     ############
-    if(is.vector(list_vec) & class(list_vec)!="list"){
+    if(is.vector(list_vec) & !is(list_vec,"list")){
     	# assume a vector
 		if(is.null(names(list_vec))){
 			stop("The input vector must have names.\n")
 		}else{
 			list_vec <- list(list_vec)
 		}
-	}else if(class(list_vec)=="list"){
+	}else if(is(list_vec,"list")){
 		## Remove null elements in a list
 		list_vec <- base::Filter(base::Negate(is.null), list_vec)
 		if(length(list_vec)==0){

@@ -16,6 +16,7 @@
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true
 #' @param silent logical to indicate whether the messages will be silent completely. By default, it sets to false. If true, verbose will be forced to be false
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @return
 #' an object of class "eGSEA", a list with following components:
 #' \itemize{
@@ -26,14 +27,9 @@
 #' }
 #' @note none
 #' @export
-#' @seealso \code{\link{xGSEAbarplot}}, \code{\link{xGSEAdotplot}}
+#' @seealso \code{\link{xSymbol2GeneID}}, \code{\link{xRDataLoader}}, \code{\link{xDAGanno}}
 #' @include xPierGSEA.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the seed nodes/genes with the weight info
@@ -53,7 +49,7 @@
 #' gp <- xGSEAdotplot(eGSEA, top=1)
 #' }
 
-xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC","PS","PS2","SF","Pfam","DO","HPPA","HPMI","HPCM","HPMA","MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6p", "GTExV7", "CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP", "CreedsGeneDN", "KEGG","KEGGmetabolism","KEGGgenetic","KEGGenvironmental","KEGGcellular","KEGGorganismal","KEGGdisease"), customised.genesets=NULL, size.range=c(10,500), p.adjust.method=c("BH", "BY", "bonferroni", "holm", "hochberg", "hommel"), path.mode=c("all_paths","shortest_paths","all_shortest_paths"), weight=1, seed=825, nperm=2000, fast=TRUE, verbose=TRUE, silent=FALSE, RData.location="http://galahad.well.ox.ac.uk/bigdata")
+xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC","PS","PS2","SF","Pfam","DO","HPPA","HPMI","HPCM","HPMA","MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall", "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA", "MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6p", "GTExV7", "CreedsDisease", "CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN", "CreedsGene", "CreedsGeneUP", "CreedsGeneDN", "KEGG","KEGGmetabolism","KEGGgenetic","KEGGenvironmental","KEGGcellular","KEGGorganismal","KEGGdisease"), customised.genesets=NULL, size.range=c(10,500), p.adjust.method=c("BH", "BY", "bonferroni", "holm", "hochberg", "hommel"), path.mode=c("all_paths","shortest_paths","all_shortest_paths"), weight=1, seed=825, nperm=2000, fast=TRUE, verbose=TRUE, silent=FALSE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
     startT <- Sys.time()
     if(!silent){
@@ -70,12 +66,12 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
     
     weight <- as.integer(weight)
     
-    if(class(pNode) == "pNode"){
+    if(is(pNode,"pNode")){
         df_priority <- pNode$priority[, c("seed","weight","priority","rank")]
-    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	df_priority <- pNode$priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
-    }else if(class(pNode) == "data.frame"){
+    }else if(is(pNode,"data.frame")){
     	df_priority <- pNode[,c(1:2)]
     	colnames(df_priority) <- c("priority","rank")
     }else{
@@ -98,7 +94,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
     ###############
         
     ## convert gene symbols to entrez geneid
-	name_GeneID <- xSymbol2GeneID(rownames(df_priority), check.symbol.identity=FALSE, verbose=verbose, RData.location=RData.location)
+	name_GeneID <- xSymbol2GeneID(rownames(df_priority), check.symbol.identity=FALSE, verbose=verbose, RData.location=RData.location, guid=guid)
 	
 	ind <- which(!is.na(name_GeneID))
 	GeneID <- name_GeneID[ind]
@@ -124,7 +120,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 			flag_PS2 <- TRUE
 			ontology <- "PS"
 		}
-		GS <- xRDataLoader(RData.customised=paste('org.Hs.eg', ontology, sep=''), RData.location=RData.location, verbose=verbose)
+		GS <- xRDataLoader(RData.customised=paste('org.Hs.eg', ontology, sep=''), RData.location=RData.location, guid=guid, verbose=verbose)
 		
 		################
 		if(flag_PS2){
@@ -160,7 +156,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 		flag_ontology <- ontology %in% all.ontologies
     	
     	if(flag_ontology){
-			g <- xRDataLoader(RData.customised=paste('ig.', ontology, sep=''), RData.location=RData.location, verbose=verbose)
+			g <- xRDataLoader(paste0('ig.',ontology), RData.location=RData.location, guid=guid, verbose=verbose)
 			true.path.rule <- TRUE
 			
 		}else{
@@ -189,7 +185,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
             }
             #######
 			anno <- lapply(customised.genesets, function(x){
-				GeneID <- xSymbol2GeneID(x, check.symbol.identity=FALSE, verbose=verbose, RData.location=RData.location)
+				GeneID <- xSymbol2GeneID(x, check.symbol.identity=FALSE, verbose=verbose, RData.location=RData.location, guid=guid)
 				GeneID <- GeneID[!is.na(GeneID)]
 				return(GeneID)
 			})
@@ -270,7 +266,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 		}
 		
 		if(!is.null(seed)) set.seed(seed)
-		suppressMessages(eTerm <- dnet::dGSEA(data=data, identity="entrez", check.symbol.identity=FALSE, ontology="Customised", customised.genesets=anno, sizeRange=size.range, which_distance=NULL, weight=weight, nperm=nperm, fast=TRUE, sigTail="one-tail", p.adjust.method=p.adjust.method, verbose=verbose, RData.location=RData.location))
+		suppressMessages(eTerm <- dnet::dGSEA(data=data, identity="entrez", check.symbol.identity=FALSE, ontology="Customised", customised.genesets=anno, sizeRange=size.range, which_distance=NULL, weight=weight, nperm=nperm, fast=TRUE, sigTail="one-tail", p.adjust.method=p.adjust.method, verbose=verbose, RData.location=RData.location, guid=guid))
 		
 		if(!is.null(eTerm)){
 			res <- dnet::dGSEAview(eTerm, which_sample=1, top_num=NULL, sortBy="pvalue", decreasing=TRUE, details=TRUE)
@@ -298,7 +294,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 
 		# replace EntrezGenes with gene symbols	
 		## load Enterz Gene information
-		EG <- xRDataLoader(RData.customised=paste('org.Hs.eg', sep=''), RData.location=RData.location, verbose=verbose)
+		EG <- xRDataLoader('org.Hs.eg', RData.location=RData.location, guid=guid, verbose=verbose)
 		allGeneID <- EG$gene_info$GeneID
 		allSymbol <- as.vector(EG$gene_info$Symbol)
 

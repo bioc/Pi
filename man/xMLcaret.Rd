@@ -4,13 +4,23 @@
 \alias{xMLcaret}
 \title{Function to integrate predictor matrix in a supervised manner via machine learning algorithms using caret.}
 \usage{
-xMLcaret(list_pNode = NULL, df_predictor = NULL, GSP, GSN,
+xMLcaret(
+list_pNode = NULL,
+df_predictor = NULL,
+GSP,
+GSN,
 method = c("gbm", "svmRadial", "rda", "knn", "pls", "nnet", "rf",
-"myrf", "cforest", "glmnet", "glm", "bayesglm", "LogitBoost",
-"xgbLinear", "xgbTree"), nfold = 3, nrepeat = 10, seed = 825,
+"myrf", "cforest",
+"glmnet", "glm", "bayesglm", "LogitBoost", "xgbLinear", "xgbTree"),
+nfold = 3,
+nrepeat = 10,
+seed = 825,
 aggregateBy = c("none", "logistic", "Ztransform", "fishers",
-"orderStatistic"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"orderStatistic"),
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{list_pNode}{a list of "pNode" objects or a "pNode" object}
@@ -67,6 +77,9 @@ displayed in the screen. By default, it sets to TRUE for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "sTarget", a list with following components:
@@ -114,12 +127,13 @@ have been installed. It can be installed via:
 \code{BiocManager::install(c("caret","e1071","gbm","kernlab","klaR","pls","nnet","randomForest","party","glmnet","arm","caTools","xgboost"))}.
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 sTarget <- xMLcaret(df_prediction, GSP, GSN, method="myrf")
 }
+}
+\seealso{
+\code{\link{xPierMatrix}}, \code{\link{xPredictROCR}},
+\code{\link{xPredictCompare}}, \code{\link{xSparseMatrix}},
+\code{\link{xSymbol2GeneID}}
 }

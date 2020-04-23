@@ -4,23 +4,36 @@
 \alias{xPierAnno}
 \title{Function to prioritise seed genes only from a list of pNode objects using annotation data}
 \usage{
-xPierAnno(data, list_pNode, network = c("STRING_highest",
-"STRING_high",
-"STRING_medium", "STRING_low", "PCommonsUN_high", "PCommonsUN_medium",
-"PCommonsDN_high", "PCommonsDN_medium", "PCommonsDN_Reactome",
-"PCommonsDN_KEGG", "PCommonsDN_HumanCyc", "PCommonsDN_PID",
+xPierAnno(
+data,
+list_pNode,
+network = c("STRING_highest", "STRING_high", "STRING_medium",
+"STRING_low",
+"PCommonsUN_high", "PCommonsUN_medium", "PCommonsDN_high",
+"PCommonsDN_medium",
+"PCommonsDN_Reactome", "PCommonsDN_KEGG", "PCommonsDN_HumanCyc",
+"PCommonsDN_PID",
 "PCommonsDN_PANTHER", "PCommonsDN_ReconX", "PCommonsDN_TRANSFAC",
 "PCommonsDN_PhosphoSite", "PCommonsDN_CTD", "KEGG", "KEGG_metabolism",
-"KEGG_genetic", "KEGG_environmental", "KEGG_cellular",
-"KEGG_organismal",
-"KEGG_disease"), STRING.only = c(NA, "neighborhood_score",
-"fusion_score", "cooccurence_score", "coexpression_score",
-"experimental_score", "database_score", "textmining_score")[1],
-weighted = FALSE, network.customised = NULL,
-seeds.inclusive = TRUE, normalise = c("laplacian", "row", "column",
-"none"), restart = 0.7, normalise.affinity.matrix = c("none",
-"quantile"), parallel = TRUE, multicores = NULL, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"KEGG_genetic",
+"KEGG_environmental", "KEGG_cellular", "KEGG_organismal",
+"KEGG_disease"),
+STRING.only = c(NA, "neighborhood_score", "fusion_score",
+"cooccurence_score",
+"coexpression_score", "experimental_score", "database_score",
+"textmining_score")[1],
+weighted = FALSE,
+network.customised = NULL,
+seeds.inclusive = TRUE,
+normalise = c("laplacian", "row", "column", "none"),
+restart = 0.7,
+normalise.affinity.matrix = c("none", "quantile"),
+parallel = TRUE,
+multicores = NULL,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{data}{a data frame with two columns: 1st column for seed/node
@@ -127,6 +140,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "pNode", a list with following components:
@@ -157,11 +173,6 @@ The input graph will treat as an unweighted graph if there is no
 'weight' edge attribute associated with
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the seed nodes/genes with the weight info
@@ -190,10 +201,9 @@ RData.location=RData.location)
 
 # c) save to the file called 'Genes_priority.Anno.txt'
 write.table(pNode_anno$priority, file="Genes_priority.Anno.txt",
-sep="\\t", row.names=FALSE)
+sep="\t", row.names=FALSE)
 }
 }
 \seealso{
-\code{\link{xRDataLoader}}, \code{\link{xPierSNPs}},
-\code{\link{xPier}}, \code{\link{xPierPathways}}
+\code{\link{xPierMatrix}}, \code{\link{xPierGenes}}
 }

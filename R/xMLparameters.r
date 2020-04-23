@@ -21,12 +21,9 @@
 #' invisible
 #' @note none
 #' @export
-#' @seealso \code{\link{xMLparameters}}
+#' @seealso \code{\link{xSparseMatrix}}
 #' @include xMLparameters.r
 #' @examples
-#' \dontrun{
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' xMLparameters(df_fit, nD="2D")
@@ -40,7 +37,7 @@ theta.3D=40, phi.3D=25)
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     nD <- match.arg(nD)
 
-    if(all(class(data) %in% c("train","train.formula"))){
+    if(is(data,"train")){
     	if(nD=="auto"){
 			if(data$method %in% c("gbm","svmRadial","rda","nnet","glmnet","xgbTree","custom")){
 				nD <- "2D"
@@ -64,7 +61,7 @@ theta.3D=40, phi.3D=25)
     		return(NULL)
     	}
         
-    }else if(class(data)=="data.frame" & nD!="auto"){
+    }else if(is(data,"data.frame") & nD!="auto"){
 		df_fit <- data
 		## get parameter name
 		if(is.na(xlab)){

@@ -4,17 +4,38 @@
 \alias{xVisEvidenceAdv}
 \title{Function to visualise evidence and priority scores for prioritised genes in a gene network}
 \usage{
-xVisEvidenceAdv(xTarget, g = NA, nodes = NULL, node.info = c("smart",
-"none"), neighbor.order = 1, neighbor.seed = TRUE,
-neighbor.top = NULL, largest.comp = TRUE, node.label.size = 2,
-node.label.color = "black", node.label.alpha = 0.9,
-node.label.padding = 0.5, node.label.arrow = 0,
-node.label.force = 0.1, node.shape = 19,
-node.color.title = "Pi\\nrating", colormap = "white-yellow-red",
-ncolors = 64, zlim = c(0, 5), node.size.range = 5, title = "",
-edge.color = "orange", edge.color.alpha = 0.5, edge.curve = 0,
-edge.arrow.gap = 0.025, pie.radius = NULL, pie.color = "black",
-pie.color.alpha = 1, pie.thick = 0.1, ...)
+xVisEvidenceAdv(
+xTarget,
+g = NA,
+nodes = NULL,
+node.info = c("smart", "none"),
+neighbor.order = 1,
+neighbor.seed = TRUE,
+neighbor.top = NULL,
+largest.comp = TRUE,
+node.label.size = 2,
+node.label.color = "black",
+node.label.alpha = 0.9,
+node.label.padding = 0.5,
+node.label.arrow = 0,
+node.label.force = 0.1,
+node.shape = 19,
+node.color.title = "Pi\\nrating",
+colormap = "white-yellow-red",
+ncolors = 64,
+zlim = c(0, 5),
+node.size.range = 5,
+title = "",
+edge.color = "orange",
+edge.color.alpha = 0.5,
+edge.curve = 0,
+edge.arrow.gap = 0.025,
+pie.radius = NULL,
+pie.color = "black",
+pie.color.alpha = 1,
+pie.thick = 0.1,
+...
+)
 }
 \arguments{
 \item{xTarget}{an object of class "dTarget", "sTarget" or "eTarget"}
@@ -114,10 +135,6 @@ scores for prioritised genes in a gene network. It returns an object of
 class "ggplot".
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 ## TNFRSF1A
@@ -126,5 +143,6 @@ neighbor.seed=TRUE, neighbor.top=NULL)
 }
 }
 \seealso{
-\code{\link{xVisEvidence}}
+\code{\link{xVisEvidence}}, \code{\link{xGGnetwork}},
+\code{\link{xPieplot}}
 }

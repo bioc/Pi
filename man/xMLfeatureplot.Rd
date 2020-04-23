@@ -4,8 +4,14 @@
 \alias{xMLfeatureplot}
 \title{Function to visualise/assess features used for machine learning}
 \usage{
-xMLfeatureplot(df_predictor, GSP, GSN, displayBy = c("boxplot", "ROC",
-"Fmax"), font.family = "sans", ...)
+xMLfeatureplot(
+df_predictor,
+GSP,
+GSN,
+displayBy = c("boxplot", "ROC", "Fmax"),
+font.family = "sans",
+...
+)
 }
 \arguments{
 \item{df_predictor}{a data frame containing genes (in rows) and
@@ -39,12 +45,11 @@ and F-max, and an object of class "trellis" for boxplot.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 gp <- xMLfeatureplot(df_predictor, GSP, GSN, displayBy="ROC")
 }
+}
+\seealso{
+\code{\link{xPredictROCR}}, \code{\link{xPredictCompare}}
 }

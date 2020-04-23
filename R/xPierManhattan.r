@@ -18,18 +18,14 @@
 #' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to false for no display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @param ... additional paramters associated with ggrepel::geom_text_repel
 #' @return an object of class "ggplot", appended by an GR object called 'gr'
 #' @note none
 #' @export
-#' @seealso \code{\link{xRDataLoader}}, \code{\link{xPier}}, \code{\link{xPierSNPs}}, \code{\link{xPierGenes}}, \code{\link{xPierPathways}}
+#' @seealso \code{\link{xRDataLoader}}, \code{\link{xColormap}}
 #' @include xPierManhattan.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the SNPs with the significance info
@@ -64,16 +60,16 @@
 #' mp
 #' }
 
-xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", signature=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
+xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", signature=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL, ...)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     top.label.type <- match.arg(top.label.type)
     y.scale <- match.arg(y.scale)
 
-    if(class(pNode) == "pNode"){
+    if(is(pNode,"pNode")){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
-    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	df_priority <- pNode$priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
     }else{
@@ -84,13 +80,13 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 		now <- Sys.time()
 		message(sprintf("Load positional information for Genes (%s) ...", as.character(now)), appendLF=TRUE)
 	}
-    gr_Gene <- xRDataLoader(RData.customised=GR.Gene[1], verbose=verbose, RData.location=RData.location)
+    gr_Gene <- xRDataLoader(GR.Gene[1], verbose=verbose, RData.location=RData.location, guid=guid)
     if(is.null(gr_Gene)){
     	GR.Gene <- "UCSC_knownGene"
 		if(verbose){
 			message(sprintf("Instead, %s will be used", GR.Gene), appendLF=TRUE)
 		}
-    	gr_Gene <- xRDataLoader(RData.customised=GR.Gene, verbose=verbose, RData.location=RData.location)
+    	gr_Gene <- xRDataLoader(GR.Gene, verbose=verbose, RData.location=RData.location, guid=guid)
     }
     
     ## ONLY restricted to genes with genomic locations

@@ -23,7 +23,7 @@ bibliography: now.Pi.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse=TRUE, comment=">")
-knitr::opts_chunk$set(dpi=300)
+knitr::opts_chunk$set(dpi=150)
 knitr::opts_chunk$set(cache=FALSE)
 knitr::opts_chunk$set(echo=TRUE)
 knitr::opts_chunk$set(warning=FALSE)
@@ -59,21 +59,17 @@ The latest version on different platforms can be installed following instruction
 **Install [`Pi`](http://www.bioconductor.org/packages/Pi) (the latest stable release version from Bioconductor):**
 
 ```{r eval=FALSE}
-source("http://bioconductor.org/biocLite.R")
-# to use the latest version of Bioconductor, upgrade it: biocLite("BiocUpgrade") 
-biocLite("Pi")
+BiocManager("Pi", dependencies=T)
 ```
 
 **Also install the latest development version from github (highly recommended):**
 
 ```{r eval=FALSE, echo=TRUE}
 # first, install the dependant packages (the stable version)
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("XGR","devtools"), siteRepos=c("http://cran.r-project.org"))
+BiocManager(c("Pi","devtools"), dependencies=T)
 
 # then, install the `Pi` package and its dependency (the latest version)
-library(devtools)
-install_github(c("hfang-bristol/XGR", "hfang-bristol/Pi"))
+BiocManager::install("hfang-bristol/Pi")
 ```
 
 

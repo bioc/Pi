@@ -30,15 +30,11 @@ pNode objects, in terms of seed genes under genetic influence.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 df_Gene2SNP <- xPierEvidence(ls_pNode)
 }
 }
 \seealso{
-\code{\link{xPierSNPsAdv}}
+\code{\link{xPierEvidence}}
 }

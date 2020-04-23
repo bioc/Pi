@@ -4,14 +4,26 @@
 \alias{xPierManhattan}
 \title{Function to visualise prioritised genes using manhattan plot}
 \usage{
-xPierManhattan(pNode, color = c("darkred", "darkgreen"), top = 50,
-top.label.type = c("box", "text"), top.label.size = 2,
-top.label.col = "darkblue", top.label.query = NULL,
-label.query.only = FALSE, chromosome.only = TRUE,
-y.scale = c("normal", "sqrt", "log"), y.lab = NULL,
+xPierManhattan(
+pNode,
+color = c("darkred", "darkgreen"),
+top = 50,
+top.label.type = c("box", "text"),
+top.label.size = 2,
+top.label.col = "darkblue",
+top.label.query = NULL,
+label.query.only = FALSE,
+chromosome.only = TRUE,
+y.scale = c("normal", "sqrt", "log"),
+y.lab = NULL,
 GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
-font.family = "sans", signature = TRUE, verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata", ...)
+font.family = "sans",
+signature = TRUE,
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL,
+...
+)
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget")}
@@ -71,6 +83,9 @@ displayed in the screen. By default, it sets to false for no display}
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
 
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
+
 \item{...}{additional paramters associated with
 ggrepel::geom_text_repel}
 }
@@ -86,11 +101,6 @@ an object of class "ggplot".
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the SNPs with the significance info
@@ -132,7 +142,5 @@ mp
 }
 }
 \seealso{
-\code{\link{xRDataLoader}}, \code{\link{xPier}},
-\code{\link{xPierSNPs}}, \code{\link{xPierGenes}},
-\code{\link{xPierPathways}}
+\code{\link{xRDataLoader}}, \code{\link{xColormap}}
 }

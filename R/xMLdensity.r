@@ -10,13 +10,9 @@
 #' @return an object of class "ggplot"
 #' @note none
 #' @export
-#' @seealso \code{\link{xMLrandomforest}}
+#' @seealso \code{\link{xColormap}}
 #' @include xMLdensity.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' gp <- xMLdensity(xTarget, displayBy="All")
@@ -30,12 +26,12 @@ xMLdensity <- function(xTarget, displayBy=c("All","GS","GSN","GSP","NEW"), x.sca
     displayBy <- match.arg(displayBy)
     x.scale <- match.arg(x.scale)
     
-    if(class(xTarget) == "dTarget"){
+    if(is(xTarget,"dTarget")){
     	if(is.null(xTarget$pPerf)){
     		stop("The function must apply to a 'dTarget' object with the component 'pPerf'.\n")
     	}
     }else{
-		if(class(xTarget) != "sTarget"){
+		if(!is(xTarget,"sTarget")){
 			stop("The function must apply to a 'sTarget' object.\n")
 		}
     }

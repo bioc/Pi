@@ -4,19 +4,35 @@
 \alias{xVisEvidence}
 \title{Function to visualise evidence for prioritised genes in a gene network}
 \usage{
-xVisEvidence(xTarget, g = NA, nodes = NULL, node.info = c("smart",
-"none"), neighbor.order = 1, neighbor.seed = TRUE,
-neighbor.top = NULL, largest.comp = TRUE, show = TRUE,
-colormap = "ggplot2", legend.position = "topleft",
-legend.horiz = FALSE, mtext.side = 3, verbose = TRUE,
-edge.width = NULL, vertex.size = NULL, vertex.size.nonseed = NULL,
-vertex.label.color = "blue", vertex.label.color.nonseed = NULL, ...)
+xVisEvidence(
+xTarget,
+g = NA,
+nodes = NULL,
+node.info = c("smart", "none"),
+neighbor.order = 1,
+neighbor.seed = TRUE,
+neighbor.top = NULL,
+largest.comp = TRUE,
+show = TRUE,
+colormap = "ggplot2",
+legend.position = "topleft",
+legend.horiz = FALSE,
+mtext.side = 3,
+verbose = TRUE,
+edge.width = NULL,
+vertex.size = NULL,
+vertex.size.nonseed = NULL,
+vertex.label.color = "blue",
+vertex.label.color.nonseed = NULL,
+...
+)
 }
 \arguments{
 \item{xTarget}{an object of class "dTarget", "sTarget" or "eTarget"}
 
 \item{g}{an object of class "igraph". If NA, the 'metag' will be used,
-which is part of the input object "xTarget"}
+which is part of the input object "xTarget". If provided, it must have
+a node attribute called 'priority'}
 
 \item{nodes}{which node genes are in query. If NULL, the top gene will
 be queried}
@@ -88,10 +104,6 @@ a subgraph, an object of class "igraph".
 genes in a gene network. It returns an object of class "igraph".
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 ## TNFRSF1A
@@ -108,5 +120,5 @@ legend.position="bottomleft", legend.horiz=TRUE, newpage=FALSE)
 }
 }
 \seealso{
-\code{\link{xPierMatrix}}
+\code{\link{xColormap}}
 }

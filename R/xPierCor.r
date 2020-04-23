@@ -18,14 +18,9 @@
 #' }
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierCor}}
+#' @seealso \code{\link{xCorrelation}}
 #' @include xPierCor.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the seed nodes/genes with the weight info
@@ -52,11 +47,11 @@ xPierCor <- function(pNode, list_vec, method=c("pearson","spearman"), pvalue.typ
     p.type <- match.arg(p.type)
     p.adjust.method <- match.arg(p.adjust.method)
     
-    if(class(pNode) == "pNode"){
+    if(is(pNode,"pNode")){
         df_priority <- pNode$priority[, c("name","priority")]
-    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	df_priority <- pNode$priority[, c("name","priority")]
-    }else if(class(pNode) == "data.frame"){
+    }else if(is(pNode,"data.frame")){
     	df_priority <- pNode[,c(1:2)]
     	colnames(df_priority) <- c("name","priority")
     }else{

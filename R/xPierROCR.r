@@ -18,12 +18,9 @@
 #' AUC: the area under ROC
 #' F-measure: the maximum of a harmonic mean between precision and recall along PR curve
 #' @export
+#' @seealso \code{\link{xPierROCR}}
 #' @include xPierROCR.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' dTarget <- xPierROCR(dTarget, GSP, GSN)
@@ -33,7 +30,7 @@
 xPierROCR <- function(dTarget, GSP, GSN, verbose=TRUE)
 {
 
-    if (class(dTarget) != "dTarget"){
+    if (!is(dTarget,"dTarget")){
     	stop("The function must apply to a 'dTarget' object.\n")
     }
 

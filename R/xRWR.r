@@ -17,28 +17,35 @@
 #' }
 #' @note The input graph will treat as an unweighted graph if there is no 'weight' edge attribute associated with
 #' @export
+#' @import igraph
+#' @import dnet
+#' @import ggplot2
+#' @import graphics
+#' @import RCircos
+#' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame GRangesList GRanges split start end
 #' @importFrom Matrix Diagonal rowSums colSums Matrix t
-#' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame
 #' @importFrom GenomeInfoDb seqlevels
 #' @importFrom Gviz IdeogramTrack GenomeAxisTrack AnnotationTrack DataTrack plotTracks
 #' @importFrom lattice xyplot contourplot levelplot
 #' @importFrom plot3D persp3D scatter3D text3D
-#' @import igraph
-#' @import dnet
-#' @import XGR
-#' @import ggplot2
-#' @import graphics
 #' @importFrom randomForest randomForest tuneRF importance
 #' @importFrom glmnet cv.glmnet predict.glmnet
 #' @importFrom caret createFolds createMultiFolds featurePlot trainControl twoClassSummary train getModelInfo varImp
-#' @importFrom stats p.adjust ecdf mad approx pexp coef median predict quantile t.test
+#' @importFrom stats sd median mad ecdf na.omit predict prcomp lm quantile as.dist hclust cor as.dendrogram order.dendrogram wilcox.test coef p.adjust dist ecdf approx pexp predict t.test
 #' @importFrom ggbio autoplot
-#' @importFrom ggrepel geom_text_repel geom_label_repel
+#' @importFrom ggrepel geom_text_repel geom_label_repel GeomTextRepel
 #' @importFrom ROCR prediction performance plot
-#' @importFrom supraHex sDistance visColormap
-#' @importFrom scales sqrt_trans log_trans trans_breaks trans_format math_format
-#' @importFrom grDevices rgb cm.colors
-#' @seealso \code{\link{xPier}}
+#' @importFrom supraHex sDistance visColormap visTreeBootstrap visHeatmapAdv
+#' @importFrom scales sqrt_trans log_trans trans_breaks trans_format math_format pvalue
+#' @importFrom grDevices rgb cm.colors colorRampPalette dev.cur dev.new rainbow hcl extendrange dev.off pdf col2rgb jpeg
+#' @importFrom methods is
+#' @importFrom IRanges IRanges width pintersect reduce
+#' @importFrom BiocGenerics unlist start end
+#' @importFrom dplyr select filter arrange mutate group_by summarise desc n arrange_all slice left_join pull bind_rows semi_join transmute distinct n_distinct
+#' @importFrom ggnetwork ggnetwork geom_nodes geom_edges
+#' @importFrom MASS fitdistr
+#' @importFrom osfr osf_retrieve_node osf_ls_files osf_download
+#' @seealso \code{\link{xCheckParallel}}
 #' @include xRWR.r
 #' @examples
 #' # 1) generate a random graph according to the ER model
@@ -80,12 +87,12 @@ xRWR <- function(g, normalise=c("laplacian","row","column","none"), setSeeds=NUL
     normalise <- match.arg(normalise)
     normalise.affinity.matrix <- match.arg(normalise.affinity.matrix)
     
-    if(class(g)=="graphNEL"){
+    if(is(g,"graphNEL")){
         ig <- igraph.from.graphNEL(g)
     }else{
         ig <- g
     }
-    if (class(ig) != "igraph"){
+    if (!is(ig,"igraph")){
         stop("The function must apply to either 'igraph' or 'graphNEL' object.\n")
     }
 

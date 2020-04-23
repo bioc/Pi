@@ -10,26 +10,22 @@
 #' @return an object of class "ggplot"
 #' @note none
 #' @export
-#' @seealso \code{\link{xMLrandomforest}}
+#' @seealso \code{\link{xMLdotplot}}
 #' @include xMLdotplot.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' gp <- xMLdotplot(sTarget, displayBy="importance_accurancy")
 #' gp
 #' }
 
-xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2fold","importance_accurancy","importance_gini","ROC","Fmax"), ML.included=T, font.family="sans", signature=TRUE) 
+xMLdotplot <- function(sTarget, displayBy=c("importance2fold","roc2fold","fmax2fold","importance_accurancy","importance_gini","ROC","Fmax"), ML.included=TRUE, font.family="sans", signature=TRUE) 
 {
     
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     displayBy <- match.arg(displayBy)
 
-    if(class(sTarget) != "sTarget"){
+    if(!is(sTarget,"sTarget")){
     	stop("The function must apply to a 'sTarget' object.\n")
     }
     

@@ -4,10 +4,16 @@
 \alias{xPierCross}
 \title{Function to extract priority matrix from a list of dTarget/sTarget objects}
 \usage{
-xPierCross(list_xTarget, displayBy = c("rating", "rank", "pvalue",
-"fdr"), combineBy = c("intersect", "union"), aggregateBy = c("none",
-"fishers", "logistic", "Ztransform", "orderStatistic"), verbose = TRUE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+xPierCross(
+list_xTarget,
+displayBy = c("rating", "rank", "pvalue", "fdr"),
+combineBy = c("intersect", "union"),
+aggregateBy = c("none", "fishers", "logistic", "Ztransform",
+"orderStatistic"),
+verbose = TRUE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{list_xTarget}{a list of "dTarget"/"sTarget" objects or a
@@ -39,6 +45,9 @@ displayed in the screen. By default, it sets to true for display}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 If aggregateBy is 'none' (by default), a data frame containing priority
@@ -70,15 +79,11 @@ this functionality as the cross mode of the prioritisation.
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 df_score <- xPierCross(ls_xTarget)
 }
 }
 \seealso{
-\code{\link{xPierMatrix}}
+\code{\link{xSymbol2GeneID}}
 }

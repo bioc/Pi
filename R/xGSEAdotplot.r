@@ -31,13 +31,9 @@
 #' @return an object of class "ggplot" or a list of "ggplot" objects.
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierGSEA}}
+#' @seealso \code{\link{xGSEAdotplot}}
 #' @include xGSEAdotplot.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' gp <- xGSEAdotplot(eGSEA, top=1)
@@ -56,7 +52,7 @@ xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL,
 	title <- match.arg(title)
 	subtitle <- match.arg(subtitle)
 	
-    if(class(eGSEA) != "eGSEA"){
+    if(!is(eGSEA,"eGSEA")){
     	stop("The function must apply to a 'eGSEA' object.\n")
     }
     
@@ -64,7 +60,7 @@ xGSEAdotplot <- function(eGSEA, top=1, colormap="lightblue-darkblue", zlim=NULL,
     nSet <- nrow(df_summary)
     
     ## determine which gene set
-    if(class(top)=="integer" | class(top)=="numeric"){
+    if(is(top,"integer") | is(top,"numeric")){
      	top <- as.integer(top)
     	ind <- which((top <= nSet) & (top >= 1))
         if(length(ind)>0){

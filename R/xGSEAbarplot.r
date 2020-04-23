@@ -16,13 +16,9 @@
 #' @return an object of class "ggplot"
 #' @note none
 #' @export
-#' @seealso \code{\link{xPierGSEA}}
+#' @seealso \code{\link{xGSEAbarplot}}
 #' @include xGSEAbarplot.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' bp <- xGSEAbarplot(eGSEA, top_num="auto", displayBy="nes")
@@ -36,7 +32,7 @@ xGSEAbarplot <- function(eGSEA, top_num=10, displayBy=c("nes","adjp","fdr","pval
     
     displayBy <- match.arg(displayBy)
     
-    if(class(eGSEA) != "eGSEA"){
+    if(!is(eGSEA,"eGSEA")){
     	stop("The function must apply to a 'eGSEA' object.\n")
     }
     df_summary <- eGSEA$df_summary

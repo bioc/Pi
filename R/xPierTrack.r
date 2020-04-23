@@ -18,18 +18,14 @@
 #' @param GR.SNP the genomic regions of SNPs. By default, it is 'dbSNP_GWAS', that is, SNPs from dbSNP (version 146) restricted to GWAS SNPs and their LD SNPs (hg19). It can be 'dbSNP_Common', that is, Common SNPs from dbSNP (version 146) plus GWAS SNPs and their LD SNPs (hg19). Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to dbSNP IDs. Then, tell "GR.SNP" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to false for no display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
+#' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
 #' @param ... additional graphic parameters. For example, the parameter "add" allows the plot added to an existing plotting canvas without re-initialising. See \url{http://www.rdocumentation.org/packages/Gviz/topics/plotTracks} for the complete list.
 #' @return a list of GenomeGraph tracks, each one augmented by the computed image map coordinates in the 'imageMap' slot, along with the additional 'ImageMap' object 'titles' containing information about the title panels.
 #' @note none
 #' @export
-#' @seealso \code{\link{xMLrandomforest}}
+#' @seealso \code{\link{xRDataLoader}}, \code{\link{xSNPlocations}}, \code{\link{xGR}}
 #' @include xPierTrack.r
 #' @examples
-#' \dontrun{
-#' # Load the library
-#' library(Pi)
-#' }
-#'
 #' RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 #' \dontrun{
 #' # a) provide the SNPs with the significance info
@@ -51,12 +47,12 @@
 #' xPierTrack(pNode, priority.top=1000, nearby=20, RData.location=RData.location)
 #' }
 
-xPierTrack <- function(pNode, priority.top=NULL, target.query=NULL, window=1e6, nearby=NULL, query.highlight=TRUE, track.ideogram=TRUE, track.genomeaxis=TRUE, name.datatrack="5-star rating\n(Priority index)", name.annotrack="Targets", GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), SNPs=NULL, max.num.SNPs=50, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", ...)
+xPierTrack <- function(pNode, priority.top=NULL, target.query=NULL, window=1e6, nearby=NULL, query.highlight=TRUE, track.ideogram=TRUE, track.genomeaxis=TRUE, name.datatrack="5-star rating\n(Priority index)", name.annotrack="Targets", GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), SNPs=NULL, max.num.SNPs=50, GR.SNP=c("dbSNP_GWAS","dbSNP_Common","dbSNP_Single"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL, ...)
 {
 
-    if(class(pNode) == "pNode"){
+    if(is(pNode,"pNode")){
         df_priority <- pNode$priority[, c("seed","weight","priority")]
-    }else if(class(pNode) == "sTarget" | class(pNode) == "dTarget"){
+    }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	df_priority <- pNode$priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
     }else{
@@ -82,13 +78,13 @@ xPierTrack <- function(pNode, priority.top=NULL, target.query=NULL, window=1e6, 
 		now <- Sys.time()
 		message(sprintf("Load positional information for Genes (%s) ...", as.character(now)), appendLF=TRUE)
 	}
-    gr_Gene <- xRDataLoader(RData.customised=GR.Gene[1], verbose=verbose, RData.location=RData.location)
+    gr_Gene <- xRDataLoader(RData.customised=GR.Gene[1], verbose=verbose, RData.location=RData.location, guid=guid)
     if(is.null(gr_Gene)){
     	GR.Gene <- "UCSC_knownGene"
 		if(verbose){
 			message(sprintf("Instead, %s will be used", GR.Gene), appendLF=TRUE)
 		}
-    	gr_Gene <- xRDataLoader(RData.customised=GR.Gene, verbose=verbose, RData.location=RData.location)
+    	gr_Gene <- xRDataLoader(RData.customised=GR.Gene, verbose=verbose, RData.location=RData.location, guid=guid)
     }
     
     ## ONLY restricted to genes with genomic locations
@@ -155,12 +151,12 @@ xPierTrack <- function(pNode, priority.top=NULL, target.query=NULL, window=1e6, 
 	#Gviz::availableDisplayPars(dtrack)
 	
 	## for SNP annotation track
-	gr_SNP <- xSNPlocations(data=unique(SNPs), GR.SNP=GR.SNP, verbose=verbose, RData.location=RData.location)
+	gr_SNP <- xSNPlocations(data=unique(SNPs), GR.SNP=GR.SNP, verbose=verbose, RData.location=RData.location, guid=guid)
 	if(!is.null(gr_SNP)){
 		## for genes
 		df_gr_sub <- GenomicRanges::as.data.frame(gr_sub, row.names=NULL)
 		df <- data.frame(chr=as.character(unique(df_gr_sub[,1])), start=min(df_gr_sub[,2:3]), end=max(df_gr_sub[,2:3]))
-		gr_tmp <- xGR(df, format="data.frame", RData.location=RData.location)
+		gr_tmp <- xGR(df, format="data.frame", RData.location=RData.location, guid=guid)
 		## find snps
 		q2r <- as.matrix(as.data.frame(suppressWarnings(GenomicRanges::findOverlaps(query=gr_SNP, subject=gr_tmp, maxgap=-1L, minoverlap=0L, type="any", select="all", ignore.strand=TRUE))))
 		gr_SNP_sub <- gr_SNP[q2r[,1],]

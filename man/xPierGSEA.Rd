@@ -4,24 +4,38 @@
 \alias{xPierGSEA}
 \title{Function to prioritise pathways based on GSEA analysis of prioritised genes}
 \usage{
-xPierGSEA(pNode, priority.top = NULL, ontology = c("GOBP", "GOMF",
-"GOCC", "PS", "PS2", "SF", "Pfam", "DO", "HPPA", "HPMI", "HPCM",
-"HPMA",
-"MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP", "MsigdbC2CPall",
+xPierGSEA(
+pNode,
+priority.top = NULL,
+ontology = c("GOBP", "GOMF", "GOCC", "PS", "PS2", "SF", "Pfam", "DO",
+"HPPA", "HPMI",
+"HPCM", "HPMA", "MP", "EF", "MsigdbH", "MsigdbC1", "MsigdbC2CGP",
+"MsigdbC2CPall",
 "MsigdbC2CP", "MsigdbC2KEGG", "MsigdbC2REACTOME", "MsigdbC2BIOCARTA",
-"MsigdbC3TFT", "MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM",
-"MsigdbC5BP",
-"MsigdbC5MF", "MsigdbC5CC", "MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4",
-"GTExV6p", "GTExV7", "CreedsDisease", "CreedsDiseaseUP",
-"CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP", "CreedsDrugDN",
-"CreedsGene", "CreedsGeneUP", "CreedsGeneDN", "KEGG",
-"KEGGmetabolism", "KEGGgenetic", "KEGGenvironmental", "KEGGcellular",
-"KEGGorganismal", "KEGGdisease"), customised.genesets = NULL,
-size.range = c(10, 500), p.adjust.method = c("BH", "BY",
-"bonferroni", "holm", "hochberg", "hommel"), path.mode = c("all_paths",
-"shortest_paths", "all_shortest_paths"), weight = 1, seed = 825,
-nperm = 2000, fast = TRUE, verbose = TRUE, silent = FALSE,
-RData.location = "http://galahad.well.ox.ac.uk/bigdata")
+"MsigdbC3TFT",
+"MsigdbC3MIR", "MsigdbC4CGN", "MsigdbC4CM", "MsigdbC5BP", "MsigdbC5MF",
+"MsigdbC5CC",
+"MsigdbC6", "MsigdbC7", "DGIdb", "GTExV4", "GTExV6p", "GTExV7",
+"CreedsDisease",
+"CreedsDiseaseUP", "CreedsDiseaseDN", "CreedsDrug", "CreedsDrugUP",
+"CreedsDrugDN",
+"CreedsGene", "CreedsGeneUP", "CreedsGeneDN", "KEGG", "KEGGmetabolism",
+"KEGGgenetic", "KEGGenvironmental", "KEGGcellular", "KEGGorganismal",
+"KEGGdisease"),
+customised.genesets = NULL,
+size.range = c(10, 500),
+p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
+"hommel"),
+path.mode = c("all_paths", "shortest_paths", "all_shortest_paths"),
+weight = 1,
+seed = 825,
+nperm = 2000,
+fast = TRUE,
+verbose = TRUE,
+silent = FALSE,
+RData.location = "http://galahad.well.ox.ac.uk/bigdata",
+guid = NULL
+)
 }
 \arguments{
 \item{pNode}{an object of class "pNode" (or "sTarget" or "dTarget").
@@ -106,6 +120,9 @@ forced to be false}
 
 \item{RData.location}{the characters to tell the location of built-in
 RData files. See \code{\link{xRDataLoader}} for details}
+
+\item{guid}{a valid (5-character) Global Unique IDentifier for an OSF
+project. See \code{\link{xRDataLoader}} for details}
 }
 \value{
 an object of class "eGSEA", a list with following components:
@@ -146,11 +163,6 @@ analysis (GSEA). It returns an object of class "eGSEA".
 none
 }
 \examples{
-\dontrun{
-# Load the library
-library(Pi)
-}
-
 RData.location <- "http://galahad.well.ox.ac.uk/bigdata"
 \dontrun{
 # a) provide the seed nodes/genes with the weight info
@@ -174,5 +186,6 @@ gp <- xGSEAdotplot(eGSEA, top=1)
 }
 }
 \seealso{
-\code{\link{xGSEAbarplot}}, \code{\link{xGSEAdotplot}}
+\code{\link{xSymbol2GeneID}}, \code{\link{xRDataLoader}},
+\code{\link{xDAGanno}}
 }
