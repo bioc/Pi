@@ -1,12 +1,12 @@
 Package: Pi
 Type: Package
 Title: Leveraging Genetic Evidence to Prioritise Drug Targets at the Gene and Pathway Level
-Version: 2.0.0
-Date: 2020-4-23
+Version: 2.0.1
+Date: 2020-5-24
 Author: Hai Fang, the ULTRA-DD Consortium, Julian C Knight
 Maintainer: Hai Fang <hfang@well.ox.ac.uk>
 Depends: igraph, dnet, ggplot2, graphics
-Imports: Matrix, ggbio, GenomicRanges, GenomeInfoDb, supraHex, scales, grDevices, ggrepel, ROCR, randomForest, glmnet, Gviz, lattice, caret, plot3D, stats, methods, MASS, IRanges, BiocGenerics, dplyr, tidyr, ggnetwork, osfr, RCircos
+Imports: Matrix, ggbio, GenomicRanges, GenomeInfoDb, supraHex, scales, grDevices, ggrepel, ROCR, randomForest, glmnet, Gviz, lattice, caret, plot3D, stats, methods, MASS, IRanges, BiocGenerics, dplyr, tidyr, ggnetwork, osfr, RCircos, purrr, readr, tibble
 Suggests: foreach, doParallel, BiocStyle, knitr, rmarkdown, png, GGally, gridExtra, ggforce, fgsea, RColorBrewer, ggpubr, rtracklayer
 Description: Priority index or Pi is developed as a genomic-led target prioritisation system. It integrates functional genomic predictors, knowledge of network connectivity and immune ontologies to prioritise potential drug targets at the gene and pathway level.
 URL: http://pi314.r-forge.r-project.org
@@ -91,6 +91,8 @@ Collate:
 	'xVisNet.r'
 	'xEnrichViewer.r'
 	'xVisKernels.r'
+	'xEnrichForest.r'
+	'xCombineNet.r'
 License: GPL-3
 VignetteBuilder: knitr
 biocViews: Software, Genetics, GraphAndNetwork, Pathways, GeneExpression, GeneTarget, GenomeWideAssociation, LinkageDisequilibrium, Network, HiC

@@ -11,6 +11,27 @@
 #' any use-specified variable that is given on the right side of the assigement sign '<-', which contains the loaded RData. If the data cannot be loaded, it returns NULL.
 #' @note If there are no use-specified variable that is given on the right side of the assigement sign '<-', then no RData will be loaded onto the working environment. To enable 'guid', please also install a package "osfr" via \code{BiocManager::install("osfr",dependencies=TRUE)}.
 #' @export
+#' @import dnet
+#' @import igraph
+#' @import ggplot2
+#' @import RCircos
+#' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame GRangesList GRanges split start end
+#' @importFrom IRanges IRanges width pintersect reduce
+#' @importFrom grDevices colorRampPalette dev.cur rgb dev.new rainbow hcl extendrange dev.off pdf col2rgb jpeg
+#' @importFrom graphics plot lines legend contour text par hist curve abline
+#' @importFrom supraHex visColormap visTreeBootstrap visHeatmapAdv
+#' @importFrom stats sd median mad ecdf na.omit predict prcomp lm quantile as.dist hclust cor as.dendrogram order.dendrogram wilcox.test coef p.adjust dist
+#' @importFrom BiocGenerics unlist start end
+#' @importFrom tibble tibble enframe as_tibble
+#' @importFrom dplyr select filter arrange mutate group_by summarise desc n arrange_all slice left_join pull bind_rows semi_join transmute distinct n_distinct
+#' @importFrom purrr map_chr
+#' @importFrom readr write_delim read_delim
+#' @importFrom ggnetwork ggnetwork geom_nodes geom_edges
+#' @importFrom ggrepel geom_text_repel geom_label_repel GeomTextRepel
+#' @importFrom Matrix Diagonal colSums Matrix t
+#' @importFrom MASS fitdistr
+#' @importFrom osfr osf_retrieve_node osf_ls_files osf_download
+#' @importFrom methods is
 #' @seealso \code{\link{xRDataLoader}}
 #' @include xRDataLoader.r
 #' @examples
