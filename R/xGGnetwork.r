@@ -516,7 +516,7 @@ xGGnetwork <- function(g, node.label=NULL, label.wrap.width=NULL, label.wrap.lin
 		gp$data_nodes <- df_sub
 		
 		## append data_edges
-		df_sub <- subset(df, whether_node==F)
+		df_sub <- subset(df, whether_node==FALSE)
 		ind <- match(colnames(df_sub), c('x','y','xend','yend','e.color','edge.color','e.size'))
 		df_sub <- df_sub[,!is.na(ind)]
 		df_sub <- df_sub[!duplicated(df_sub),]

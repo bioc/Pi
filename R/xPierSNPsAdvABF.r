@@ -77,9 +77,9 @@ xPierSNPsAdvABF <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, 
     
     #############################
     suggestive <- NULL
-    data_significant <- subset(data, !suggestive)
+    data_significant <- subset(data, suggestive==FALSE)
     #############################
-        
+    
     ## force verbose.details to be FALSE if verbose is FALSE
     if(verbose==FALSE){
     	verbose.details <- FALSE
