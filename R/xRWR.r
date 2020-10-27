@@ -23,7 +23,7 @@
 #' @import graphics
 #' @import RCircos
 #' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame GRangesList GRanges split start end
-#' @importFrom Matrix Diagonal rowSums colSums Matrix t
+#' @importFrom Matrix Diagonal rowSums colSums Matrix t summary
 #' @importFrom GenomeInfoDb seqlevels
 #' @importFrom Gviz IdeogramTrack GenomeAxisTrack AnnotationTrack DataTrack plotTracks
 #' @importFrom lattice xyplot contourplot levelplot

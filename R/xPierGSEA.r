@@ -266,7 +266,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 		}
 		
 		if(!is.null(seed)) set.seed(seed)
-		suppressMessages(eTerm <- dnet::dGSEA(data=data, identity="entrez", check.symbol.identity=FALSE, ontology="Customised", customised.genesets=anno, sizeRange=size.range, which_distance=NULL, weight=weight, nperm=nperm, fast=TRUE, sigTail="one-tail", p.adjust.method=p.adjust.method, verbose=verbose, RData.location=RData.location, guid=guid))
+		suppressMessages(eTerm <- dnet::dGSEA(data=data, identity="entrez", check.symbol.identity=FALSE, ontology="Customised", customised.genesets=anno, sizeRange=size.range, which_distance=NULL, weight=weight, nperm=nperm, fast=TRUE, sigTail="one-tail", p.adjust.method=p.adjust.method, verbose=verbose, RData.location=RData.location))
 		
 		if(!is.null(eTerm)){
 			res <- dnet::dGSEAview(eTerm, which_sample=1, top_num=NULL, sortBy="pvalue", decreasing=TRUE, details=TRUE)
