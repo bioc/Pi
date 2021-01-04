@@ -107,7 +107,7 @@
 #' gp + ggnetwork::geom_edges(size=e.size, show.legend=FALSE)
 #' }
 
-xGGnetwork <- function(g, node.label=NULL, label.wrap.width=NULL, label.wrap.lineheight=0.8, node.label.size=NULL, node.label.fontface='plain', node.label.color='darkblue', node.label.alpha=0.8, node.label.padding=1, node.label.arrow=0.01, node.label.force=1, node.shape=19, node.shape.title=NULL, node.xcoord=NULL, node.ycoord=NULL, node.color=NULL, node.color.title=NULL, colormap='grey-orange-darkred', ncolors=64, zlim=NULL, na.color='grey80', node.color.alpha=1, node.size=NULL, node.size.title=NULL, node.size.range=c(1,4), slim=NULL, title='', edge.size=0.5, edge.color="black", edge.color.alpha=0.5, edge.curve=0.1, edge.arrow=2, edge.arrow.gap=0.02, ncolumns=NULL)
+xGGnetwork <- function(g, node.label=NULL, label.wrap.width=NULL, label.wrap.lineheight=0.8, node.label.size=NULL, node.label.fontface='plain', node.label.color='darkblue', node.label.alpha=0.9, node.label.padding=1, node.label.arrow=0.01, node.label.force=1, node.shape=19, node.shape.title=NULL, node.xcoord=NULL, node.ycoord=NULL, node.color=NULL, node.color.title=NULL, colormap='grey-orange-darkred', ncolors=64, zlim=NULL, na.color='grey80', node.color.alpha=1, node.size=NULL, node.size.title=NULL, node.size.range=c(1,4), slim=NULL, title='', edge.size=0.5, edge.color="black", edge.color.alpha=0.5, edge.curve=0.1, edge.arrow=2, edge.arrow.gap=0.02, ncolumns=NULL)
 {
     
    	if(is(g,"igraph")){
@@ -387,9 +387,12 @@ xGGnetwork <- function(g, node.label=NULL, label.wrap.width=NULL, label.wrap.lin
 	########
 	## edges
 	########
-	e.color <- subset(df, !is.na(na.y))$e.color
-	e.color.alpha <- subset(df, !is.na(na.y))$e.color.alpha
-	e.size <- subset(df, !is.na(na.y))$e.size
+	whether_node <- NULL
+	df$whether_node <- FALSE
+	df$whether_node[is.na(df$e.color)] <- TRUE
+	e.color <- subset(df, whether_node==FALSE)$e.color
+	e.color.alpha <- subset(df, whether_node==FALSE)$e.color.alpha
+	e.size <- subset(df, whether_node==FALSE)$e.size
 	if(igraph::is_directed(ls_ig[[1]])){
 		gp <- gp + ggnetwork::geom_edges(color=e.color, size=e.size,  alpha=e.color.alpha, curvature=edge.curve, arrow=arrow(length=unit(edge.arrow,"pt"),type="closed"), show.legend=FALSE)
 	}else{
@@ -494,9 +497,9 @@ xGGnetwork <- function(g, node.label=NULL, label.wrap.width=NULL, label.wrap.lin
 			)
 		}
 		###########	
-		n.label.size <- subset(df, is.na(na.y))$n.label.size
-		n.label.fontface <- subset(df, is.na(na.y))$n.label.fontface
-		n.label.color <- subset(df, is.na(na.y))$n.label.color
+		n.label.size <- subset(df, whether_node==TRUE)$n.label.size
+		n.label.fontface <- subset(df, whether_node==TRUE)$n.label.fontface
+		n.label.color <- subset(df, whether_node==TRUE)$n.label.color
 		gp <- gp + my_geom_nodetext_repel(aes(label=n.label), lineheight=label.wrap.lineheight, size=n.label.size, color=n.label.color, fontface=n.label.fontface, alpha=node.label.alpha, box.padding=unit(0.5,"lines"), point.padding=unit(node.label.padding,"lines"), segment.alpha=0.2, segment.size=0.2, arrow=arrow(length=unit(node.label.arrow,'npc')), force=node.label.force)
 	}
     
@@ -504,18 +507,16 @@ xGGnetwork <- function(g, node.label=NULL, label.wrap.width=NULL, label.wrap.lin
     
     if(1){
 		df <- gp$data
-
-		na.y <- NULL
 		
 		## append data_nodes
-		df_sub <- subset(df, is.na(na.y))
-		ind <- match(colnames(df_sub), c('na.x','na.y','e.color','edge.color','e.size'))
+		df_sub <- subset(df, whether_node==TRUE)
+		ind <- match(colnames(df_sub), c('whether_node','e.color','edge.color','e.size'))
 		df_sub <- df_sub[,is.na(ind)]
 		df_sub <- df_sub[!duplicated(df_sub),]
 		gp$data_nodes <- df_sub
 		
 		## append data_edges
-		df_sub <- subset(df, !is.na(na.y))
+		df_sub <- subset(df, whether_node==FALSE)
 		ind <- match(colnames(df_sub), c('x','y','xend','yend','e.color','edge.color','e.size'))
 		df_sub <- df_sub[,!is.na(ind)]
 		df_sub <- df_sub[!duplicated(df_sub),]

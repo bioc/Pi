@@ -59,16 +59,23 @@ xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none
 	}
 	
 	## layout
-	#glayout <- igraph::layout_as_tree(subg,root=dnet::dDAGroot(subg),circular=TRUE,flip.y=TRUE)
-	glayout <- igraph::layout_with_kk(subg)
-	V(subg)$xcoord <- glayout[,1]
-	V(subg)$ycoord <- glayout[,2]
+	if(any(is.null(V(subg)$xcoord), is.null(V(subg)$ycoord))){
+		#glayout <- igraph::layout_as_tree(subg,root=dnet::dDAGroot(subg),circular=TRUE,flip.y=TRUE)
+		if(0){
+			glayout <- igraph::layout_with_kk(subg)
+			V(subg)$xcoord <- glayout[,1]
+			V(subg)$ycoord <- glayout[,2]
+		}else{
+			subg <- subg %>% xLayout("graphlayouts.layout_with_stress")
+		}
+	}
 	
 	#################
 	gp <- xGGnetwork(g=subg, node.label='vertex.label', node.label.size=node.label.size, node.label.color=node.label.color, node.label.alpha=node.label.alpha, node.label.padding=node.label.padding, node.label.arrow=node.label.arrow, node.label.force=node.label.force, node.shape=node.shape, node.xcoord='xcoord', node.ycoord='ycoord', node.color='priority', node.color.title=node.color.title, colormap=colormap, ncolors=ncolors, zlim=zlim, node.size.range=node.size.range, title=title, edge.color=edge.color, edge.color.alpha=edge.color.alpha, edge.curve=edge.curve, edge.arrow.gap=edge.arrow.gap,...)
     #################
 
-	df <- gp$data_nodes
+	#df <- gp$data_nodes
+	df <- gp$data
 	
 	columns <- c('dGene','pGene','fGene','nGene','eGene','cGene')
 	df_sub <- as.data.frame(matrix(0, nrow=nrow(df), ncol=length(columns)+2))

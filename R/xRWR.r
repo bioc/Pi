@@ -23,16 +23,14 @@
 #' @import graphics
 #' @import RCircos
 #' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame GRangesList GRanges split start end
-#' @importFrom Matrix Diagonal rowSums colSums Matrix t
+#' @importFrom Matrix Diagonal rowSums colSums Matrix t summary
 #' @importFrom GenomeInfoDb seqlevels
-#' @importFrom Gviz IdeogramTrack GenomeAxisTrack AnnotationTrack DataTrack plotTracks
 #' @importFrom lattice xyplot contourplot levelplot
 #' @importFrom plot3D persp3D scatter3D text3D
 #' @importFrom randomForest randomForest tuneRF importance
 #' @importFrom glmnet cv.glmnet predict.glmnet
 #' @importFrom caret createFolds createMultiFolds featurePlot trainControl twoClassSummary train getModelInfo varImp
 #' @importFrom stats sd median mad ecdf na.omit predict prcomp lm quantile as.dist hclust cor as.dendrogram order.dendrogram wilcox.test coef p.adjust dist ecdf approx pexp predict t.test
-#' @importFrom ggbio autoplot
 #' @importFrom ggrepel geom_text_repel geom_label_repel GeomTextRepel
 #' @importFrom ROCR prediction performance plot
 #' @importFrom supraHex sDistance visColormap visTreeBootstrap visHeatmapAdv

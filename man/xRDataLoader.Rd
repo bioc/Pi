@@ -6,10 +6,11 @@
 \usage{
 xRDataLoader(
 RData = c(NA, "GWAS2EF", "GWAS_LD", "IlluminaHumanHT",
-"IlluminaOmniExpress", "ig.DO",
-"ig.EF", "ig.GOBP", "ig.GOCC", "ig.GOMF", "ig.HPCM", "ig.HPMA",
-"ig.HPMI", "ig.HPPA",
-"ig.MP", "org.Hs.eg", "org.Hs.egDGIdb", "org.Hs.egDO", "org.Hs.egGOBP",
+"IlluminaOmniExpress",
+"ig.DO", "ig.EF", "ig.GOBP", "ig.GOCC", "ig.GOMF", "ig.HPCM",
+"ig.HPMA", "ig.HPMI",
+"ig.HPPA", "ig.MP", "org.Hs.eg", "org.Hs.egDGIdb", "org.Hs.egDO",
+"org.Hs.egGOBP",
 "org.Hs.egGOCC", "org.Hs.egGOMF", "org.Hs.egHPCM", "org.Hs.egHPMA",
 "org.Hs.egHPMI",
 "org.Hs.egHPPA", "org.Hs.egMP", "org.Hs.egMsigdbC1",

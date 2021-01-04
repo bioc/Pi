@@ -122,8 +122,10 @@ xSNPscores <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signi
 	
 		GWAS_LD <- xRDataLoader('GWAS_LD', RData.location=RData.location, guid=guid, verbose=verbose)
 		res_list <- lapply(include.LD, function(x){
-			data_ld <- ''
-			eval(parse(text=paste("data_ld <- GWAS_LD$", x, sep="")))
+			ind <- match(x, names(GWAS_LD))
+			data_ld <- GWAS_LD[[ind]]
+			#data_ld <- ''
+			#eval(parse(text=paste("data_ld <- GWAS_LD$", x, sep="")))
 			ind <- match(rownames(data_ld), leads)
 			ind_lead <- which(!is.na(ind))
 			
@@ -148,8 +150,10 @@ xSNPscores <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signi
 		if(1){
 			ImmunoBase_LD <- xRDataLoader('ImmunoBase_LD', RData.location=RData.location, guid=guid, verbose=verbose)
 			res_list <- lapply(include.LD, function(x){
-				data_ld <- ''
-				eval(parse(text=paste("data_ld <- ImmunoBase_LD$", x, sep="")))
+				ind <- match(x, names(ImmunoBase_LD))
+				data_ld <- ImmunoBase_LD[[ind]]
+				#data_ld <- ''
+				#eval(parse(text=paste("data_ld <- ImmunoBase_LD$", x, sep="")))
 				ind <- match(rownames(data_ld), leads)
 				ind_lead <- which(!is.na(ind))
 				
@@ -210,7 +214,7 @@ xSNPscores <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signi
 		LD_Sig <- data.frame(SNP=names(vec), Sig=vec, row.names=NULL, stringsAsFactors=FALSE)
 
 		## merge Lead and LD
-		df <- rbind(Lead_Sig, as.matrix(LD_Sig))
+		df <- base::rbind(Lead_Sig, LD_Sig)
 		res_list <- split(x=df$Sig, f=df$SNP)
 		vec <- unlist(lapply(res_list, min))
 		SNP_Sig <- data.frame(SNP=names(vec), FDR=vec, row.names=NULL, stringsAsFactors=FALSE)
