@@ -186,6 +186,10 @@ xSNPscores <- function(data, include.LD=NA, LD.customised=NULL, LD.r2=0.8, signi
 		}
 		
 		if(!is.null(LLR)){
+			#############
+			ind <- match(LLR[,1], leads)
+			LLR <- LLR[!is.na(ind),]
+			#############
 			flag <- LLR[,3]>=LD.r2
 			if(sum(flag)>0){
 				LLR <- LLR[LLR[,3]>=LD.r2,]

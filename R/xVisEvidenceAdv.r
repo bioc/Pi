@@ -77,21 +77,37 @@ xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none
 	#df <- gp$data_nodes
 	df <- gp$data
 	
-	columns <- c('dGene','pGene','fGene','nGene','eGene','cGene')
-	df_sub <- as.data.frame(matrix(0, nrow=nrow(df), ncol=length(columns)+2))
-	colnames(df_sub) <- c('x','y',columns)
-	ind <- match(colnames(df_sub), colnames(df))
-	df_sub[,!is.na(ind)] <- df[,ind[!is.na(ind)]]
-	ind <- which(apply(df_sub[,c(-1,-2)],1,sum)!=0)
-	if(length(ind)>0){
-		df_sub <- df_sub[ind, ]
-		df_sub_1 <- df_sub[,c(1,2)]
-		df_sub_2 <- df_sub[,c(-1,-2)]
-		df_sub_2[df_sub_2>=1] <- 1
-		df_sub <- cbind(df_sub_1, df_sub_2)
+	if(0){
+		## previously
+		columns <- c('dGene','pGene','fGene','nGene','eGene','cGene')
+		df_sub <- as.data.frame(matrix(0, nrow=nrow(df), ncol=length(columns)+2))
+		colnames(df_sub) <- c('x','y',columns)
+		ind <- match(colnames(df_sub), colnames(df))
+		df_sub[,!is.na(ind)] <- df[,ind[!is.na(ind)]]
+		ind <- which(apply(df_sub[,c(-1,-2)],1,sum)!=0)
+		if(length(ind)>0){
+			df_sub <- df_sub[ind, ]
+			df_sub_1 <- df_sub[,c(1,2)]
+			df_sub_2 <- df_sub[,c(-1,-2)]
+			df_sub_2[df_sub_2>=1] <- 1
+			df_sub <- cbind(df_sub_1, df_sub_2)
 
-		gp <- xPieplot(df_sub, columns, colormap='ggplot2', pie.radius=pie.radius, pie.color=pie.color, pie.color.alpha=pie.color.alpha, pie.thick=pie.thick, legend.title='Seed gene', gp=gp)
+			gp <- xPieplot(df_sub, columns, colormap='ggplot2', pie.radius=pie.radius, pie.color=pie.color, pie.color.alpha=pie.color.alpha, pie.thick=pie.thick, legend.title='Seed gene', gp=gp)
+		}
+
+	}else{
+		#################
+		## now (20211115)
+		#################
+		x <- y <- ycoord <- vertex.label <- NULL
+		df_sub_1 <- df %>% dplyr::select(x,y)
+		df_sub_2 <- df %>% dplyr::select(ycoord:vertex.label) %>% dplyr::select(-1,-length(.))
+		df_sub_2[df_sub_2>=1] <- 1
+		ind <- which(apply(df_sub_2,1,sum)!=0)
+		df_sub <- cbind(df_sub_1, df_sub_2) %>% dplyr::slice(ind)
 		
+		columns <- colnames(df_sub_2)
+		gp <- xPieplot(df_sub, columns, colormap='ggplot2', pie.radius=pie.radius, pie.color=pie.color, pie.color.alpha=pie.color.alpha, pie.thick=pie.thick, legend.title='Seed gene', gp=gp)
 	}
 	
     invisible(gp)

@@ -11,6 +11,8 @@
 #' @param p.adjust.method the method used to adjust p-values. It can be one of "BH", "BY", "bonferroni", "holm", "hochberg" and "hommel". The first two methods "BH" (widely used) and "BY" control the false discovery rate (FDR: the expected proportion of false discoveries amongst the rejected hypotheses); the last four methods "bonferroni", "holm", "hochberg" and "hommel" are designed to give strong control of the family-wise error rate (FWER). Notes: FDR is a less stringent condition than FWER
 #' @param plot logical to indicate whether scatter plot is drawn
 #' @param plot.smooth the smooth method for the scatter plot. It can be NA (depending on correlation type), "lm" for the linear line or 'loess' for the loess curve
+#' @param point.size the point size
+#' @param point.color the point color
 #' @return 
 #' a list with three componets:
 #' \itemize{
@@ -40,7 +42,7 @@
 #' ls_res <- xCorrelation(df, data, method="pearson", p.type="empirical", nperm=2000, plot=TRUE)
 #' }
 
-xCorrelation <- function(df, list_vec, method=c("pearson","spearman"), p.type=c("nominal","empirical"), seed=825, nperm=2000, p.adjust.method=c("BH","BY","bonferroni","holm","hochberg","hommel"), plot=FALSE, plot.smooth=c(NA, "lm","loess"))
+xCorrelation <- function(df, list_vec, method=c("pearson","spearman"), p.type=c("nominal","empirical"), seed=825, nperm=2000, p.adjust.method=c("BH","BY","bonferroni","holm","hochberg","hommel"), plot=FALSE, plot.smooth=c(NA, "lm","loess"), point.size=1, point.color='grey90')
 {
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
     method <- match.arg(method)
@@ -192,7 +194,7 @@ xCorrelation <- function(df, list_vec, method=c("pearson","spearman"), p.type=c(
 			
 			priority <- name <- NULL
 			m <- ggplot(df, aes(x=priority, y=data))
-			m <- m + geom_point()
+			m <- m + geom_point(size=point.size, color=point.color)
 			if(is.na(plot.smooth)){
 				if(method=="pearson"){
 					plot.smooth <- "lm"
@@ -203,9 +205,9 @@ xCorrelation <- function(df, list_vec, method=c("pearson","spearman"), p.type=c(
 			m <- m + geom_smooth(method=plot.smooth, se=TRUE, span=4)
 			m <- m + theme_bw() + theme(legend.position="top", axis.title.y=element_text(size=10,color="black"), axis.text.y=element_text(size=8,color="black"), axis.title.x=element_text(size=10,color="black"), axis.text.x=element_text(size=8,color="black"), panel.background=element_rect(fill="transparent"))
 			m <- m + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-			subtitle <- paste0("correlation: ",cor_obs,' (',p.type,' p: ',pval_obs,', fdr: ',fdr_obs,')')
+			subtitle <- paste0("",cor_obs,' (',p.type,' p: ',pval_obs,', fdr: ',fdr_obs,')')
 			if(length(list_vec)==1){
-				subtitle <- paste0("correlation: ",cor_obs,', (',p.type,' p: ',pval_obs,')')
+				subtitle <- paste0("",cor_obs,', (',p.type,' p: ',pval_obs,')')
 			}
 			gp_curve <- m + labs(x="data frame", y=name_obs, title=paste0("Correlation (",method,"; n=",nrow(df),")"), subtitle=subtitle) + theme(plot.title=element_text(hjust=0.5, size=10), plot.subtitle=element_text(hjust=0.5, size=8))
 		

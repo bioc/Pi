@@ -14,7 +14,9 @@ nperm = 2000,
 p.adjust.method = c("BH", "BY", "bonferroni", "holm", "hochberg",
 "hommel"),
 plot = FALSE,
-plot.smooth = c(NA, "lm", "loess")
+plot.smooth = c(NA, "lm", "loess"),
+point.size = 1,
+point.color = "grey90"
 )
 }
 \arguments{
@@ -48,6 +50,10 @@ condition than FWER}
 \item{plot.smooth}{the smooth method for the scatter plot. It can be NA
 (depending on correlation type), "lm" for the linear line or 'loess'
 for the loess curve}
+
+\item{point.size}{the point size}
+
+\item{point.color}{the point color}
 }
 \value{
 a list with three componets:

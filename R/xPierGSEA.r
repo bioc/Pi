@@ -92,7 +92,7 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 	}
     df_priority <- df_priority[1:priority.top,]
     ###############
-        
+    
     ## convert gene symbols to entrez geneid
 	name_GeneID <- xSymbol2GeneID(rownames(df_priority), check.symbol.identity=FALSE, verbose=verbose, RData.location=RData.location, guid=guid)
 	
@@ -332,7 +332,19 @@ xPierGSEA <- function(pNode, priority.top=NULL, ontology=c("GOBP","GOMF","GOCC",
 			max.RES <- max(RES)
 			min.RES <- min(RES)
 			es.observed <- signif(ifelse(max.RES>abs(min.RES), max.RES, min.RES), digits=5)
-			es.position <- ifelse(max.RES>abs(min.RES), which.max(RES), which.min(RES))
+			###########################################################
+			if(0){
+				## TODO: based on max.RES and min.RES
+				es.position <- ifelse(max.RES>abs(min.RES), which.max(RES), which.min(RES))
+			}else{
+				## TODO: based on sign of ES
+				if(res$ES[res$setID==x] > 0){
+					es.position <- which.max(RES)
+				}else{
+					es.position <- which.min(RES)
+				}
+			}
+			###########################################################
 			## for leading genes
 			if(RES[es.position]<0){
 				ind <- which(flag >= es.position)

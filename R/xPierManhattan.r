@@ -205,9 +205,9 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 		midpoint <- priority <- Symbol <- NULL
 		if(!is.null(df_highlight)){
 			if(top.label.type=="text"){
-				bp <- bp + ggrepel::geom_text_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold.italic', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')), ...)
+				bp <- bp + ggrepel::geom_text_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold.italic', point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')), max.overlaps=Inf, ...)
 			}else if(top.label.type=="box"){
-				bp <- bp + ggrepel::geom_label_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold.italic', box.padding=unit(0.2,"lines"), point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')), ...)
+				bp <- bp + ggrepel::geom_label_repel(data=df_highlight, aes(x=midpoint,y=priority,label=Symbol), size=top.label.size, color=top.label.col, fontface='bold.italic', box.padding=unit(0.2,"lines"), point.padding=unit(0.2,"lines"), segment.color='grey50', segment.alpha=0.5, arrow=arrow(length=unit(0.01,'npc')), max.overlaps=Inf, ...)
 			}
 		}
 	}

@@ -126,7 +126,7 @@ xGSEAbarplot <- function(eGSEA, top_num=10, displayBy=c("nes","adjp","fdr","pval
 	bp <- bp + theme(axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
 	
 	## x-axis (actually y-axis) position
-	bp <- bp + scale_y_continuous(position="top")
+	bp <- bp + scale_y_continuous(position="right")
 	
 	invisible(bp)
 }
