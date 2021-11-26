@@ -99,7 +99,8 @@ xVisEvidenceAdv <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","none
 		#################
 		## now (20211115)
 		#################
-		x <- y <- ycoord <- vertex.label <- NULL
+		x <- y <- ycoord <- vertex.label <- . <- NULL
+		
 		df_sub_1 <- df %>% dplyr::select(x,y)
 		df_sub_2 <- df %>% dplyr::select(ycoord:vertex.label) %>% dplyr::select(-1,-length(.))
 		df_sub_2[df_sub_2>=1] <- 1

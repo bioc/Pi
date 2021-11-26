@@ -4,6 +4,7 @@
 #'
 #' @param pNode an object of class "pNode" (or "sTarget" or "dTarget")
 #' @param color a character vector for colors to alternate chromosome colorings. If NULL, ggplot2 default colors will be used. If a single character is provided, it can be "jet" (jet colormap) or "rainbow" (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta)
+#' @param point.size the point size
 #' @param top the number of the top targets to be labelled/highlighted
 #' @param top.label.type how to label the top targets. It can be "box" drawing a box around the labels , and "text" for the text only
 #' @param top.label.size the highlight label size
@@ -60,7 +61,7 @@
 #' mp
 #' }
 
-xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", signature=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL, ...)
+xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), point.size=0.5, top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", signature=TRUE, verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL, ...)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -133,7 +134,7 @@ xPierManhattan <- function(pNode, color=c("darkred","darkgreen"), top=50, top.la
 	priority <- seqnames <- priority <- NULL
 	###############################
 	## calling ggbio::autoplot
-	suppressMessages(ggp <- ggbio::autoplot(object=gr, aes(y=priority,color=seqnames,alpha=priority), coord="genome", geom='point', space.skip=0.01))
+	suppressMessages(ggp <- ggbio::autoplot(object=gr, aes(y=priority,color=seqnames,alpha=priority), coord="genome", geom='point', space.skip=0.01, size=point.size))
 	
 	## extract ggplot
 	bp <- ggp@ggplot

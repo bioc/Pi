@@ -110,18 +110,18 @@ xPierPathways <- function(pNode, priority.top=100, background=NULL, ontology=NA,
     
     if(verbose){
         now <- Sys.time()
-        message(sprintf("\n#######################################################", appendLF=TRUE))
+        message(sprintf("\n#######################################################"))
         message(sprintf("'xEnricherGenes' is being called (%s):", as.character(now)), appendLF=TRUE)
-        message(sprintf("#######################################################", appendLF=TRUE))
+        message(sprintf("#######################################################"))
     }
     
 	eTerm <- xEnricherGenes(data=data, background=background, ontology=ontology, size.range=size.range, min.overlap=min.overlap, which.distance=which.distance, test=test, background.annotatable.only=background.annotatable.only, p.tail=p.tail, p.adjust.method=p.adjust.method, ontology.algorithm=ontology.algorithm, elim.pvalue=elim.pvalue, lea.depth=lea.depth, path.mode=path.mode, true.path.rule=true.path.rule, verbose=verbose, RData.location=RData.location, guid=guid)
 	
 	if(verbose){
         now <- Sys.time()
-        message(sprintf("#######################################################", appendLF=TRUE))
+        message(sprintf("#######################################################"))
         message(sprintf("'xEnricherGenes' has been finished (%s)!", as.character(now)), appendLF=TRUE)
-        message(sprintf("#######################################################\n", appendLF=TRUE))
+        message(sprintf("#######################################################\n"))
     }
     
     ####################################################################################

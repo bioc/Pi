@@ -115,9 +115,9 @@ xPier <- function(seeds, g, seeds.inclusive=TRUE, normalise=c("laplacian","row",
     
     if(verbose){
         now <- Sys.time()
-        message(sprintf("\n#######################################################", appendLF=TRUE))
+        message(sprintf("\n#######################################################"))
         message(sprintf("'xRWR' is being called (%s):", as.character(now)), appendLF=TRUE)
-        message(sprintf("#######################################################", appendLF=TRUE))
+        message(sprintf("#######################################################"))
     }
     
     PTmatrix <- suppressWarnings(xRWR(g=ig, normalise=normalise, setSeeds=setSeeds, restart=restart, normalise.affinity.matrix=normalise.affinity.matrix, parallel=parallel, multicores=multicores, verbose=verbose))
@@ -125,9 +125,9 @@ xPier <- function(seeds, g, seeds.inclusive=TRUE, normalise=c("laplacian","row",
 	
 	if(verbose){
         now <- Sys.time()
-        message(sprintf("#######################################################", appendLF=TRUE))
+        message(sprintf("#######################################################"))
         message(sprintf("'xRWR' has been finished (%s)!", as.character(now)), appendLF=TRUE)
-        message(sprintf("#######################################################\n", appendLF=TRUE))
+        message(sprintf("#######################################################\n"))
     }
     
     if(1){

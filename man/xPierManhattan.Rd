@@ -7,6 +7,7 @@
 xPierManhattan(
 pNode,
 color = c("darkred", "darkgreen"),
+point.size = 0.5,
 top = 50,
 top.label.type = c("box", "text"),
 top.label.size = 2,
@@ -32,6 +33,8 @@ guid = NULL,
 colorings. If NULL, ggplot2 default colors will be used. If a single
 character is provided, it can be "jet" (jet colormap) or "rainbow"
 (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta)}
+
+\item{point.size}{the point size}
 
 \item{top}{the number of the top targets to be labelled/highlighted}
 
