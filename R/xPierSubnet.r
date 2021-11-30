@@ -149,9 +149,9 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
     
     if(verbose){
         now <- Sys.time()
-        message(sprintf("\n#######################################################", appendLF=TRUE))
+        message(sprintf("\n#######################################################"))
         message(sprintf("xSubneterGenes is being called (%s):", as.character(now)), appendLF=TRUE)
-        message(sprintf("#######################################################", appendLF=TRUE))
+        message(sprintf("#######################################################"))
     }
     
     if(is.na(network)){
@@ -182,9 +182,9 @@ xPierSubnet <- function(pNode, priority.quantile=0.1, network=c(NA,"STRING_highe
 	
 	if(verbose){
         now <- Sys.time()
-        message(sprintf("#######################################################", appendLF=TRUE))
+        message(sprintf("#######################################################"))
         message(sprintf("xSubneterGenes has finished (%s)!", as.character(now)), appendLF=TRUE)
-        message(sprintf("#######################################################\n", appendLF=TRUE))
+        message(sprintf("#######################################################\n"))
     }
     
     ####################################################################################

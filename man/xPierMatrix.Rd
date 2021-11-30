@@ -9,7 +9,8 @@ list_pNode,
 displayBy = c("score", "rank", "weight", "pvalue", "evidence"),
 combineBy = c("union", "intersect"),
 aggregateBy = c("none", "fishers", "logistic", "Ztransform",
-"orderStatistic"),
+"orderStatistic",
+"harmonic", "max", "sum"),
 verbose = TRUE,
 RData.location = "http://galahad.well.ox.ac.uk/bigdata",
 guid = NULL
@@ -38,7 +39,9 @@ does best in problems where the evidence is concentrated in a
 relatively small fraction of the individual tests or when the evidence
 is at least moderately strong; the logistic method provides a
 compromise between these two. Notably, the aggregate methods 'fishers'
-and 'logistic' are preferred here}
+and 'logistic' are preferred here. Also supported are methods summing
+up evidence 'sum', taking teh maximum of evidence ('max') or
+sequentially weighting evidence 'harmonic'}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}

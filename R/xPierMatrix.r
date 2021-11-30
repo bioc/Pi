@@ -5,7 +5,7 @@
 #' @param list_pNode a list of "pNode" objects or a "pNode" object
 #' @param displayBy which priority will be extracted. It can be "score" for priority score/rating (by default), "rank" for priority rank, "weight" for seed weight, "pvalue" for priority p-value, "evidence" for the evidence (seed info)
 #' @param combineBy how to resolve nodes/targets from a list of "pNode" objects. It can be "intersect" for intersecting nodes (by default), "union" for unionising nodes
-#' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here
+#' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here. Also supported are methods summing up evidence 'sum', taking teh maximum of evidence ('max') or sequentially weighting evidence 'harmonic'
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param RData.location the characters to tell the location of built-in RData files. See \code{\link{xRDataLoader}} for details
 #' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{xRDataLoader}} for details
@@ -37,9 +37,16 @@
 #' dTarget <- xPierMatrix(ls_pNode, displayBy="pvalue", aggregateBy="fishers")
 #' }
 
-xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
+xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic","harmonic","max","sum"), verbose=TRUE, RData.location="http://galahad.well.ox.ac.uk/bigdata", guid=NULL)
 {
 
+    startT <- Sys.time()
+    if(verbose){
+        message(paste(c("Start at ",as.character(startT)), collapse=""), appendLF=TRUE)
+        message("", appendLF=TRUE)
+    }
+    ####################################################################################
+    
     displayBy <- match.arg(displayBy)
     combineBy <- match.arg(combineBy)
     aggregateBy <- match.arg(aggregateBy) 
@@ -74,7 +81,7 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 	}
 	nodes <- sort(nodes)
 	
-	if(displayBy=='evidence' | (displayBy=='pvalue' & aggregateBy!="none")){
+	if(displayBy=='evidence' | (displayBy=='pvalue' & aggregateBy!="none") | (displayBy=='score' & (aggregateBy %in% c("harmonic","max","sum")))){
 		############
 		## seed info
 		predictor_names <- names(list_pNode)
@@ -103,20 +110,29 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 		}
 		
 		############
-		## get edges involved
-		ls_edges <- lapply(list_pNode, function(x){
-			relations <- igraph::get.data.frame(x$g, what="edges")
-		})
-		edges <- unique(do.call(rbind, ls_edges))
-		## get metag
-		metag <- igraph::graph.data.frame(d=edges, directed=FALSE, vertices=nodes)
+		if(0){
+			## get edges involved
+			ls_edges <- pbapply::pblapply(list_pNode, function(x){
+				relations <- igraph::get.data.frame(x$g, what="edges")
+			})
+			edges <- do.call(rbind, ls_edges) %>% unique()
+			## get metag
+			metag <- igraph::graph.data.frame(d=edges, directed=FALSE, vertices=nodes)
+		}else{
+			#############
+			### very fast
+			#############
+			edges <- igraph::get.data.frame(list_pNode[[1]]$g, what="edges")
+			## get metag
+			metag <- igraph::graph.data.frame(d=edges, directed=FALSE, vertices=nodes)
+		}
 		##############
 		
 	}
 	
 	if(displayBy!='evidence'){
 		## Combine into a data frame called 'df_predictor'
-		ls_priority <- lapply(list_pNode, function(pNode){
+		ls_priority <- pbapply::pblapply(list_pNode, function(pNode){
 			p <- pNode$priority
 			ind <- match(nodes, rownames(p))
 			#ind <- ind[!is.na(ind)]
@@ -216,6 +232,7 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			## return dTarget
 			#priority <- cbind(df_priority,Overall=overall, mat_evidence)
 			#priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,c("nGene","cGene","eGene","dGene","pGene","fGene")], stringsAsFactors=FALSE)
+			
 			if(0){
 				## previous version
 				ind <- match(c("nGene","cGene","eGene","dGene","pGene","fGene"), colnames(mat_evidence))
@@ -250,6 +267,93 @@ xPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 		class(eTarget) <- "eTarget"
 		df_predictor <- eTarget
 		
+	}else if(displayBy=='score' & (aggregateBy %in% c("harmonic","max","sum"))){
+		if(aggregateBy=="max"){
+			summaryFun <- max
+		}else if(aggregateBy=="sum"){
+			summaryFun <- sum
+		}else if(aggregateBy=="harmonic"){
+			summaryFun <- function(x){
+				base::sum(x / base::rank(-x,ties.method="min")^2)
+			}
+		}
+		
+		df_harmonic <- apply(df_predictor, 1, summaryFun)
+		
+		if(1){
+			df_harmonic <- sort(df_harmonic, decreasing=T)
+			
+			## get rank
+			df_rank <- rank(-df_harmonic, ties.method="min")
+			## rating: first sqrt and then being rescaled into the [0,5] range
+			####
+			rating <- sqrt(df_harmonic)
+			####
+			rating <- 5 * (rating - min(rating))/(max(rating) - min(rating))
+			
+			## df_priority
+			df_priority <- data.frame(name=names(df_harmonic), rank=df_rank, harmonic=df_harmonic, rating=rating, stringsAsFactors=FALSE)
+			### add description
+			df_priority$description <- xSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, RData.location=RData.location, guid=guid)$description
+			###
+			
+			## df_predictor
+			ind <- match(names(df_harmonic), rownames(df_predictor))
+			if(ncol(df_predictor)>1){
+				df_predictor <- df_predictor[ind,]
+			}else{
+				####
+				# deal with only 1 predictor
+				####
+				tmp <- df_predictor[ind,]
+				tmp_matrix <- matrix(tmp, ncol=ncol(df_predictor))
+				colnames(tmp_matrix) <- colnames(df_predictor)
+				rownames(tmp_matrix) <- names(tmp)
+				df_predictor <- tmp_matrix
+				####				
+			}
+			
+			## reorder mat_evidence
+			ind_row <- match(df_priority$name, rownames(mat_evidence))
+			ind_col <- match(unique(predictor_names), colnames(mat_evidence))
+			if(ncol(mat_evidence)>1){
+				mat_evidence <- mat_evidence[ind_row,ind_col]
+			}else{
+				####
+				# deal with only 1 predictor
+				####
+				tmp <- mat_evidence[ind_row,ind_col]
+				tmp_matrix <- matrix(tmp, ncol=ncol(mat_evidence))
+				colnames(tmp_matrix) <- colnames(mat_evidence)
+				rownames(tmp_matrix) <- names(tmp)
+				mat_evidence <- tmp_matrix
+				###
+			}
+			overall <- apply(mat_evidence!=0, 1, sum)
+			
+			## return dTarget
+			#priority <- cbind(df_priority,Overall=overall, mat_evidence)
+			#priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,c("nGene","cGene","eGene","dGene","pGene","fGene")], stringsAsFactors=FALSE)
+			if(0){
+				## previous version
+				ind <- match(c("nGene","cGene","eGene","dGene","pGene","fGene"), colnames(mat_evidence))
+			}else{
+				#################
+				## 20211115
+				## now generalised version
+				#################
+				ind <- match(unique(predictor_names), colnames(mat_evidence))
+			}
+			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			dTarget <- list(priority  = priority,
+							predictor = df_predictor,
+							metag	  = metag,
+							list_pNode  = list_pNode
+						 )
+			class(dTarget) <- "dTarget"
+			
+			df_predictor <- dTarget
+		}
 	}
 	
 	if(verbose){
